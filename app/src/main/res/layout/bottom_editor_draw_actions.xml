@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_editor_draw_actions_wrapper"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/bottom_actions_height"
+    android:layout_alignParentBottom="true">
+
+    <RelativeLayout
+        android:id="@+id/bottom_draw_holder"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/bigger_margin"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="-2dp"
+        android:layout_marginBottom="-2dp"
+        android:background="@drawable/bottom_draw_bar"
+        app:layout_constraintBottom_toBottomOf="@id/bottom_draw_color_clickable"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/bottom_draw_eraser"
+        app:layout_constraintTop_toTopOf="@+id/bottom_draw_color_clickable">
+
+        <com.goodwy.commons.views.MySeekBar
+            android:id="@+id/bottom_draw_width"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/bottom_draw_color"
+            android:layout_marginEnd="6dp"
+            android:padding="@dimen/normal_margin"
+            android:max="100"
+            android:progress="50" />
+
+        <ImageView
+            android:id="@+id/bottom_draw_color"
+            android:layout_width="@dimen/bottom_editor_color_picker_size"
+            android:layout_height="@dimen/bottom_editor_color_picker_size"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="2dp"
+            android:clickable="false"
+            android:contentDescription="@null"
+            android:background="@drawable/circle_background" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/bottom_draw_eraser"
+        android:layout_width="@dimen/bottom_editor_color_picker_size"
+        android:layout_height="@dimen/bottom_editor_color_picker_size"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/eraser"
+        android:padding="@dimen/medium_margin"
+        android:src="@drawable/ic_eraser_vector"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/bottom_draw_eye_dropper"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/bottom_draw_eye_dropper"
+        android:layout_width="@dimen/bottom_editor_color_picker_size"
+        android:layout_height="@dimen/bottom_editor_color_picker_size"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/eyedropper"
+        android:padding="10dp"
+        android:src="@drawable/ic_dropper"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/bottom_draw_undo"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/bottom_draw_undo"
+        android:layout_width="@dimen/bottom_editor_color_picker_size"
+        android:layout_height="@dimen/bottom_editor_color_picker_size"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="false"
+        android:contentDescription="@string/undo"
+        android:padding="@dimen/medium_margin"
+        android:src="@drawable/ic_undo_vector"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/bottom_draw_redo"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/bottom_draw_redo"
+        android:layout_width="@dimen/bottom_editor_color_picker_size"
+        android:layout_height="@dimen/bottom_editor_color_picker_size"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="false"
+        android:contentDescription="@string/undo"
+        android:padding="@dimen/medium_margin"
+        android:src="@drawable/ic_redo_vector"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/bottom_draw_color_clickable"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/bottom_draw_color_clickable"
+        android:layout_width="@dimen/bottom_editor_color_picker_size"
+        android:layout_height="@dimen/bottom_editor_color_picker_size"
+        android:layout_marginEnd="@dimen/normal_margin"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/change_color"
+        android:padding="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/bottom_draw_color_ring"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/rainbow_ring" />
+
+        <ImageView
+            android:id="@+id/bottom_draw_color_icon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_background" />
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

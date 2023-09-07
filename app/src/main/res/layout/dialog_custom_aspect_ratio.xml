@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/aspect_ratio_holder"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_margin"
+    android:paddingTop="@dimen/activity_margin"
+    android:paddingRight="@dimen/activity_margin">
+
+    <com.goodwy.commons.views.MyTextInputLayout
+        android:id="@+id/aspect_ratio_width_hint"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_margin"
+        android:hint="@string/width">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/aspect_ratio_width"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:maxLength="6"
+            android:maxLines="1"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/bigger_text_size" />
+
+    </com.goodwy.commons.views.MyTextInputLayout>
+
+    <com.goodwy.commons.views.MyTextView
+        android:id="@+id/aspect_ratio_colon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/aspect_ratio_width_hint"
+        android:layout_alignBottom="@+id/aspect_ratio_width_hint"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_toEndOf="@+id/aspect_ratio_width_hint"
+        android:gravity="center"
+        android:text=":"
+        android:textStyle="bold" />
+
+    <com.goodwy.commons.views.MyTextInputLayout
+        android:id="@+id/aspect_ratio_height_hint"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/aspect_ratio_width_hint"
+        android:layout_alignBottom="@+id/aspect_ratio_width_hint"
+        android:layout_toEndOf="@+id/aspect_ratio_colon"
+        android:hint="@string/height">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/aspect_ratio_height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:maxLength="6"
+            android:maxLines="1"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/bigger_text_size" />
+
+    </com.goodwy.commons.views.MyTextInputLayout>
+</RelativeLayout>

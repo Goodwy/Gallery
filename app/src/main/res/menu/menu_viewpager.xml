@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="AppCompatResource">
+    <item
+        android:id="@+id/menu_save_as"
+        android:icon="@drawable/ic_check_vector"
+        android:title="@string/save_as"
+        android:visible="false"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_delete"
+        android:icon="@drawable/ic_delete_outline"
+        android:title="@string/delete"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_share"
+        android:icon="@drawable/ic_share_vector"
+        android:title="@string/share"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_edit"
+        android:icon="@drawable/ic_edit_vector"
+        android:title="@string/edit"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_rotate"
+        android:icon="@drawable/ic_rotate_right_vector"
+        android:title="@string/rotate"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/menu_rotate_right"
+                android:title="@string/rotate_right" />
+            <item
+                android:id="@+id/menu_rotate_left"
+                android:title="@string/rotate_left" />
+            <item
+                android:id="@+id/menu_rotate_one_eighty"
+                android:title="@string/rotate_one_eighty" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/menu_properties"
+        android:icon="@drawable/ic_info_vector"
+        android:title="@string/properties"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_rename"
+        android:icon="@drawable/ic_rename_vector"
+        android:title="@string/rename"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_hide"
+        android:icon="@drawable/ic_hide_vector"
+        android:title="@string/hide"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_unhide"
+        android:icon="@drawable/ic_unhide_vector"
+        android:title="@string/unhide"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_copy_to"
+        android:showAsAction="never"
+        android:title="@string/copy_to"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_move_to"
+        android:showAsAction="never"
+        android:title="@string/move_to"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_open_with"
+        android:showAsAction="never"
+        android:title="@string/open_with"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_set_as"
+        android:icon="@drawable/ic_set_as_vector"
+        android:title="@string/set_as"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_create_shortcut"
+        android:showAsAction="never"
+        android:title="@string/create_shortcut"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_add_to_favorites"
+        android:icon="@drawable/ic_star_outline_vector"
+        android:title="@string/add_to_favorites"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_remove_from_favorites"
+        android:icon="@drawable/ic_star_vector"
+        android:title="@string/remove_from_favorites"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_restore_file"
+        android:showAsAction="never"
+        android:title="@string/restore_this_file"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_change_orientation"
+        android:icon="@drawable/ic_orientation_auto_vector"
+        android:title="@string/change_orientation"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/menu_force_portrait"
+                android:title="@string/force_portrait" />
+            <item
+                android:id="@+id/menu_force_landscape"
+                android:title="@string/force_landscape" />
+            <item
+                android:id="@+id/menu_default_orientation"
+                android:title="@string/use_default_orientation" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/menu_print"
+        android:showAsAction="never"
+        android:title="@string/print"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_resize"
+        android:showAsAction="never"
+        android:title="@string/resize"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_show_on_map"
+        android:showAsAction="never"
+        android:title="@string/show_on_map"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_slideshow"
+        android:icon="@drawable/ic_slideshow_vector"
+        android:title="@string/slideshow"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/ic_settings_cog_vector"
+        android:title="@string/settings"
+        app:showAsAction="ifRoom" />
+</menu>

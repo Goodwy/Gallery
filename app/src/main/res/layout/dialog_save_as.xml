@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/save_as_holder"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_margin">
+
+    <com.goodwy.commons.views.MyTextInputLayout
+        android:id="@+id/folder_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_margin"
+        android:hint="@string/path">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/folder_value"
+            style="@style/UnclickableEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.goodwy.commons.views.MyTextInputLayout>
+
+    <com.goodwy.commons.views.MyTextInputLayout
+        android:id="@+id/filename_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_margin"
+        android:hint="@string/filename">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/filename_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapSentences"
+            android:singleLine="true"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/bigger_text_size" />
+
+    </com.goodwy.commons.views.MyTextInputLayout>
+
+    <com.goodwy.commons.views.MyTextInputLayout
+        android:id="@+id/extension_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/extension">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/extension_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/bigger_text_size" />
+
+    </com.goodwy.commons.views.MyTextInputLayout>
+</LinearLayout>

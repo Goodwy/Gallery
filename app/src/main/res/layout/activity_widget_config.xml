@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/config_coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/config_app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/config_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/color_primary"
+            app:title="@string/app_launcher_name"
+            app:titleTextAppearance="@style/AppTheme.ActionBar.TitleTextStyle" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:id="@+id/config_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/activity_margin"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <RelativeLayout
+            android:id="@+id/folder_picker_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/button_background_rounded"
+            android:paddingBottom="@dimen/medium_margin">
+
+            <RelativeLayout
+                android:id="@+id/folder_picker_show_folder_name_holder"
+                style="@style/SettingsHolderSwitchStyle"
+                android:layout_marginTop="@dimen/normal_margin"
+                android:background="@null">
+
+                <com.goodwy.commons.views.MySwitchCompat
+                    android:id="@+id/folder_picker_show_folder_name"
+                    style="@style/SettingsSwitchStyle"
+                    android:text="@string/show_folder_name"
+                    app:switchPadding="@dimen/activity_margin" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/folder_picker_value_holder"
+                style="@style/SettingsHolderSwitchStyle"
+                android:layout_below="@+id/folder_picker_show_folder_name_holder"
+                android:paddingTop="@dimen/smaller_margin"
+                android:paddingBottom="@dimen/smaller_margin">
+
+                <com.goodwy.commons.views.MyTextView
+                    android:id="@+id/folder_picker_label"
+                    style="@style/SettingsTextLabelStyle"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/folder_picker_value"
+                    android:text="@string/folder_on_widget" />
+
+                <com.goodwy.commons.views.MyTextView
+                    android:id="@+id/folder_picker_value"
+                    style="@style/SettingsTextValueStyle"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/settings_margin"
+                    android:background="@drawable/button_background"
+                    android:paddingTop="@dimen/smaller_margin"
+                    android:paddingBottom="@dimen/smaller_margin"
+                    android:paddingStart="@dimen/normal_margin"
+                    android:paddingEnd="@dimen/normal_margin"
+                    tools:text="@string/internal" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/config_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/activity_margin"
+                android:layout_below="@+id/folder_picker_value_holder"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/ripple_all_corners"
+                android:paddingTop="@dimen/smaller_margin"
+                android:paddingBottom="@dimen/smaller_margin"
+                android:paddingStart="@dimen/normal_margin"
+                android:paddingEnd="@dimen/normal_margin"
+                android:text="@string/ok" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/config_image_holder"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/folder_picker_holder"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center">
+
+            <com.goodwy.commons.views.MySquareImageView
+                android:id="@+id/config_image"
+                android:layout_width="@dimen/widget_initial_size"
+                android:layout_height="@dimen/widget_initial_size"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="@dimen/normal_margin"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/normal_margin"
+                android:layout_marginBottom="@dimen/small_margin" />
+
+            <com.goodwy.commons.views.MyTextView
+                android:id="@+id/config_folder_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/config_image"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:lines="1"
+                android:paddingBottom="@dimen/small_margin"
+                android:textSize="@dimen/bigger_text_size"
+                tools:text="@string/internal" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/config_bg_color"
+            android:layout_width="@dimen/widget_colorpicker_size"
+            android:layout_height="@dimen/widget_colorpicker_size"
+            android:layout_above="@+id/config_text_color"
+            android:layout_marginStart="@dimen/tiny_margin"
+            android:layout_marginTop="@dimen/tiny_margin"
+            android:layout_marginEnd="@dimen/tiny_margin"
+            android:layout_marginBottom="@dimen/tiny_margin"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/config_bg_seekbar_holder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/config_bg_color"
+            android:layout_alignBottom="@+id/config_bg_color"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_toEndOf="@+id/config_bg_color"
+            android:background="@drawable/widget_config_seekbar_background"
+            android:visibility="gone">
+
+            <com.goodwy.commons.views.MySeekBar
+                android:id="@+id/config_bg_seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingLeft="@dimen/activity_margin"
+                android:paddingRight="@dimen/activity_margin" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/config_text_color"
+            android:layout_width="@dimen/widget_colorpicker_size"
+            android:layout_height="@dimen/widget_colorpicker_size"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/tiny_margin"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

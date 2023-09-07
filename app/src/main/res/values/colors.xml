@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="actionbar_menu_icon">#454545</color>
+    <color name="crop_image_view_background">#BB000000</color>
+    <color name="circle_black_background">#66000000</color>
+
+    <color name="tab_background_light">#F2F4F4F4</color>
+    <color name="tab_background_gray">#F2FFFFFF</color>
+    <color name="tab_background_dark">#F2666666</color>
+    <color name="tab_background_black">#F21E1E1E</color>
+    <color name="tab_indicator_light">#FFB6B6B6</color>
+    <color name="tab_indicator_gray">#FFB6B6B6</color>
+    <color name="tab_indicator_dark">#FF515151</color>
+    <color name="tab_indicator_black">#FF515151</color>
+</resources>

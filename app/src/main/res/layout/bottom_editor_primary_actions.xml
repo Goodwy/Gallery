@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_editor_primary_actions_wrapper"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/bottom_actions_height"
+    android:layout_alignParentBottom="true">
+
+    <com.goodwy.commons.views.MyTextView
+        android:id="@+id/bottom_primary_cancel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/normal_margin"
+        android:layout_marginEnd="@dimen/normal_margin"
+        android:lines="1"
+        android:padding="@dimen/medium_margin"
+        android:contentDescription="@string/pesdk_editor_cancel"
+        android:text="@string/pesdk_editor_cancel"
+        android:textSize="@dimen/bigger_text_size"
+        android:background="@drawable/ripple_all_corners"
+        app:layout_constraintEnd_toStartOf="@+id/bottom_primary_filter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/bottom_primary_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/small_margin"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/filter"
+        android:padding="@dimen/normal_margin"
+        android:src="@drawable/ic_photo_filter_vector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/bottom_primary_crop_rotate"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias='0'/>
+
+    <ImageView
+        android:id="@+id/bottom_primary_crop_rotate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/pesdk_transform_title_name"
+        android:padding="@dimen/normal_margin"
+        android:src="@drawable/ic_crop_rotate_vector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/bottom_primary_draw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/small_margin"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/pesdk_brush_title_name"
+        android:padding="@dimen/normal_margin"
+        android:src="@drawable/ic_easel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bottom_primary_crop_rotate"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <com.goodwy.commons.views.MyTextView
+        android:id="@+id/bottom_primary_save"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/normal_margin"
+        android:layout_marginEnd="@dimen/normal_margin"
+        android:background="@drawable/ripple_all_corners"
+        android:contentDescription="@string/pesdk_editor_save"
+        android:gravity="end"
+        android:lines="1"
+        android:padding="@dimen/medium_margin"
+        android:text="@string/save_as"
+        android:textSize="@dimen/bigger_text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bottom_primary_draw"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

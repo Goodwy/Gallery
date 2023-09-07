@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/resize_image_with_path_holder"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_margin"
+    android:paddingTop="@dimen/activity_margin"
+    android:paddingRight="@dimen/activity_margin">
+
+    <com.goodwy.commons.views.MyTextInputLayout
+        android:id="@+id/resize_image_width_hint"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_margin"
+        android:hint="@string/width">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/resize_image_width"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:maxLength="6"
+            android:maxLines="1"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/bigger_text_size" />
+
+    </com.goodwy.commons.views.MyTextInputLayout>
+
+    <com.goodwy.commons.views.MyTextView
+        android:id="@+id/resize_image_colon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/resize_image_width_hint"
+        android:layout_alignBottom="@+id/resize_image_width_hint"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_toEndOf="@+id/resize_image_width_hint"
+        android:gravity="center"
+        android:text=":"
+        android:textStyle="bold" />
+
+    <com.goodwy.commons.views.MyTextInputLayout
+        android:id="@+id/resize_image_height_hint"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/resize_image_width_hint"
+        android:layout_alignBottom="@+id/resize_image_width_hint"
+        android:layout_toEndOf="@+id/resize_image_colon"
+        android:hint="@string/height">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/resize_image_height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:maxLength="6"
+            android:maxLines="1"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/bigger_text_size" />
+
+    </com.goodwy.commons.views.MyTextInputLayout>
+
+    <com.goodwy.commons.views.MyTextInputLayout
+        android:id="@+id/folder_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/resize_image_width_hint"
+        android:layout_marginBottom="@dimen/activity_margin"
+        android:hint="@string/folder">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/folder"
+            style="@style/UnclickableEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.goodwy.commons.views.MyTextInputLayout>
+
+    <com.goodwy.commons.views.MyTextInputLayout
+        android:id="@+id/filename_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/folder_hint"
+        android:layout_marginBottom="@dimen/activity_margin"
+        android:hint="@string/filename">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/filename_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapSentences"
+            android:singleLine="true"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/bigger_text_size" />
+
+    </com.goodwy.commons.views.MyTextInputLayout>
+
+    <com.goodwy.commons.views.MyTextInputLayout
+        android:id="@+id/extension_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/filename_hint"
+        android:hint="@string/extension">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/extension_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textCursorDrawable="@null"
+            android:textSize="@dimen/bigger_text_size" />
+
+    </com.goodwy.commons.views.MyTextInputLayout>
+
+</RelativeLayout>
