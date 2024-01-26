@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:paddingStart="@dimen/medium_margin"
+        android:paddingEnd="@dimen/medium_margin"
         android:paddingTop="@dimen/big_margin">
 
         <RelativeLayout
@@ -44,18 +46,6 @@
                 android:id="@+id/dialog_file_style_rounded_corners"
                 style="@style/SettingsSwitchStyle"
                 android:text="@string/rounded_corners"
-                app:switchPadding="@dimen/bigger_margin" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/dialog_file_style_animate_gifs_holder"
-            style="@style/SettingsHolderSwitchStyle">
-
-            <com.goodwy.commons.views.MySwitchCompat
-                android:id="@+id/dialog_file_style_animate_gifs"
-                style="@style/SettingsSwitchStyle"
-                android:text="@string/animate_gifs"
                 app:switchPadding="@dimen/bigger_margin" />
 
         </RelativeLayout>

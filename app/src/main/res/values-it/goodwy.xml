@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Galleria</string> <!--Not used-->
+    <string name="exclude_folder_description_g">Questo escluderà la selezione e le relative sottocartelle solo da Right Gallery. Si possono gestire le cartelle escluse nelle impostazioni.</string>
+    <string name="excluded_activity_placeholder_g">L\'esclusione delle cartelle e delle sottocartelle le renderà nascoste solo in Right Gallery, saranno ancora visibili in altre applicazioni.
+\n
+\nSe si desidera nasconderle anche nelle altre app, usa la funzione Nascondi.</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">Come posso impostare Right Gallery come la galleria predefinita del dispositivo\?</string>
+    <string name="faq_1_text_g">Si deve prima trovare l\'attuale galleria predefinita nella sezione App delle impostazioni di sistema, cercare un pulsante che dice qualcosa come «App predefinite», cliccarlo e poi selezionare «Ripristina predefiniti». La prossima volta che proverai ad aprire un\'immagine o video si dovrebbe vedere un selettore di app, dove si può scegliere Right Gallery e renderla l\'app predefinita.</string>
+    <string name="faq_5_text_g">L\'esclusione impedisce la visualizzazione della cartella solo in Right Gallery, mentre «Nascondi» funziona a livello di sistema e nasconde la cartella anche da altre gallerie. Funziona creando un file vuoto .nomedia nella cartella data, che puoi poi rimuovere con qualsiasi file manager. Nota che alcuni dispositivi non permettono di nascondere cartelle come Fotocamera, Schermate e Scaricamenti.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">Anni</string>
+    <string name="months">Mesi</string>
+    <string name="days">Giorni</string>
+    <string name="all_photos">Tutte le foto</string>
+    <string name="by_last_modified_yearly_g">Ultima modifica (annuale)</string>
+    <string name="by_date_taken_yearly_g">Data creazione (annuale)</string>
+
+    <string name="eraser">Gomma per cancellare</string>
+    <string name="eyedropper">Contagocce</string>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">காட்சியகம்</string> <!--Not used-->
+    <string name="exclude_folder_description_g">இது Right Gallery தெரிவின் துணையடைவுகளுடன் அதை விலக்கும். அமைப்புகளில் விலக்கிய அடைவுகளை நீங்கள் நிர்வகிக்கலாம்.</string>
+    <string name="excluded_activity_placeholder_g">அடைவுகளை விலக்குதல், அவற்றின் துணையடைவுகளுடன் அவற்றை Right Gallery மட்டுமே மறைக்கும், அவை பிற செயலிகளில் இன்னும் தெரியும்.
+\n
+\nபிற செயலிகளிலிருந்தும் அவற்றை மறைக்க, மறை செயல்பாட்டைப் பயன்படுத்து.</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">Right Gallery இயல்புநிலை சாதன காட்சியகமாக மாற்றுவது எப்படி\?</string>
+    <string name="faq_1_text_g">முதலில் உங்கள் சாதன அமைப்புகளின் செயலிகள் பிரிவில் தற்போது இயல்புநிலை காட்சியகத்தைக் கண்டுபிடிக்க வேண்டும், \"இயல்புநிலையாகத் திற\" போன்றதைக் கூறும் பொத்தானைத் தேடு, அதைக் சொடுக்கி, \"இயல்புநிலைகளைத் துடை\" என்பதைத் தேர்ந்தெடு. அடுத்த முறை நீங்கள் ஒரு படத்தை அ காணொளியை திறக்க முயற்சிப்பீர்கள், நீங்கள் ஒரு செயலி எடுப்பியைப் பார்க்க வேண்டும், அங்கு நீங்கள் Right Gallery தேர்ந்தெடுத்து அதை இயல்புநிலை செயலியாக மாற்றலாம்.</string>
+    <string name="faq_5_text_g">விலக்கு Right Gallery மட்டுமே அடைவைக் காண்பிப்பதைத் தடுக்கிறது, அதே சமயம் கணினி வாரியாக மறைக்கிறது, மேலும் இது மற்ற காட்சியகங்களிலிருந்தும் அடைவை மறைக்கிறது. கொடுக்கப்பட்ட அடைவில் வெற்று \".nomedia\" கோப்பை உருவாக்குவதன் மூலம் இது செயல்படுகிறது, அதை நீங்கள் எந்தக் கோப்பு நிர்வாகியுடனும் நீக்கலாம். படக்கருவி, திரைப்பிடிப்புகள் மற்றும் பதிவிறக்கங்கள் போன்ற அடைவுகளை மறைக்க சில சாதனங்கள் அனுமதிக்காது என்பதை நினைவில் கொள்க.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">ஆண்டுகள்</string>
+    <string name="months">மாதங்கள்</string>
+    <string name="days">நாட்களில்</string>
+    <string name="all_photos">அனைத்து புகைப்படங்களும்</string>
+    <string name="by_last_modified_yearly_g">கடைசியாக மாற்றியது (ஆண்டுதோறும்)</string>
+    <string name="by_date_taken_yearly_g">எடுத்த தேதி (ஆண்டுதோறும்)</string>
+
+    <string name="eraser">அழிப்பான்</string>
+    <string name="eyedropper">கண்துடைப்பான்</string>
+</resources>

@@ -1,9 +1,6 @@
 package com.goodwy.gallery.helpers
 
-import com.goodwy.commons.helpers.MONTH_SECONDS
-import com.goodwy.commons.helpers.PERMISSION_READ_MEDIA_IMAGES
-import com.goodwy.commons.helpers.PERMISSION_WRITE_STORAGE
-import com.goodwy.commons.helpers.isTiramisuPlus
+import com.goodwy.commons.helpers.*
 
 // shared preferences
 const val DIRECTORY_SORT_ORDER = "directory_sort_order"
@@ -56,7 +53,9 @@ const val HIDE_EXTENDED_DETAILS = "hide_extended_details"
 const val ALLOW_INSTANT_CHANGE = "allow_instant_change"
 const val WAS_NEW_APP_SHOWN = "was_new_app_shown_clock"
 const val LAST_FILEPICKER_PATH = "last_filepicker_path"
+const val LAST_COPY_PATH = "last_copy_path"
 const val TEMP_SKIP_DELETE_CONFIRMATION = "temp_skip_delete_confirmation"
+const val TEMP_SKIP_RECYCLE_BIN = "temp_skip_recycle_bin"
 const val BOTTOM_ACTIONS = "bottom_actions"
 const val LAST_VIDEO_POSITION_PREFIX = "last_video_position_"
 const val VISIBLE_BOTTOM_ACTIONS = "visible_bottom_actions"
@@ -97,6 +96,9 @@ const val THUMBNAIL_SPACING = "thumbnail_spacing"
 const val FILE_ROUNDED_CORNERS = "file_rounded_corners"
 const val CUSTOM_FOLDERS_ORDER = "custom_folders_order"
 const val AVOID_SHOWING_ALL_FILES_PROMPT = "avoid_showing_all_files_prompt"
+const val SEARCH_ALL_FILES_BY_DEFAULT = "search_all_files_by_default"
+const val LAST_EXPORTED_FAVORITES_FOLDER = "last_exported_favorites_folder"
+const val SHOW_WARNING = "show_warning"
 
 // slideshow
 const val SLIDESHOW_INTERVAL = "slideshow_interval"
@@ -229,13 +231,6 @@ const val ASPECT_RATIO_FOUR_THREE = 2
 const val ASPECT_RATIO_SIXTEEN_NINE = 3
 const val ASPECT_RATIO_OTHER = 4
 
-// some constants related to zooming videos
-const val MIN_VIDEO_ZOOM_SCALE = 1f
-const val MAX_VIDEO_ZOOM_SCALE = 5f
-const val ZOOM_MODE_NONE = 0
-const val ZOOM_MODE_DRAG = 1
-const val ZOOM_MODE_ZOOM = 2
-
 // constants related to image quality
 const val LOW_TILE_DPI = 160
 const val NORMAL_TILE_DPI = 220
@@ -255,6 +250,20 @@ const val FOLDER_STYLE_ROUNDED_CORNERS = 2
 
 fun getPermissionToRequest() = if (isTiramisuPlus()) PERMISSION_READ_MEDIA_IMAGES else PERMISSION_WRITE_STORAGE
 
+fun getRequiredPermission() = if (isUpsideDownCakePlus()) PERMISSION_READ_MEDIA_VISUAL_USER_SELECTED else getPermissionToRequest()
+
+fun getPermissionsToRequest(): Collection<Int> {
+    val permissions = mutableListOf(getPermissionToRequest())
+    if (isRPlus()) {
+        permissions.add(PERMISSION_MEDIA_LOCATION)
+    }
+
+    if (isTiramisuPlus()) {
+        permissions.add(PERMISSION_READ_MEDIA_VIDEO)
+    }
+
+    return permissions
+}
 
 const val TAB_ONE = 0
 const val TAB_TWO = 2

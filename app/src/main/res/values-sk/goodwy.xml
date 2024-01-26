@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Galéria</string> <!--Not used-->
+    <string name="exclude_folder_description_g">Táto funkcia vylúči výber a jeho podpriečinky iba z Right Gallery. Spravovať vylúčené priečinky je možné v nastaveniach.</string>
+    <string name="excluded_activity_placeholder_g">Vylúčené priečinky budú spolu s podpriečinkami ukryté iba pred Right Gallery, ostatné aplikácie ich budú stále vidieť.
+\n
+\nAk ich chcete ukryť aj pred ostatnými aplikáciami, použite funkciu Skryť.</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">Ako viem spraviť Right Gallery predvolenou galériou zariadenia\?</string>
+    <string name="faq_1_text_g">Najprv musíte nájsť v nastaveniach zariadenia,sekcii Aplikácie, súčasnú predvolenú galériu, zvoliť tlačidlo s textom v zmysle \"Nastavenie predvoleného otvárania\" a následne \"Vymazať predvolené nastavenia\". Ak potom skúsite otvoriť obrázok alebo video, zobrazí sa zoznam aplikácií, kde viete zvoliť Right Gallery a nastaviť ju ako predvolenú.</string>
+    <string name="faq_5_text_g">Kým vylúčenie predíde zobrazeniu priečinka iba vrámci Right Gallery, skrytie ho ukryje vrámci celého systému, teda to ovplyvní aj ostatné galérie. Skrytie funguje pomocou vytvorenia prázdneho \".nomedia\" súboru v danom priečinku, ktorý viete vymazať aj nejakým správcom súborov. Vedzte ale, že na niektorých zariadeniach nie je možné ukryť priečinky ako Kamera, Screenshoty a Stiahnuté.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">Rokov</string>
+    <string name="months">Mesiace</string>
+    <string name="days">Dni</string>
+    <string name="all_photos">Všetky fotografie</string>
+    <string name="by_last_modified_yearly_g">Dátumu poslednej úpravy (ročne)</string>
+    <string name="by_date_taken_yearly_g">Dátumu vytvorenia (ročne)</string>
+
+    <string name="eraser">Guma</string>
+    <string name="eyedropper">Kvapkadlo</string>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Galería</string> <!--Not used-->
+    <string name="exclude_folder_description_g">Esto excluirá la selección junto con sus subcarpetas, solamente de Right Gallery. Puede gestionar las carpetas excluidas en los Ajustes.</string>
+    <string name="excluded_activity_placeholder_g">La opción de excluir las carpetas las excluirá junto a sus subcarpetas sólo en Right Gallery, estas seguirán siendo visibles en otras aplicaciones.
+\n
+\nSi desea ocultarlo de otras aplicaciones, utilice la función \"Ocultar\".</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">¿Cómo puedo hacer que Right Gallery sea la galería de dispositivos predeterminada\?</string>
+    <string name="faq_1_text_g">Primero tiene que encontrar la galería predeterminada actualmente en la sección Aplicaciones de la configuración de su dispositivo, busque un botón que diga algo como \"Abrir por defecto \", haga clic en él, luego seleccione \"Borrar valores predeterminados \". La próxima vez que intente abrir una imagen o video, debería ver un selector de aplicaciones, donde puede seleccionar Right Gallery y convertirla en la aplicación predeterminada.</string>
+    <string name="faq_5_text_g">Excluir evita mostrar la carpeta solo en Right Gallery, mientras que Ocultar funciona en el sistema y oculta la carpeta de otras galerías también. Funciona al crear un archivo \".nomedia \" vacío en la carpeta determinada, que luego puede eliminar también con cualquier administrador de archivos. Tenga en cuenta que algunos dispositivos no permiten ocultar carpetas como Cámara, Capturas de pantalla y Descargas.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">Años</string>
+    <string name="months">Meses</string>
+    <string name="days">Días</string>
+    <string name="all_photos">Todas las fotos</string>
+    <string name="by_last_modified_yearly_g">Fecha de modificacion (anual)</string>
+    <string name="by_date_taken_yearly_g">Fecha de creación (anual)</string>
+
+    <string name="eraser">Borrador</string>
+    <string name="eyedropper">Cuentagotas</string>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Галерија</string> <!--Not used-->
+    <string name="exclude_folder_description_g">Ово ће изузети одабир заједно са подфасциклама само из Right Gallery. Можете управљати изузетим фасциклама у подешавањима.</string>
+    <string name="excluded_activity_placeholder_g">Изузимање фасцикли ће их заједно са њиховим подфасциклама учинити скривеним само у Right Gallery, они ће и даље бити видљиви у другим апликацијама.
+\n
+\nАко желите да их сакријете од других апликација, употребите Сакриј функцију.</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">Како да подесим Right Gallery да буде главна галерија уређаја\?</string>
+    <string name="faq_1_text_g">Први морате да нађете тренутну главну галерију у Апликације секцији подешавања вашег уређаја, потражите дугме које каже нешто попут \"Отвори по дифолту\", кликни на то, затим изабери \"Уклони дифолт\". Следећи пут када покушате да отворите слику или видео требало би да видите изабирач апликација, где можете да изаберете Right Gallery и учините је подразумевајућом апликацијом.</string>
+    <string name="faq_5_text_g">Изузимање спречава приказивање фасцикле само у Right Gallery, док се скривање односи на цео систем и скрива фасциклу од свих других галерија. Он функционише тако што прави празан \".nomedia\" фајл у задатој фасцикли, који затим можете да уклоните са било којим фајл менаџером. Note that some devices do not allow hiding folders like Camera, Screenshots and Downloads.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">Године</string>
+    <string name="months">Месеци</string>
+    <string name="days">Дани</string>
+    <string name="all_photos">Све фотографије</string>
+    <string name="by_last_modified_yearly_g">Последња измена (годишње)</string>
+    <string name="by_date_taken_yearly_g">Датум снимања (годишње)</string>
+
+    <string name="eraser">Гумица за брисање</string>
+    <string name="eyedropper">Пипета</string>
+</resources>

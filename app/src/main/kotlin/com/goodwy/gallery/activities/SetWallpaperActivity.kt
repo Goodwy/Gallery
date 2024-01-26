@@ -6,17 +6,17 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import com.canhub.cropper.CropImageView
 import com.goodwy.commons.dialogs.RadioGroupDialog
 import com.goodwy.commons.extensions.checkAppSideloading
 import com.goodwy.commons.extensions.toast
+import com.goodwy.commons.extensions.viewBinding
 import com.goodwy.commons.helpers.NavigationIcon
 import com.goodwy.commons.helpers.ensureBackgroundThread
 import com.goodwy.commons.helpers.isNougatPlus
 import com.goodwy.commons.models.RadioItem
 import com.goodwy.gallery.R
-import com.theartofdev.edmodo.cropper.CropImageView
-import kotlinx.android.synthetic.main.activity_set_wallpaper.*
-import kotlinx.android.synthetic.main.bottom_set_wallpaper_actions.*
+import com.goodwy.gallery.databinding.ActivitySetWallpaperBinding
 
 class SetWallpaperActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener {
     private val RATIO_PORTRAIT = 0
@@ -30,9 +30,11 @@ class SetWallpaperActivity : SimpleActivity(), CropImageView.OnCropImageComplete
     lateinit var uri: Uri
     lateinit var wallpaperManager: WallpaperManager
 
+    private val binding by viewBinding(ActivitySetWallpaperBinding::inflate)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_set_wallpaper)
+        setContentView(binding.root)
         setupBottomActions()
 
         if (checkAppSideloading()) {
@@ -53,7 +55,7 @@ class SetWallpaperActivity : SimpleActivity(), CropImageView.OnCropImageComplete
 
     override fun onResume() {
         super.onResume()
-        setupToolbar(set_wallpaper_toolbar, NavigationIcon.Arrow)
+        setupToolbar(binding.setWallpaperToolbar, NavigationIcon.Arrow)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
@@ -68,10 +70,10 @@ class SetWallpaperActivity : SimpleActivity(), CropImageView.OnCropImageComplete
     }
 
     private fun setupOptionsMenu() {
-        set_wallpaper_toolbar.setOnMenuItemClickListener { menuItem ->
+        binding.setWallpaperToolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.save -> confirmWallpaper()
-                R.id.allow_changing_aspect_ratio -> crop_image_view.clearAspectRatio()
+                R.id.allow_changing_aspect_ratio -> binding.cropImageView.clearAspectRatio()
                 else -> return@setOnMenuItemClickListener false
             }
             return@setOnMenuItemClickListener true
@@ -87,7 +89,7 @@ class SetWallpaperActivity : SimpleActivity(), CropImageView.OnCropImageComplete
         }
 
         wallpaperManager = WallpaperManager.getInstance(applicationContext)
-        crop_image_view.apply {
+        binding.cropImageView.apply {
             setOnCropImageCompleteListener(this@SetWallpaperActivity)
             setImageUriAsync(uri)
         }
@@ -96,12 +98,12 @@ class SetWallpaperActivity : SimpleActivity(), CropImageView.OnCropImageComplete
     }
 
     private fun setupBottomActions() {
-        bottom_set_wallpaper_aspect_ratio.setOnClickListener {
+        binding.bottomSetWallpaperActions.bottomSetWallpaperAspectRatio.setOnClickListener {
             changeAspectRatio()
         }
 
-        bottom_set_wallpaper_rotate.setOnClickListener {
-            crop_image_view.rotateImage(90)
+        binding.bottomSetWallpaperActions.bottomSetWallpaperRotate.setOnClickListener {
+            binding.cropImageView.rotateImage(90)
         }
     }
 
@@ -113,9 +115,9 @@ class SetWallpaperActivity : SimpleActivity(), CropImageView.OnCropImageComplete
         }
 
         when (aspectRatio) {
-            RATIO_PORTRAIT -> crop_image_view.setAspectRatio(heightToUse, widthToUse)
-            RATIO_LANDSCAPE -> crop_image_view.setAspectRatio(widthToUse, heightToUse)
-            else -> crop_image_view.setAspectRatio(widthToUse, widthToUse)
+            RATIO_PORTRAIT -> binding.cropImageView.setAspectRatio(heightToUse, widthToUse)
+            RATIO_LANDSCAPE -> binding.cropImageView.setAspectRatio(widthToUse, heightToUse)
+            else -> binding.cropImageView.setAspectRatio(widthToUse, widthToUse)
         }
     }
 
@@ -134,21 +136,21 @@ class SetWallpaperActivity : SimpleActivity(), CropImageView.OnCropImageComplete
 
             RadioGroupDialog(this, items) {
                 wallpaperFlag = it as Int
-                crop_image_view.getCroppedImageAsync()
+                binding.cropImageView.croppedImageAsync()
             }
         } else {
-            crop_image_view.getCroppedImageAsync()
+            binding.cropImageView.croppedImageAsync()
         }
     }
 
-    override fun onCropImageComplete(view: CropImageView?, result: CropImageView.CropResult) {
+    override fun onCropImageComplete(view: CropImageView, result: CropImageView.CropResult) {
         if (isDestroyed)
             return
 
-        if (result.error == null) {
+        if (result.error == null && result.bitmap != null) {
             toast(R.string.setting_wallpaper)
             ensureBackgroundThread {
-                val bitmap = result.bitmap
+                val bitmap = result.bitmap!!
                 val wantedHeight = wallpaperManager.desiredMinimumHeight
                 val ratio = wantedHeight / bitmap.height.toFloat()
                 val wantedWidth = (bitmap.width * ratio).toInt()
@@ -161,13 +163,13 @@ class SetWallpaperActivity : SimpleActivity(), CropImageView.OnCropImageComplete
                     }
                     setResult(Activity.RESULT_OK)
                 } catch (e: OutOfMemoryError) {
-                    toast(R.string.out_of_memory_error)
+                    toast(com.goodwy.commons.R.string.out_of_memory_error)
                     setResult(Activity.RESULT_CANCELED)
                 }
                 finish()
             }
         } else {
-            toast("${getString(R.string.image_editing_failed)}: ${result.error.message}")
+            toast("${getString(R.string.image_editing_failed)}: ${result.error?.message}")
         }
     }
 }

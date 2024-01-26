@@ -9,17 +9,19 @@
         android:id="@+id/slideshow_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingStart="@dimen/medium_margin"
+        android:paddingEnd="@dimen/medium_margin">
 
         <com.goodwy.commons.views.MyTextView
             android:id="@+id/interval_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/interval_hint"
+            android:layout_alignBottom="@+id/interval_hint"
             android:layout_marginTop="@dimen/medium_margin"
             android:paddingStart="@dimen/activity_margin"
             android:paddingTop="@dimen/bigger_margin"
-            android:layout_alignTop="@+id/interval_hint"
-            android:layout_alignBottom="@+id/interval_hint"
             android:paddingBottom="@dimen/activity_margin"
             android:text="@string/interval" />
 

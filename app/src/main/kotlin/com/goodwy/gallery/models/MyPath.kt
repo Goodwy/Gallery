@@ -48,7 +48,7 @@ class MyPath : Path(), Serializable {
                 ++i
             }
         } catch (e: Exception) {
-            activity.toast(R.string.unknown_error_occurred)
+            activity.toast(com.goodwy.commons.R.string.unknown_error_occurred)
         }
     }
 

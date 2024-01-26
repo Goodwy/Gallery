@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Galeria</string> <!--Not used-->
+    <string name="exclude_folder_description_g">Honek hautatutakoa bere azpikarpetekin baztertutako ditu Right Gallery soilik. Baztertutako karpetak ezarpenetan kudeatu ditzakezu.</string>
+    <string name="excluded_activity_placeholder_g">Karpetak baztertzeak hauek eta beren azpikarpetak Right Gallery soilik ezkutatuko ditu, beste aplikazioetan oraindik ikusgai egongo dira.
+\n
+\nBeste aplikazioetatik ere ezkutatu nahi badituzu, erabili Ezkutatu funtzioa.</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">How can I make Right Gallery the default device gallery?</string>
+    <string name="faq_1_text_g">First you have to find the currently default gallery in the Apps section of your device settings, look for a button that says something like \"Open by default\", click on it, then select \"Clear defaults\".
+        The next time you will try opening an image or video you should see an app picker, where you can select Right Gallery and make it the default app.</string>
+    <string name="faq_5_text_g">Exclude prevents displaying the folder only in Right Gallery, while Hide works system-wise and it hides the folder from other galleries too. It works by creating an empty \".nomedia\" file in the given folder, which you can then remove with any file manager too. Note that some devices do not allow hiding folders like Camera, Screenshots and Downloads.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">Urteak</string>
+    <string name="months">Hilabeteak</string>
+    <string name="days">Egunak</string>
+    <string name="all_photos">Argazki guztiak</string>
+    <string name="by_last_modified_yearly_g">Azken aldaketa (urtero)</string>
+    <string name="by_date_taken_yearly_g">Ateratze-data (urtero)</string>
+
+    <string name="eraser">Ezabagailua</string>
+    <string name="eyedropper">Konttatakoa</string>
+</resources>

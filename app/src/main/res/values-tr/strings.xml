@@ -5,6 +5,7 @@
     <string name="edit">Düzenle</string>
     <string name="open_camera">Kamerayı aç</string>
     <string name="hidden">(gizli)</string>
+    <string name="excluded">(hariç)</string>
     <string name="pin_folder">Klasörü sabitle</string>
     <string name="unpin_folder">Klasörü ayır</string>
     <string name="pin_to_the_top">Üste sabitle</string>
@@ -14,7 +15,7 @@
     <string name="other_folder">Diğer klasör</string>
     <string name="show_on_map">Haritada göster</string>
     <string name="unknown_location">Bilinmeyen konum</string>
-    <string name="volume">Ses</string>
+    <string name="volume">Ses seviyesi</string>
     <string name="brightness">Parlaklık</string>
     <string name="lock_orientation">Yönü kilitle</string>
     <string name="unlock_orientation">Yönün kilidini aç</string>
@@ -27,13 +28,6 @@
     <string name="dates_fixed_successfully">Tarihler başarıyla düzeltildi</string>
     <string name="no_date_takens_found">Çekilen Tarih bulunamadı</string>
     <string name="share_resized">Yeniden boyutlandırılmış sürümü paylaş</string>
-    <string name="upgraded_from_free">Merhaba,
-\n
-\neski ücretsiz uygulamadan yükseltmiş gibi görünüyorsunuz. Artık uygulama ayarlarının en üst kısmında \'Pro\'ya Yükselt\' düğmesi olan eski sürümü kaldırabilirsiniz.
-\n
-\nYalnızca Geri Dönüşüm Kutusu ögelerinin silinmesi, sık kullanılanların işaretlerinin kaldırılması ve uygulama ayarlarınızı sıfırlamanız gerekir.
-\n
-\nTeşekkürler!</string>
     <string name="switch_to_file_search">Tüm görünür klasörler arasında dosya aramaya geç</string>
     <string name="set_as_default_folder">Öntanımlı klasör olarak ayarla</string>
     <string name="unset_as_default_folder">Öntanımlı klasör ayarını kaldır</string>
@@ -61,6 +55,7 @@
     <string name="manage_hidden_folders">Gizli klasörleri yönet</string>
     <string name="hidden_folders_placeholder">\".nomedia\" dosyasıyla gizlenmiş herhangi bir klasörünüz yok gibi görünüyor.</string>
     <string name="hidden_all_files">Gizli dosyaları görmek için uygulamaya Tüm Dosyalar erişimi vermeniz gerekir, aksi takdirde çalışamaz.</string>
+    <string name="cant_unhide_folder">Bir klasörün veya üst klasörlerinden birinin adından önce bir nokta varsa, bu klasör gizlidir ve bu şekilde gizliliği kaldırılamaz. Yeniden adlandırarak noktayı kaldırmanız gerekir.</string>
     <!-- Include folders -->
     <string name="include_folders">Dahil edilen klasörler</string>
     <string name="manage_included_folders">Dahil edilen klasörleri yönet</string>
@@ -75,8 +70,19 @@
     <string name="height">Yükseklik</string>
     <string name="keep_aspect_ratio">En-boy oranını koru</string>
     <string name="invalid_values">Lütfen geçerli bir çözünürlük girin</string>
+    <string name="resize_multiple_images">Birden fazla resmi yeniden boyutlandır</string>
+    <string name="resize_factor">Yeniden boyutlandırma çarpanı</string>
+    <string name="resize_factor_info">Resimleri verilen yüzdeye göre yeniden boyutlandırın, değer 10 ile 90 arasında olmalıdır.</string>
+    <string name="resize_factor_error">10 ile 90 arasında bir sayı girin</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">%d resim yeniden boyutlandırılamadı</item>
+        <item quantity="other">%d resim yeniden boyutlandırılamadı</item>
+    </plurals>
+    <string name="images_resized_successfully">Resimler yeniden boyutlandırıldı</string>
     <!-- Editor -->
     <string name="editor">Düzenleyici</string>
+    <string name="basic_editor">Temel Düzenleyici</string>
+    <string name="advanced_editor">Gelişmiş Düzenleyici</string>
     <string name="rotate">Döndür</string>
     <string name="invalid_image_path">Geçersiz resim yolu</string>
     <string name="invalid_video_path">Geçersiz video yolu</string>
@@ -96,6 +102,9 @@
     <string name="rotate_left">Sola döndür</string>
     <string name="rotate_right">Sağa döndür</string>
     <string name="rotate_one_eighty">180º döndür</string>
+    <string name="transform">Dönüştür</string>
+    <string name="crop">Kırp</string>
+    <string name="draw">Çiz</string>
     <string name="flip">Çevir</string>
     <string name="flip_horizontally">Yatay olarak çevir</string>
     <string name="flip_vertically">Dikey olarak çevir</string>
@@ -201,7 +210,9 @@
     <string name="limit_folder_title">Uzun klasör başlıklarını 1 satırla sınırla</string>
     <string name="square">Kare</string>
     <string name="rounded_corners">Yuvarlatılmış köşeler</string>
-    <string name="export_favorite_paths">Favori dosya yollarını dışa aktar</string>
+    <string name="export_favorite_paths">Favorileri dışa aktar</string>
+    <string name="import_favorite_paths">Favorileri içe aktar</string>
+    <string name="paths_imported_successfully">Yollar başarıyla içe aktarıldı</string>
     <string name="media_management_prompt">Tüm dosya işlemlerinin güvenilir bir şekilde çalıştığından emin olmak için lütfen bu uygulamayı aygıt ayarlarınızda bir medya yönetimi uygulaması yapın.</string>
     <string name="password_protect_excluded">Hariç tutulan klasör görünürlüğünü parola ile koru</string>
     <string name="media_management_manual">Bir şeyler ters gitti, lütfen aygıtınızın Ayarlar - Uygulamalar - Özel uygulama erişimi - Medya yönetimi uygulamaları bölümüne gidin ve bu uygulamanın medyayı yönetmesine izin verin.</string>
@@ -210,6 +221,8 @@
     <string name="alternative_media_access">Alternatif olarak, yalnızca medya dosyalarına erişime izin verebilirsiniz. Ancak bu durumda gizli dosyalarla çalışamazsınız.</string>
     <string name="media_only">Yalnızca medya</string>
     <string name="all_files">Tüm dosyalar</string>
+    <string name="search_all_files">Ana ekranda klasörler yerine tüm dosyaları ara</string>
+    <string name="show_all_folders">Tüm Klasör İçeriğini Göster seçeneğini hızlıca değiştirmek için bir menü düğmesi göster</string>
     <!-- Setting sections -->
     <string name="thumbnails">Küçük resimler</string>
     <string name="fullscreen_media">Tam ekran medya</string>

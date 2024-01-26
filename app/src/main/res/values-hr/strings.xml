@@ -5,10 +5,11 @@
     <string name="edit">Uredi</string>
     <string name="open_camera">Otvori kameru</string>
     <string name="hidden">(skrivene)</string>
+    <string name="excluded">(isključene)</string>
     <string name="pin_folder">Prikvači mapu</string>
     <string name="unpin_folder">Otkvači mapu</string>
     <string name="pin_to_the_top">Prikvači na vrh</string>
-    <string name="show_all">Prikaži cijeli sadržaj mape</string>
+    <string name="show_all">Prikaži sadržaj svih mapa</string>
     <string name="all_folders">Sve mape</string>
     <string name="folder_view">Prijeđi na prikaz mape</string>
     <string name="other_folder">Ostale mape</string>
@@ -27,13 +28,6 @@
     <string name="dates_fixed_successfully">Datumi uspješno ispravljeni</string>
     <string name="no_date_takens_found">Nije pronađen nijedan datum snimanja</string>
     <string name="share_resized">Dijeli verziju promijenjene veličine</string>
-    <string name="upgraded_from_free">Hej,
-\n
-\nčini se da si nadogradio/la staru besplatnu aplikaciju. Sada možeš deinstalirati staru verziju, koja ima gumb „Nadogradi na Pro” na vrhu postavki aplikacije.
-\n
-\nIzbrisat će se samo stavke u košu za smeće, oznake omiljenih stavki će se odznačiti i morat ćeš obnoviti postavke aplikacije.
-\n
-\nHvala!</string>
     <string name="switch_to_file_search">Prijeđi na pretraživanje datoteka u svim vidljivim mapama</string>
     <string name="set_as_default_folder">Postavi kao standardnu mapu</string>
     <string name="unset_as_default_folder">Poništi postavljanje kao standardne mape</string>
@@ -60,7 +54,8 @@
     <string name="hidden_folders">Skrivene mape</string>
     <string name="manage_hidden_folders">Upravljaj skrivenim mapama</string>
     <string name="hidden_folders_placeholder">Čini se da nemaš skrivene mape s \".nomedia\" datotekom.</string>
-    <string name="hidden_all_files">You have to grant the app All Files access to see hidden files, else it cannot work.</string>
+    <string name="hidden_all_files">Aplikaciji moraš odobriti pristup svim datotekama za prikaz skrivenih datoteka, inače neće raditi.</string>
+    <string name="cant_unhide_folder">Ukoliko mapa ili neka od mapa koje je sadržavaju imaju ime koje počinje sa tačkom, ne mogu se otkriti na ovaj način. Morate ukloniti tačku iz njihovog imena da biste ih otkrili.</string>
     <!-- Include folders -->
     <string name="include_folders">Uključene mape</string>
     <string name="manage_included_folders">Upravljaj uključenim mapama</string>
@@ -75,8 +70,20 @@
     <string name="height">Visina</string>
     <string name="keep_aspect_ratio">Zadrži omjer</string>
     <string name="invalid_values">Upiši valjanu rezoluciju</string>
+    <string name="resize_multiple_images">Promijeni veličine slika</string>
+    <string name="resize_factor">Faktor promjene veličine</string>
+    <string name="resize_factor_info">Promijeni veličine slika zadanim postotkom. Vrijednost mora biti između 10 i 90.</string>
+    <string name="resize_factor_error">Upiši broj između 10 i 90</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Neuspjelo mijenjanje veličine za %d sliku</item>
+        <item quantity="few">Neuspjelo mijenjanje veličine za %d slike</item>
+        <item quantity="other">Neuspjelo mijenjanje veličine za %d slika</item>
+    </plurals>
+    <string name="images_resized_successfully">Veličina slika je uspješno promijenjena</string>
     <!-- Editor -->
     <string name="editor">Uređivač</string>
+    <string name="basic_editor">Osnovni uređivač</string>
+    <string name="advanced_editor">Napredni uređivač</string>
     <string name="rotate">Okreni</string>
     <string name="invalid_image_path">Neispravna putanja slike</string>
     <string name="invalid_video_path">Neispravna putanja videa</string>
@@ -96,6 +103,9 @@
     <string name="rotate_left">Okreni nalijevo</string>
     <string name="rotate_right">Okreni nadesno</string>
     <string name="rotate_one_eighty">Okreni za 180 º</string>
+    <string name="transform">Transformiraj</string>
+    <string name="crop">Obreži</string>
+    <string name="draw">Crtaj</string>
     <string name="flip">Preokreni</string>
     <string name="flip_horizontally">Preokreni vodoravno</string>
     <string name="flip_vertically">Preokreni okomito</string>
@@ -115,7 +125,7 @@
     <string name="home_screen">Početni ekran</string>
     <string name="lock_screen">Zaključaj ekran</string>
     <string name="home_and_lock_screen">Početni i zaključani ekran</string>
-    <string name="allow_changing_aspect_ratio">Dozvoli mijenjanje omjera</string>
+    <string name="allow_changing_aspect_ratio">Dopusti mijenjanje omjera</string>
     <!-- Slideshow -->
     <string name="slideshow">Dijaprojekcija</string>
     <string name="interval">Razmak</string>
@@ -172,7 +182,7 @@
     <string name="show_extended_details">Prikaži proširene pojedinosti ispred cjeloekranskog prikaza medija</string>
     <string name="manage_extended_details">Upravljaj proširenim pojedinostima</string>
     <string name="one_finger_zoom">Dozvoli zumiranje jednim prstom u cjeloekranskom prikazu medija</string>
-    <string name="allow_instant_change">Dopusti trenutačno mijenjanje medija dodirom na strane ekrana</string>
+    <string name="allow_instant_change">Dozvoli trenutno mijenjanje medija dodirom na strane ekrana</string>
     <string name="allow_deep_zooming_images">Dozvoli duboko zumiranje slika</string>
     <string name="hide_extended_details">Sakrij proširene pojedinosti kad je traka stanja skrivena</string>
     <string name="show_at_bottom">Prikaži neke gumbe za radnju na dnu ekrana</string>
@@ -180,10 +190,10 @@
     <string name="deep_zoomable_images">Slike visoke rezolucije</string>
     <string name="show_highest_quality">Prikaži slike u najvišoj mogućoj kvaliteti</string>
     <string name="show_recycle_bin_last">Prikaži koš za smeće kao posljednju stavku u glavnom ekranu</string>
-    <string name="allow_down_gesture">Omogući zatvaranje cjeloekranskog prikaza pokretom prema dolje</string>
-    <string name="allow_one_to_one_zoom">Dozvloi zumiranje 1:1 s dva dvostruka dodira</string>
+    <string name="allow_down_gesture">Dozvoli zatvaranje cjeloekranskog prikaza pokretom prema dolje</string>
+    <string name="allow_one_to_one_zoom">Dozvoli zumiranje 1:1 s dva dvostruka dodira</string>
     <string name="open_videos_on_separate_screen">Uvijek otvaraj videa u zasebnom ekranu s novim vodoravnim pokretima</string>
-    <string name="show_notch">Prikaži oznaku ako je dostupna</string>
+    <string name="show_notch">Prikaži isječak ako je dostupan</string>
     <string name="allow_rotating_gestures">Dozvoli okretanje slika pokretima</string>
     <string name="file_loading_priority">Prioritet učitavanja datoteka</string>
     <string name="speed">Brzina</string>
@@ -198,18 +208,22 @@
     <string name="show_file_count_line">Prikaži broj datoteka u zasebnom retku</string>
     <string name="show_file_count_brackets">Prikaži broj datoteka u zagradama</string>
     <string name="show_file_count_none">Nemoj prikazivati broj datoteka</string>
-    <string name="limit_folder_title">Ograniči dugačke nalsove mapa na jedan redak</string>
+    <string name="limit_folder_title">Ograniči dugačke naslove mapa na jedan redak</string>
     <string name="square">Kvadrat</string>
     <string name="rounded_corners">Zaobljeni kutovi</string>
-    <string name="export_favorite_paths">Izvezi staze omiljenih datoteka</string>
+    <string name="export_favorite_paths">Izvezi favorite</string>
+    <string name="import_favorite_paths">Uvezi favorite</string>
+    <string name="paths_imported_successfully">Staze su uspješno uvezene</string>
     <string name="media_management_prompt">Kako bi sve radnje s datotekama pouzdano radile, postavi ovu aplikaciju kao aplikaciju za upravljanje medijima u postavkama uređaja.</string>
     <string name="password_protect_excluded">Lozinkom zaštiti vidljivost isključene mape</string>
-    <string name="media_management_manual">Nešto nije u redu. Idi u Postavke - Aplikacije - Poseban pristup aplikaciji - Aplikacije za upravljanje medijima i dozvoli ovoj aplikaciji da upravlja medijima.</string>
-    <string name="media_management_note">Ako preusmjeravanje ne radi, idi u Postavke - Aplikacije - Poseban pristup aplikaciji - Aplikacije za upravljanje medijima i dozvoli ovoj aplikaciji da upravlja medijima.</string>
-    <string name="media_management_alternative">Ako to ne želiš učiniti, na svom uređaju idi u Postavke - Aplikacije - Poseban pristup aplikacijama - Aplikacije za upravljanje medijima i dopustiti ovoj aplikaciji da upravlja medijima.</string>
-    <string name="alternative_media_access">Alternativno, možete dopustiti pristup samo medijskim datotekama. U tom slučaju nećete moći raditi sa skrivenim datotekama.</string>
+    <string name="media_management_manual">Nešto nije u redu. Idi u Postavke - Aplikacije - Poseban pristup aplikacije - Aplikacije za upravljanje medijima i dozvoli ovoj aplikaciji da upravlja medijima.</string>
+    <string name="media_management_note">Ako preusmjeravanje ne radi, idi u Postavke - Aplikacije - Poseban pristup aplikacijie- Aplikacije za upravljanje medijima i dozvoli ovoj aplikaciji da upravlja medijima.</string>
+    <string name="media_management_alternative">Ako to ne želiš učiniti, na svom uređaju idi u Postavke - Aplikacije - Poseban pristup aplikacije - Aplikacije za upravljanje medijima i dozvoli ovoj aplikaciji da upravlja medijima.</string>
+    <string name="alternative_media_access">Alternativno možeš dozvoliti pristup samo medijskim datotekama. U tom slučaju nećeš moći raditi sa skrivenim datotekama.</string>
     <string name="media_only">Samo mediji</string>
     <string name="all_files">Sve datoteke</string>
+    <string name="search_all_files">Pretraži sve datoteke umjesto mapa u glavnom ekranu</string>
+    <string name="show_all_folders">Pokaži gumb izbornika za brzo uključivanje i isključivanje „Prikaži sadržaj svih mapa”</string>
     <!-- Setting sections -->
     <string name="thumbnails">Sličice</string>
     <string name="fullscreen_media">Mediji u cjeloekranskom prikazu</string>
@@ -340,9 +354,9 @@
     <string name="faq_3_title">Kako mogu postaviti album uvijek na vrh\?</string>
     <string name="faq_3_text">Dugo pritisnu željeni album i odaberi ikonu za prikvačivanje u izborniku radnji, koji će ga pričvrstiti na vrh. Možeš prikvačiti više mapa odjednom, prikvačene stavke će se razvrstati prema zadanom načinu razvrstavanja.</string>
     <string name="faq_4_title">Kako mogu premotati video prema naprijed\?</string>
-    <string name="faq_4_text">To možeš učiniti dvostrukim dodirom strane ekrana ili dodirom na tekstove trenutačnog ili maksimalnog trajanja u blizini trake prematanja. Ako omogućiš otvaranje videoa u zasebnom ekranu u postavkama aplikacije, možeš koristiti i vodoravne geste.</string>
+    <string name="faq_4_text">To možeš učiniti dvostrukim dodirom strane ekrana ili dodirom na tekstove trenutačnog ili maksimalnog trajanja u blizini trake prematanja. Ako aktiviraš otvaranje videoa u zasebnom ekranu u postavkama aplikacije, možeš koristiti i vodoravne geste.</string>
     <string name="faq_5_title">Koja je razlika između skrivanja i isključivanja mape\?</string>
-    <string name="faq_5_text">Isključivanje sprečava prikaz mape samo u aplikaciji „Jednostavna galerija”, a skrivanje radi na razini sustava i skriva mapu u drugim galerijama. Djeluje stvaranjem praznih „.nomedia” datoteka u zadanoj mapi, koju možeš ukloniti pomoću bilo kojeg upravljača datoteka. Imaj na umu da neki uređaji ne dopuštaju skrivanje mapa kao što su Kamera, Slike ekrana i Preuzimanja.</string>
+    <string name="faq_5_text">Isključivanje sprečava prikaz mape samo u aplikaciji „Jednostavna galerija”, a skrivanje radi na razini sustava i skriva mapu u drugim galerijama. Djeluje stvaranjem praznih „.nomedia” datoteka u zadanoj mapi, koju možeš ukloniti pomoću bilo kojeg upravljača datoteka. Imaj na umu da neki uređaji ne dozvoljavaju skrivanje mapa kao što su Kamera, Slike ekrana i Preuzimanja.</string>
     <string name="faq_6_title">Zašto se prikazuju mape sa slikama naslovnica ili naljepnice\?</string>
     <string name="faq_6_text">Može se dogoditi da vidiš neke neobične albume. Za isključivanje tih albuma, pritisni ih dugo i odaberi „Isključi”. U sljedećem dijaloškom okviru možeš odabrati glavnu mapu. Time ćeš vrlo vjerojatno također spriječiti pojavljivanje drugih srodnih albuma.</string>
     <string name="faq_7_title">Mapa sa slikama se ne prikazuje ili ne prikazuje sve slike. Što mogu učiniti\?</string>
@@ -352,18 +366,18 @@
     <string name="faq_10_title">Mogu li obrezati slike pomoću ove aplikacije\?</string>
     <string name="faq_10_text">Da, slike možeš obrezati u uređivaču povlačenjem uglova. Pokreni uređivač dugim pritiskom na sličicu i odaberi „Uredi” ili odaberi „Uredi” u cjeloekranskom prikazu.</string>
     <string name="faq_11_title">Mogu li nekako grupirati sličice medijskih datoteka\?</string>
-    <string name="faq_11_text">Naravno, u izborniku odaberi „Grupiraj prema” u prikazu sličica. Datoteke možeš grupirati prema više kriterija, uključujući datum snimanja. Ako koristiš funkciju „Prikaži sav sadržaj mape”, možeš ih grupirati i prema mapama.</string>
+    <string name="faq_11_text">Naravno, u izborniku odaberi „Grupiraj prema” u prikazu sličica. Datoteke možeš grupirati na osnovi više kriterija, uključujući datum snimanja. Ako koristiš funkciju „Prikaži sadržaj svih mapa”, možeš ih grupirati i prema mapama.</string>
     <string name="faq_12_title">Razvrstavanje prema datumu snimanja nije točno, kako to mogu ispraviti\?</string>
     <string name="faq_12_text">Vjerojatan uzrok tome je da su slike kopirane s drugih mjesta. Dodirni dugo sličice datoteka i odaberi funkciju „Ispravi vrijednost datuma snimanja”.</string>
     <string name="faq_13_title">Vidim nekakvo preklapanje boja na slikama. Kako mogu poboljšati kvalitetu\?</string>
-    <string name="faq_13_text">Aktualno rješenje za prikazivanje slika funkcionira dobro u velikoj većini slučajeva, ali ako želiš još bolju kvalitetu slike, možeš uključiti „Prikaži slike u najvišoj mogućoj kvaliteti” u postavkama aplikacije, u odjeljku „Slike visoke rezolucije.</string>
+    <string name="faq_13_text">Aktualno rješenje za prikazivanje slika funkcionira dobro u većini slučajeva, ali ako želiš još bolju kvalitetu slike, možeš aktivirati „Prikaži slike u najvišoj mogućoj kvaliteti” u postavkama aplikacije, u odjeljku „Slike visoke rezolucije.</string>
     <string name="faq_14_title">Sakrio sam datoteku/mapu. Kako je mogu opet prikazati\?</string>
     <string name="faq_14_text">U glavnom ekranu pritisni stavku izbornika „Privremeno prikaži skrivene stavke” ili uključi „Prikaži skrivene stavke” u postavkama aplikacije. Ako je želiš prikazati, pritisni je dugo i odaberi „Otkrij”. Mape se skrivaju dodavanjem skrivene datoteke „.nomedia”. Datoteku možeš izbrisati i s bilo kojim upravljačem datoteka. Imaj na umu da skrivanje ipak radi rekurzivno, pa ako sakriješ mapu, sve podmape će se također sakriti. Za otkrivanje podmapa moraš otkriti nadređenu mapu.</string>
     <string name="faq_15_title">Zašto aplikacija koristi toliko memorije\?</string>
     <string name="faq_15_text">Predmemorija aplikacije može zauzeti do 250 MB, osigurava brže učitavanje slike. Ako aplikacija zauzima još više prostora, razlog tome je najvjerojatnije da imaš stavke u košu za smeće. Te se datoteke ubrajaju u veličinu aplikacije. Isprazni koš za smeće tako da ga otvoriš i izbrišeš sve datoteke ili u postavkama aplikacije. Svaka datoteka u košu automatski se briše nakon 30 dana.</string>
     <string name="faq_16_title">Što se dogodilo sa skrivanjem datoteka i mapa i zašto više ne mogu vidjeti skrivene stavke\?</string>
     <string name="faq_16_text">Počevši od Androida 11 više ne možeš sakriti ili otkriti datoteke ili mape, ne možeš vidjeti skrivene u aplikacijama galerije zbog ograničenja sustava. Za to ćeš morati koristiti neki upravljač datoteka.</string>
-    <string name="faq_16_text_extra">Ili ovoj galeriji možete odobriti pristup svim datotekama putem postavki uređaja, što će nam omogućiti prikazivanje skrivenih stavki i učiniti rad s datotekama općenito pouzdanijim.</string>
+    <string name="faq_16_text_extra">Alternativno ovoj galeriji možeš odobriti pristup svim datotekama putem postavki uređaja, što će nam dozvoliti prikazivanje skrivenih stavki i općenito povećati pouzdanost rada s datotekama.</string>
     <string name="faq_17_title">Zašto više ne mogu uključiti nedostajuće mape\?</string>
     <string name="faq_17_text">To je prestalo raditi zbog promjena sustava koje su uvedene s Androidom 11. Aplikacija više ne može pregledavati stvarne mape, oslanja se na takozvani MediaStore za dohvaćanje podataka.</string>
     <string name="faq_18_title">Zašto vidim oglase tijekom reprodukcije videa\?</string>

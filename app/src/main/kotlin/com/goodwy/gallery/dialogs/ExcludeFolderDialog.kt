@@ -1,31 +1,30 @@
 package com.goodwy.gallery.dialogs
 
 import android.view.ViewGroup
-import android.widget.RadioButton
 import android.widget.RadioGroup
 import com.goodwy.commons.activities.BaseSimpleActivity
+import com.goodwy.commons.databinding.RadioButtonBinding
 import com.goodwy.commons.extensions.beVisibleIf
 import com.goodwy.commons.extensions.getAlertDialogBuilder
 import com.goodwy.commons.extensions.getBasePath
 import com.goodwy.commons.extensions.setupDialogStuff
-import com.goodwy.gallery.R
+import com.goodwy.gallery.databinding.DialogExcludeFolderBinding
 import com.goodwy.gallery.extensions.config
-import kotlinx.android.synthetic.main.dialog_exclude_folder.view.*
 
 class ExcludeFolderDialog(val activity: BaseSimpleActivity, val selectedPaths: List<String>, val callback: () -> Unit) {
     private val alternativePaths = getAlternativePathsList()
     private var radioGroup: RadioGroup? = null
 
     init {
-        val view = activity.layoutInflater.inflate(R.layout.dialog_exclude_folder, null).apply {
-            exclude_folder_parent.beVisibleIf(alternativePaths.size > 1)
+        val binding = DialogExcludeFolderBinding.inflate(activity.layoutInflater).apply {
+            excludeFolderParent.beVisibleIf(alternativePaths.size > 1)
 
-            radioGroup = exclude_folder_radio_group
-            exclude_folder_radio_group.beVisibleIf(alternativePaths.size > 1)
+            radioGroup = excludeFolderRadioGroup
+            excludeFolderRadioGroup.beVisibleIf(alternativePaths.size > 1)
         }
 
         alternativePaths.forEachIndexed { index, value ->
-            val radioButton = (activity.layoutInflater.inflate(R.layout.radio_button, null) as RadioButton).apply {
+            val radioButton = RadioButtonBinding.inflate(activity.layoutInflater).root.apply {
                 text = alternativePaths[index]
                 isChecked = index == 0
                 id = index
@@ -34,10 +33,10 @@ class ExcludeFolderDialog(val activity: BaseSimpleActivity, val selectedPaths: L
         }
 
         activity.getAlertDialogBuilder()
-            .setPositiveButton(R.string.ok) { dialog, which -> dialogConfirmed() }
-            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(com.goodwy.commons.R.string.ok) { dialog, which -> dialogConfirmed() }
+            .setNegativeButton(com.goodwy.commons.R.string.cancel, null)
             .apply {
-                activity.setupDialogStuff(view, this)
+                activity.setupDialogStuff(binding.root, this)
             }
     }
 

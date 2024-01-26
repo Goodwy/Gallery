@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Galéria</string> <!--Not used-->
+    <string name="exclude_folder_description_g">Ez kizárja a kijelölést és az alkönyvtárakat a Right Gallery alkalmazásból. A kizárt mappákat a Beállításokban kezelheti.</string>
+    <string name="excluded_activity_placeholder_g">A mappák kizárásával az almappákkal együtt elrejti a Right Gallery alkalmazásban, de továbbra is láthatóak maradnak más alkalmazásokban.
+\n
+\nHa el szeretné rejteni őket más alkalmazásokban is, használja az Elrejtés funkciót.</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">Hogyan tudom beállítani a Right Gallery-t alapértelmezett galériának\?</string>
+    <string name="faq_1_text_g">Először meg kell találnia az alapértelmezett galériát az eszköz beállításainak Alkalmazások részében. Keressen egy olyan gombot, amely valami olyasmit, mint az \"Legyen alapértelmezett\", kattintson rá, majd válassza a \"Alapértelmezések törlése\" pontot. A következő alkalommal, amikor megpróbál megnyitni egy képet vagy videót, megjelenik egy alkalmazásválasztó, ahol kiválaszthatja a Right Gallery lehetőséget, és beállíthatja alapértelmezett alkalmazásnak.</string>
+    <string name="faq_5_text_g">A Kizárás megakadályozza, hogy a mappát a Right Gallery megjelenítse, az Elrejtés pedig rendszer szinten működik, és elrejti a mappát más galériákból is. Úgy működik, hogy létrehoz egy üres \". nomedia\" nevű fájlt az adott mappában, amelyet bármikor eltávolíthat bármilyen fájlkezelővel is. Note that some devices do not allow hiding folders like Camera, Screenshots and Downloads.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">Évek</string>
+    <string name="months">Hónapok</string>
+    <string name="days">Napok</string>
+    <string name="all_photos">Minden fénykép</string>
+    <string name="by_last_modified_yearly_g">Utoljára módosítva (évi)</string>
+    <string name="by_date_taken_yearly_g">Felvétel dátuma (évi)</string>
+
+    <string name="eraser">Radír</string>
+    <string name="eyedropper">Szemcseppentő</string>
+</resources>

@@ -3,6 +3,7 @@
     android:id="@+id/dir_holder"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/tiny_margin"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
@@ -108,7 +109,7 @@
             android:layout_height="@dimen/sd_card_icon_size"
             android:contentDescription="@string/pin"
             android:paddingBottom="@dimen/small_margin"
-            android:src="@drawable/ic_pin_filled_vector"
+            android:src="@drawable/ic_pin_angle_filled"
             android:visibility="gone" />
 
         <ImageView

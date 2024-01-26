@@ -5,6 +5,7 @@
     <string name="edit">திருத்து</string>
     <string name="open_camera">படக்கருவியைத் திற</string>
     <string name="hidden">(மறைந்த)</string>
+    <string name="excluded">(excluded)</string>
     <string name="pin_folder">அடைவை முள்ளிடு</string>
     <string name="unpin_folder">அடைவை முள்ளெடு</string>
     <string name="pin_to_the_top">மேலே முள்ளிடு</string>
@@ -27,13 +28,6 @@
     <string name="dates_fixed_successfully">தேதிகள் சரிசெய்தல் வெற்றி</string>
     <string name="no_date_takens_found">தேதி எடுத்த மதிப்புகள் எதுவும் கண்டுபிடிக்கப்படவில்லை</string>
     <string name="share_resized">மறுவளவிடப்பட்ட பதிப்பைப் பகிர்</string>
-    <string name="upgraded_from_free">ஏய்,
-\n
-\nபழைய இலவச செயலியிலிருந்து தரமுயர்த்தியதாகத் தெரிகிறது. செயலி அமைவுகளின் மேலே \'புரோவுக்குத் தரமுயர்த்து\' பொத்தானைக் கொண்ட பழைய பதிப்பை இப்போது நீங்கள் நிறுவல் நீக்கலாம்.
-\n
-\nமீள்சுழல் தொட்டி உருப்படிகளை மட்டுமே உமக்கு அழிக்கப்படும், அபிமான உருப்படிகள் குறிக்கப்படாமல் இருக்கும், மேலும் உம் செயலி அமைவுகளையும் அகரமாக்க வேண்டும்.
-\n
-\nநன்றி!</string>
     <string name="switch_to_file_search">எல்லா தெரியும் அடைவுகளிலும் கோப்பு தேடலுக்கு மாறு</string>
     <string name="set_as_default_folder">இயல்புநிலை அடைவாக அமை</string>
     <string name="unset_as_default_folder">இயல்புநிலை அடைவாக அமைக்காதே</string>
@@ -61,6 +55,7 @@
     <string name="manage_hidden_folders">மறைத்த அடைவுகளை நிர்வகி</string>
     <string name="hidden_folders_placeholder">உங்களிடம் \".nomedia\" கோப்புடன் எவ்வடைகளும் மறைக்கப்படவில்லை என தெரிகிறது.</string>
     <string name="hidden_all_files">You have to grant the app All Files access to see hidden files, else it cannot work.</string>
+    <string name="cant_unhide_folder">If a folder or one of its parent folders has a dot before its name, it is hidden and cannot be unhidden like this. You have to remove the dot by renaming it.</string>
     <!-- Include folders -->
     <string name="include_folders">உள்ளடக்கிய அடைவுகள்</string>
     <string name="manage_included_folders">உள்ளடக்கிய அடைவுகளை நிர்வகி</string>
@@ -75,8 +70,19 @@
     <string name="height">உயரம்</string>
     <string name="keep_aspect_ratio">கூறுவிகிதத்தை வைத்திரு</string>
     <string name="invalid_values">செல்லத்தக்க தீர்மானத்தை உள்ளிடவும்</string>
+    <string name="resize_multiple_images">Resize multiple images</string>
+    <string name="resize_factor">Resize factor</string>
+    <string name="resize_factor_info">Resize images to the given percentage, value must be within 10 and 90.</string>
+    <string name="resize_factor_error">Enter a number between 10 and 90</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Failed to resize %d image</item>
+        <item quantity="other">Failed to resize %d images</item>
+    </plurals>
+    <string name="images_resized_successfully">Images resized successfully</string>
     <!-- Editor -->
     <string name="editor">திருத்தி</string>
+    <string name="basic_editor">Basic Editor</string>
+    <string name="advanced_editor">Advanced Editor</string>
     <string name="rotate">சுழற்று</string>
     <string name="invalid_image_path">செல்லாத பட பாதை</string>
     <string name="invalid_video_path">செல்லாத காணொளி பாதை</string>
@@ -96,6 +102,9 @@
     <string name="rotate_left">இடதில் சுழற்று</string>
     <string name="rotate_right">வலதில் சுழற்று</string>
     <string name="rotate_one_eighty">180º சுழற்று</string>
+    <string name="transform">Transform</string>
+    <string name="crop">Crop</string>
+    <string name="draw">Draw</string>
     <string name="flip">புரட்டு</string>
     <string name="flip_horizontally">கிடைமட்டமாக புரட்டு</string>
     <string name="flip_vertically">செங்குத்தாக புரட்டு</string>
@@ -202,6 +211,8 @@
     <string name="square">சதுரம்</string>
     <string name="rounded_corners">மழுங்கையான மூலைகள்</string>
     <string name="export_favorite_paths">பிடித்த கோப்பு பாதைகளை ஏற்றுமதி செய்</string>
+    <string name="import_favorite_paths">Import favorites</string>
+    <string name="paths_imported_successfully">Paths imported successfully</string>
     <string name="media_management_prompt">To make sure that all file operations work reliably, please make this app a Media management app in your device settings.</string>
     <string name="password_protect_excluded">Password protect excluded folder visibility</string>
     <string name="media_management_manual">Something went wrong, please go into your device Settings - Apps - Special app access - Media management apps and allow this app to manage media.</string>
@@ -210,6 +221,8 @@
     <string name="alternative_media_access">Alternatively, you can allow accessing media files only. In that case you will not be able to work with hidden files though.</string>
     <string name="media_only">Media only</string>
     <string name="all_files">All files</string>
+    <string name="search_all_files">Search all files instead of folders on the main screen</string>
+    <string name="show_all_folders">Show a menu button for toggling Show All Folders Content quickly</string>
     <!-- Setting sections -->
     <string name="thumbnails">சிறுபடங்கள்</string>
     <string name="fullscreen_media">முழுத்திரை ஊடகம்</string>

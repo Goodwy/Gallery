@@ -5,6 +5,7 @@
     <string name="edit">Upraviť</string>
     <string name="open_camera">Otvoriť fotoaparát</string>
     <string name="hidden">(skryté)</string>
+    <string name="excluded">(vylúčené)</string>
     <string name="pin_folder">Pripnúť priečinok</string>
     <string name="unpin_folder">Odopnúť priečinok</string>
     <string name="pin_to_the_top">Pripnúť na vrch</string>
@@ -27,13 +28,6 @@
     <string name="dates_fixed_successfully">Dátumy vytvorenia boli úspešne opravené</string>
     <string name="no_date_takens_found">Nenašli sa žiadne dátumy vytvorenia</string>
     <string name="share_resized">Zdieľať verziu so zmenenou veľkosťou</string>
-    <string name="upgraded_from_free">Zdravím,
-\n
-\nvyzerá to tak, že ste zo starej bezplatnej apky prešli na novú, platenú. Starú apku, ktorá má na vrchu nastavení tlačidlo \'Stiahnuť Pro verziu\', môžete už odinštalovať.
-\n
-\nStratíte tým iba súbory v odpadkovom koši, obľúbené položky budú odznačené a tiež si budete musieť opäť nastaviť položky v nastaveniach aplikácie.
-\n
-\nVďaka!</string>
     <string name="switch_to_file_search">Prepnúť na vyhľadávanie súborov vo všetkých viditeľných priečinkoch</string>
     <string name="set_as_default_folder">Nastaviť ako predvolený priečinok</string>
     <string name="unset_as_default_folder">Odobrať predvolený priečinok</string>
@@ -53,7 +47,7 @@
     <!-- Hide / Exclude -->
     <string name="hide_folder_description">Táto funkcia skryje priečinok pridaním súboru \'.nomedia\', skryté budú aj podpriečinky. Môžete ich vidieť zvolením možnosti \'Zobraziť skryté priečinky\' v nastaveniach. Pokračovať\?</string>
     <string name="exclude_folder_description">Táto funkcia vylúči výber a jeho podpriečinky iba z Jednoduchej galérie. Spravovať vylúčené priečinky je možné v nastaveniach.</string>
-    <string name="exclude_folder_parent">Chcete ukryť rodičovský priečinok\?</string>
+    <string name="exclude_folder_parent">Chcete vylúčiť nadpriečinok\?</string>
     <string name="excluded_activity_placeholder">Vylúčené priečinky budú spolu s podpriečinkami ukryté iba pred Jednoduchou Galériou, ostatné aplikácie ich budú stále vidieť.
 \n
 \nAk ich chcete ukryť aj pred ostatnými aplikáciami, použite funkciu Skryť.</string>
@@ -61,6 +55,7 @@
     <string name="manage_hidden_folders">Spravovať skryté priečinky</string>
     <string name="hidden_folders_placeholder">Zdá sa, že nemáte žiadne priečinky skryté pomocou súboru \".nomedia\".</string>
     <string name="hidden_all_files">Na zobrazenie skrytých súborov musíte apke povoliť prístup ku všetkým súborom, ináč to fungovať nebude.</string>
+    <string name="cant_unhide_folder">Ak priečinok, alebo niektorý z vyšších priečinkov obsahuje pred názvom bodku, je ukrytý a týmto spôsobom sa ho nedá odokryť. Na odstránenie bodky musíte priečinok premenovať.</string>
     <!-- Include folders -->
     <string name="include_folders">Pridané priečinky</string>
     <string name="manage_included_folders">Spravovať pridané priečinky</string>
@@ -75,8 +70,20 @@
     <string name="height">Výška</string>
     <string name="keep_aspect_ratio">Zachovať pomer strán</string>
     <string name="invalid_values">Prosím zadajte platné rozlíšenie</string>
+    <string name="resize_multiple_images">Zmeniť veľkosť obrázkov</string>
+    <string name="resize_factor">Faktor zmeny veľkosti</string>
+    <string name="resize_factor_info">Zmeniť veľkosť obrázkov na dané percento, hodnota musí byť medzi 10 a 90.</string>
+    <string name="resize_factor_error">Zadajte číslo medzi 10 a 90</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Nepodarilo sa zmeniť veľkosť %d obrázku</item>
+        <item quantity="few">Nepodarilo sa zmeniť veľkosť %d obrázkov</item>
+        <item quantity="other">Nepodarilo sa zmeniť veľkosť %d obrázkov</item>
+    </plurals>
+    <string name="images_resized_successfully">Veľkosť obrázkov bola zmenená úspešne</string>
     <!-- Editor -->
     <string name="editor">Editor</string>
+    <string name="basic_editor">Základný editor</string>
+    <string name="advanced_editor">Pokročilý editor</string>
     <string name="rotate">Otočiť</string>
     <string name="invalid_image_path">Neplatná cesta obrázka</string>
     <string name="invalid_video_path">Neplatná cesta videa</string>
@@ -96,6 +103,9 @@
     <string name="rotate_left">Otočiť vľavo</string>
     <string name="rotate_right">Otočiť vpravo</string>
     <string name="rotate_one_eighty">Otočiť o 180º</string>
+    <string name="transform">Transformovať</string>
+    <string name="crop">Orezať</string>
+    <string name="draw">Kresliť</string>
     <string name="flip">Preklopiť</string>
     <string name="flip_horizontally">Preklopiť vodorovne</string>
     <string name="flip_vertically">Preklopiť zvisle</string>
@@ -201,7 +211,9 @@
     <string name="limit_folder_title">Obmedziť názvy dlhých priečinkov na 1 riadok</string>
     <string name="square">Štvorec</string>
     <string name="rounded_corners">Zaoblené rohy</string>
-    <string name="export_favorite_paths">Exportovať cesty obľúbených položiek</string>
+    <string name="export_favorite_paths">Exportovať obľúbené</string>
+    <string name="import_favorite_paths">Importovať obľúbené</string>
+    <string name="paths_imported_successfully">Cesty boli úspešne importované</string>
     <string name="media_management_prompt">Aby súborové operácie fungovali správne, prosím povoľte túto apku ako Správca médií v nastaveniach zariadenia.</string>
     <string name="password_protect_excluded">Uzamknúť viditeľnosť vylúčených priečinkov heslom</string>
     <string name="media_management_manual">Niečo sa pokazilo, prosím choďte do nastavení vášho zariadenia - Aplikácie - Špeciálny prístup aplikácií - Aplikácie na správu médií a povoľte tejto apke správu médií.</string>
@@ -210,6 +222,8 @@
     <string name="alternative_media_access">Ako alternatíva môžete povoliť prístup iba k médiám. V tomto prípade ale nebudete môcť pracovať so skrytými súbormi.</string>
     <string name="media_only">Iba médiá</string>
     <string name="all_files">Všetky súbory</string>
+    <string name="search_all_files">Vyhľadávať medzi všetkými súbormi namiesto priečinkov na hlavnej obrazovke</string>
+    <string name="show_all_folders">Zobraziť tlačidlo na menu pre rýchle prepínanie zobrazovania obsahu všetkých priečinkov</string>
     <!-- Setting sections -->
     <string name="thumbnails">Náhľady</string>
     <string name="fullscreen_media">Celoobrazovkový režim</string>

@@ -2,37 +2,41 @@ package com.goodwy.gallery.activities
 
 import android.os.Bundle
 import com.goodwy.commons.dialogs.FilePickerDialog
-import com.goodwy.commons.extensions.beVisibleIf
-import com.goodwy.commons.extensions.getProperTextColor
-import com.goodwy.commons.extensions.internalStoragePath
-import com.goodwy.commons.extensions.isExternalStorageManager
+import com.goodwy.commons.extensions.*
 import com.goodwy.commons.helpers.NavigationIcon
 import com.goodwy.commons.helpers.isRPlus
 import com.goodwy.commons.interfaces.RefreshRecyclerViewListener
 import com.goodwy.gallery.R
 import com.goodwy.gallery.adapters.ManageFoldersAdapter
+import com.goodwy.gallery.databinding.ActivityManageFoldersBinding
 import com.goodwy.gallery.extensions.config
-import kotlinx.android.synthetic.main.activity_manage_folders.*
 
 class ExcludedFoldersActivity : SimpleActivity(), RefreshRecyclerViewListener {
+
+    private val binding by viewBinding(ActivityManageFoldersBinding::inflate)
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        isMaterialActivity = true
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_manage_folders)
+        setContentView(binding.root)
         updateFolders()
         setupOptionsMenu()
-        manage_folders_toolbar.title = getString(R.string.excluded_folders)
+        binding.manageFoldersToolbar.title = getString(com.goodwy.commons.R.string.excluded_folders)
+
+        updateMaterialActivityViews(binding.manageFoldersCoordinator, binding.manageFoldersList, useTransparentNavigation = true, useTopSearchMenu = false)
+        setupMaterialScrollListener(binding.manageFoldersList, binding.manageFoldersToolbar)
     }
 
     override fun onResume() {
         super.onResume()
-        setupToolbar(manage_folders_toolbar, NavigationIcon.Arrow)
+        setupToolbar(binding.manageFoldersToolbar, NavigationIcon.Arrow)
     }
 
     private fun updateFolders() {
         val folders = ArrayList<String>()
         config.excludedFolders.mapTo(folders) { it }
         var placeholderText = getString(R.string.excluded_activity_placeholder_g)
-        manage_folders_placeholder.apply {
+        binding.manageFoldersPlaceholder.apply {
             beVisibleIf(folders.isEmpty())
             setTextColor(getProperTextColor())
 
@@ -43,12 +47,12 @@ class ExcludedFoldersActivity : SimpleActivity(), RefreshRecyclerViewListener {
             text = placeholderText
         }
 
-        val adapter = ManageFoldersAdapter(this, folders, true, this, manage_folders_list) {}
-        manage_folders_list.adapter = adapter
+        val adapter = ManageFoldersAdapter(this, folders, true, this, binding.manageFoldersList) {}
+        binding.manageFoldersList.adapter = adapter
     }
 
     private fun setupOptionsMenu() {
-        manage_folders_toolbar.setOnMenuItemClickListener { menuItem ->
+        binding.manageFoldersToolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.add_folder -> addFolder()
                 else -> return@setOnMenuItemClickListener false

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">图库</string> <!--Not used-->
+    <string name="exclude_folder_description_g">该操作仅会在“Right Gallery”中排除显示选定的文件夹及其子文件夹。您可以在设置中管理排除的文件夹。</string>
+    <string name="excluded_activity_placeholder_g">排除此文件夹将使它们与其子文件夹在“Right Gallery”中隐身，但它们仍将在其他应用程序中可见。
+\n
+\n如果您想对其他应用程序隐藏它们，请使用隐藏功能。</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">如何把简单图库设置为设备的默认图库？</string>
+    <string name="faq_1_text_g">首先在系统设置中的“应用”菜单下找到您当前的默认图库，选择并点击“默认打开”按钮，然后点击“清除默认值”。下次再打开图片或视频时，您会看到一个应用程序选择器，在这里选择“简单图库”并将其设为默认应用程序即可。</string>
+    <string name="faq_5_text_g">排除功能只是防止其在简单图库中显示，而隐藏功能则使用的是系统提供的方法，这样的话在其他的图库应用中也会隐藏。它的工作原理是在给定的文件夹中创建一个空的.nomedia文件，您可以使用任何文件管理器来删除它。请注意，某些设备不允许隐藏\"Camera\"，\"Screenshots\"和\"Downloads\"等文件夹。</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">年</string>
+    <string name="months">月</string>
+    <string name="days">天</string>
+    <string name="all_photos">所有照片</string>
+    <string name="by_last_modified_yearly_g">最后修改时间 (每年)</string>
+    <string name="by_date_taken_yearly_g">拍摄时间 (每年)</string>
+
+    <string name="eraser">橡皮</string>
+    <string name="eyedropper">滴管</string>
+</resources>

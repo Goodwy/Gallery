@@ -5,6 +5,7 @@
     <string name="edit">ערוך</string>
     <string name="open_camera">פתח מצלמה</string>
     <string name="hidden">(מוסתר)</string>
+    <string name="excluded">(excluded)</string>
     <string name="pin_folder">הצמד תקיה</string>
     <string name="unpin_folder">בטל הצמדת תקיה</string>
     <string name="pin_to_the_top">הצמד למעלה</string>
@@ -27,11 +28,6 @@
     <string name="dates_fixed_successfully">תאריכים תוקנה בהצלחה</string>
     <string name="no_date_takens_found">לא נמצאו ערכי תאריך נטילתם</string>
     <string name="share_resized">שתף גרסה ששונתה</string>
-    <string name="upgraded_from_free">היי,
-\n נראה כאילו שדרגת מהאפליקציה הישנה החינמית. כעת תוכל להסיר את ההתקנה של הגרסה הישנה, בעלת כפתור \'שדרג למקצוען\' בחלק העליון של הגדרות האפליקציה.
-\n
-\nרק פריטי סל המיחזור יימחקו, פריטים מועדפים לא יהיו מסומנים ותצטרך גם לאפס את הגדרות האפליקציה שלך.
-\nתודה!</string>
     <string name="switch_to_file_search">עבור לחיפוש קבצים בכל התיקיות הגלויות</string>
     <string name="set_as_default_folder">הגדר כתיקיית ברירת מחדל</string>
     <string name="unset_as_default_folder">בטל את ההגדרה כתיקיית ברירת המחדל</string>
@@ -59,6 +55,7 @@
     <string name="manage_hidden_folders">נהל תיקיות נסתרות</string>
     <string name="hidden_folders_placeholder">נראה שאין לך תיקיות מוסתרות עם קובץ \".nomedia\".</string>
     <string name="hidden_all_files">You have to grant the app All Files access to see hidden files, else it cannot work.</string>
+    <string name="cant_unhide_folder">If a folder or one of its parent folders has a dot before its name, it is hidden and cannot be unhidden like this. You have to remove the dot by renaming it.</string>
     <!-- Include folders -->
     <string name="include_folders">תיקיות כלולות</string>
     <string name="manage_included_folders">נהל תיקיות כלולות</string>
@@ -73,8 +70,19 @@
     <string name="height">גובה</string>
     <string name="keep_aspect_ratio">שמור על יחס רוחב-גובה</string>
     <string name="invalid_values">נא להזין החלטה חוקית</string>
+    <string name="resize_multiple_images">Resize multiple images</string>
+    <string name="resize_factor">Resize factor</string>
+    <string name="resize_factor_info">Resize images to the given percentage, value must be within 10 and 90.</string>
+    <string name="resize_factor_error">Enter a number between 10 and 90</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Failed to resize %d image</item>
+        <item quantity="other">Failed to resize %d images</item>
+    </plurals>
+    <string name="images_resized_successfully">Images resized successfully</string>
     <!-- Editor -->
     <string name="editor">עורך</string>
+    <string name="basic_editor">Basic Editor</string>
+    <string name="advanced_editor">Advanced Editor</string>
     <string name="rotate">להחליף</string>
     <string name="invalid_image_path">נתיב תמונה לא חוקי</string>
     <string name="invalid_video_path">נתיב וידאו לא חוקי</string>
@@ -94,6 +102,9 @@
     <string name="rotate_left">סובב שמאלה</string>
     <string name="rotate_right">לסובב ימינה</string>
     <string name="rotate_one_eighty">סובב 180 מעלות</string>
+    <string name="transform">Transform</string>
+    <string name="crop">Crop</string>
+    <string name="draw">Draw</string>
     <string name="flip">להשליך</string>
     <string name="flip_horizontally">הפוך אופקית</string>
     <string name="flip_vertically">הפוך אנכית</string>
@@ -198,6 +209,8 @@
     <string name="square">כיכר</string>
     <string name="rounded_corners">פינות מעוגלות</string>
     <string name="export_favorite_paths">ייצא נתיבי קבצים מועדפים</string>
+    <string name="import_favorite_paths">Import favorites</string>
+    <string name="paths_imported_successfully">Paths imported successfully</string>
     <string name="media_management_prompt">כדי לוודא שכל פעולות הקבצים פועלות בצורה מהימנה, אנא הפוך את האפליקציה הזו לאפליקציית ניהול מדיה בהגדרות המכשיר שלך.</string>
     <string name="password_protect_excluded">הגנה באמצעות סיסמה על נראות התיקייה שלא נכללה</string>
     <string name="media_management_manual">Something went wrong, please go into your device Settings - Apps - Special app access - Media management apps and allow this app to manage media.</string>
@@ -206,6 +219,8 @@
     <string name="alternative_media_access">Alternatively, you can allow accessing media files only. In that case you will not be able to work with hidden files though.</string>
     <string name="media_only">Media only</string>
     <string name="all_files">All files</string>
+    <string name="search_all_files">Search all files instead of folders on the main screen</string>
+    <string name="show_all_folders">Show a menu button for toggling Show All Folders Content quickly</string>
     <!-- Setting sections -->
     <string name="thumbnails">תמונות ממוזערות</string>
     <string name="fullscreen_media">מדיה במסך מלא</string>

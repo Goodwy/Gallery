@@ -5,6 +5,7 @@
     <string name="edit">सम्पादन</string>
     <string name="open_camera">क्यामेरा खोल्नुहोस</string>
     <string name="hidden">(लुकेको)</string>
+    <string name="excluded">(excluded)</string>
     <string name="pin_folder">फोल्डरलाई पिन गर्नुहोस</string>
     <string name="unpin_folder">फोल्डरलाई पिन गर्नुहोस</string>
     <string name="pin_to_the_top">सबैभन्दा माथि पिन गर्नुहोस</string>
@@ -27,13 +28,6 @@
     <string name="dates_fixed_successfully">Dates fixed successfully</string>
     <string name="no_date_takens_found">No Date Taken values have been found</string>
     <string name="share_resized">Share a resized version</string>
-    <string name="upgraded_from_free">Hey,
-\n
-\nseems like you upgraded from the old free app. You can now uninstall the old version, which has an \'Upgrade to Pro\' button at the top of the app settings.
-\n
-\nYou will only have the Recycle bin items deleted, favorite items unmarked and you will also have to reset your app settings.
-\n
-\nThanks!</string>
     <string name="switch_to_file_search">Switch to file search across all visible folders</string>
     <string name="set_as_default_folder">Set as default folder</string>
     <string name="unset_as_default_folder">Unset as default folder</string>
@@ -61,6 +55,7 @@
     <string name="manage_hidden_folders">Manage hidden folders</string>
     <string name="hidden_folders_placeholder">Seems like you don\'t have any folders hidden with a \".nomedia\" file.</string>
     <string name="hidden_all_files">You have to grant the app All Files access to see hidden files, else it cannot work.</string>
+    <string name="cant_unhide_folder">If a folder or one of its parent folders has a dot before its name, it is hidden and cannot be unhidden like this. You have to remove the dot by renaming it.</string>
     <!-- Include folders -->
     <string name="include_folders">Included folders</string>
     <string name="manage_included_folders">Manage included folders</string>
@@ -75,8 +70,19 @@
     <string name="height">उचाई</string>
     <string name="keep_aspect_ratio">Keep aspect ratio</string>
     <string name="invalid_values">Please enter a valid resolution</string>
+    <string name="resize_multiple_images">Resize multiple images</string>
+    <string name="resize_factor">Resize factor</string>
+    <string name="resize_factor_info">Resize images to the given percentage, value must be within 10 and 90.</string>
+    <string name="resize_factor_error">Enter a number between 10 and 90</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Failed to resize %d image</item>
+        <item quantity="other">Failed to resize %d images</item>
+    </plurals>
+    <string name="images_resized_successfully">Images resized successfully</string>
     <!-- Editor -->
     <string name="editor">सम्पादक</string>
+    <string name="basic_editor">Basic Editor</string>
+    <string name="advanced_editor">Advanced Editor</string>
     <string name="rotate">घुमाउने</string>
     <string name="invalid_image_path">Invalid image path</string>
     <string name="invalid_video_path">Invalid video path</string>
@@ -96,6 +102,9 @@
     <string name="rotate_left">Rotate left</string>
     <string name="rotate_right">Rotate right</string>
     <string name="rotate_one_eighty">Rotate by 180º</string>
+    <string name="transform">Transform</string>
+    <string name="crop">Crop</string>
+    <string name="draw">Draw</string>
     <string name="flip">Flip</string>
     <string name="flip_horizontally">Flip horizontally</string>
     <string name="flip_vertically">Flip vertically</string>
@@ -201,7 +210,9 @@
     <string name="limit_folder_title">Limit long folder titles to 1 line</string>
     <string name="square">Square</string>
     <string name="rounded_corners">Rounded corners</string>
-    <string name="export_favorite_paths">Export favorite file paths</string>
+    <string name="export_favorite_paths">Export favorites</string>
+    <string name="import_favorite_paths">Import favorites</string>
+    <string name="paths_imported_successfully">Paths imported successfully</string>
     <string name="media_management_prompt">To make sure that all file operations work reliably, please make this app a Media management app in your device settings.</string>
     <string name="password_protect_excluded">Password protect excluded folder visibility</string>
     <string name="media_management_manual">Something went wrong, please go into your device Settings - Apps - Special app access - Media management apps and allow this app to manage media.</string>
@@ -210,6 +221,8 @@
     <string name="alternative_media_access">Alternatively, you can allow accessing media files only. In that case you will not be able to work with hidden files though.</string>
     <string name="media_only">Media only</string>
     <string name="all_files">All files</string>
+    <string name="search_all_files">Search all files instead of folders on the main screen</string>
+    <string name="show_all_folders">Show a menu button for toggling Show All Folders Content quickly</string>
     <!-- Setting sections -->
     <string name="thumbnails">Thumbnails</string>
     <string name="fullscreen_media">Fullscreen media</string>

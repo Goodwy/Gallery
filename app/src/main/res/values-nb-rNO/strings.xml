@@ -5,6 +5,7 @@
     <string name="edit">Rediger</string>
     <string name="open_camera">Åpne kamera</string>
     <string name="hidden">(skjult)</string>
+    <string name="excluded">(ekskludert)</string>
     <string name="pin_folder">Fest mappe</string>
     <string name="unpin_folder">Løsne mappe</string>
     <string name="pin_to_the_top">Fest til toppen</string>
@@ -27,13 +28,6 @@
     <string name="dates_fixed_successfully">Datoer er korrigerte</string>
     <string name="no_date_takens_found">Ingen verdier for Dato tatt er funnet</string>
     <string name="share_resized">Del versjon med endret størrelse</string>
-    <string name="upgraded_from_free">Hey,
-\n
-\nseems like you upgraded from the old free app. You can now uninstall the old version, which has an \'Upgrade to Pro\' button at the top of the app settings.
-\n
-\nYou will only have the Recycle bin items deleted, favorite items unmarked and you will also have to reset your app settings.
-\n
-\nThanks!</string>
     <string name="switch_to_file_search">Skift til filsøk i alle synlige mapper</string>
     <string name="set_as_default_folder">Sett som standardmappe</string>
     <string name="unset_as_default_folder">Ikke lenger sett som standardmappe</string>
@@ -60,7 +54,8 @@
     <string name="hidden_folders">Skjulte mapper</string>
     <string name="manage_hidden_folders">Håndter skjulte mapper</string>
     <string name="hidden_folders_placeholder">Ser ut til at du ikke har skjult noen mapper med en \".nomedia\"-fil.</string>
-    <string name="hidden_all_files">You have to grant the app All Files access to see hidden files, else it cannot work.</string>
+    <string name="hidden_all_files">Du må gi appen tilgang til alle filer for å se skjulte filer, ellers fungerer det ikke.</string>
+    <string name="cant_unhide_folder">If a folder or one of its parent folders has a dot before its name, it is hidden and cannot be unhidden like this. You have to remove the dot by renaming it.</string>
     <!-- Include folders -->
     <string name="include_folders">Inkluderte mapper</string>
     <string name="manage_included_folders">Håndter inkluderte mapper</string>
@@ -75,8 +70,19 @@
     <string name="height">Høyde</string>
     <string name="keep_aspect_ratio">Behold sideforhold</string>
     <string name="invalid_values">Oppfør en gyldig oppløsning</string>
+    <string name="resize_multiple_images">Endre størrelse på flere bilder</string>
+    <string name="resize_factor">Faktor for størrelsesendring</string>
+    <string name="resize_factor_info">Endre størrelse på bilder til den angitte prosenten, verdi må være mellom 10 og 90.</string>
+    <string name="resize_factor_error">Angi et tall mellom 10 og 90</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Klarte ikke endre størrelse på %d bilde</item>
+        <item quantity="other">Klarte ikke endre størrelse på %d bilder</item>
+    </plurals>
+    <string name="images_resized_successfully">Størrelsen på bildene endret</string>
     <!-- Editor -->
     <string name="editor">Redigering</string>
+    <string name="basic_editor">Enkel redigering</string>
+    <string name="advanced_editor">Avansert redigering</string>
     <string name="rotate">Roter</string>
     <string name="invalid_image_path">Ugyldig bildebane</string>
     <string name="invalid_video_path">Ugyldig videobane</string>
@@ -96,6 +102,9 @@
     <string name="rotate_left">Roter til venstre</string>
     <string name="rotate_right">Roter til høyre</string>
     <string name="rotate_one_eighty">Roter med 180º</string>
+    <string name="transform">Transformer</string>
+    <string name="crop">Beskjær</string>
+    <string name="draw">Tegn</string>
     <string name="flip">Speilvend</string>
     <string name="flip_horizontally">Speilvend horisontalt</string>
     <string name="flip_vertically">Speilvend vertikalt</string>
@@ -201,15 +210,19 @@
     <string name="limit_folder_title">Begrens lange mappetitler til 1 linje</string>
     <string name="square">Firkantet</string>
     <string name="rounded_corners">Avrundede hjørner</string>
-    <string name="export_favorite_paths">Eksporter favorittfilbaner</string>
-    <string name="media_management_prompt">To make sure that all file operations work reliably, please make this app a Media management app in your device settings.</string>
+    <string name="export_favorite_paths">Eksporter favoritter</string>
+    <string name="import_favorite_paths">Importer favoritter</string>
+    <string name="paths_imported_successfully">Filbaner importert</string>
+    <string name="media_management_prompt">For å være sikker på at alle filoperasjoner fungerer pålitelig, gjør denne appen til en mediaadministrasjonsapp i enhetsinnstillingene.</string>
     <string name="password_protect_excluded">Passordbeskytt synlighet for ekskludert mappe</string>
     <string name="media_management_manual">Something went wrong, please go into your device Settings - Apps - Special app access - Media management apps and allow this app to manage media.</string>
     <string name="media_management_note">If the redirection does not work, please go into your device Settings - Apps - Special app access - Media management apps and allow this app to manage media.</string>
     <string name="media_management_alternative">If you do not want to do it, you can also go into your device Settings - Apps - Special app access - Media management apps and allow this app to manage media.</string>
-    <string name="alternative_media_access">Alternatively, you can allow accessing media files only. In that case you will not be able to work with hidden files though.</string>
+    <string name="alternative_media_access">Alternativt kan du kun tillate tilgang til mediafiler. I dette tilfellet vil du riktignok ikke kunne arbeide med skjulte filer.</string>
     <string name="media_only">Kun media</string>
     <string name="all_files">Alle filer</string>
+    <string name="search_all_files">Søk alle filer istedenfor mapper på hovedskjermen</string>
+    <string name="show_all_folders">Vis en menyknapp for å raskt slå av/på \"Vis alle mappers innhold\"</string>
     <!-- Setting sections -->
     <string name="thumbnails">Minibilder</string>
     <string name="fullscreen_media">Mediavisning</string>

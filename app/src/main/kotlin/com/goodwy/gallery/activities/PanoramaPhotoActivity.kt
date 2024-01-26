@@ -16,11 +16,11 @@ import com.goodwy.commons.extensions.*
 import com.goodwy.commons.helpers.ensureBackgroundThread
 import com.goodwy.commons.helpers.isRPlus
 import com.goodwy.gallery.R
+import com.goodwy.gallery.databinding.ActivityPanoramaPhotoBinding
 import com.goodwy.gallery.extensions.config
 import com.goodwy.gallery.extensions.hideSystemUI
 import com.goodwy.gallery.extensions.showSystemUI
 import com.goodwy.gallery.helpers.PATH
-import kotlinx.android.synthetic.main.activity_panorama_photo.*
 
 open class PanoramaPhotoActivity : SimpleActivity() {
     private val CARDBOARD_DISPLAY_MODE = 3
@@ -29,23 +29,25 @@ open class PanoramaPhotoActivity : SimpleActivity() {
     private var isExploreEnabled = true
     private var isRendering = false
 
+    private val binding by viewBinding(ActivityPanoramaPhotoBinding::inflate)
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         useDynamicTheme = false
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_panorama_photo)
+        setContentView(binding.root)
 
         checkNotchSupport()
         setupButtonMargins()
 
-        cardboard.setOnClickListener {
-            panorama_view.displayMode = CARDBOARD_DISPLAY_MODE
+        binding.cardboard.setOnClickListener {
+            binding.panoramaView.displayMode = CARDBOARD_DISPLAY_MODE
         }
 
-        explore.setOnClickListener {
+        binding.explore.setOnClickListener {
             isExploreEnabled = !isExploreEnabled
-            panorama_view.setPureTouchTracking(isExploreEnabled)
-            explore.setImageResource(if (isExploreEnabled) R.drawable.ic_explore_vector else R.drawable.ic_explore_off_vector)
+            binding.panoramaView.setPureTouchTracking(isExploreEnabled)
+            binding.explore.setImageResource(if (isExploreEnabled) R.drawable.ic_explore_vector else R.drawable.ic_explore_off_vector)
         }
 
         checkIntent()
@@ -57,7 +59,7 @@ open class PanoramaPhotoActivity : SimpleActivity() {
 
     override fun onResume() {
         super.onResume()
-        panorama_view.resumeRendering()
+        binding.panoramaView.resumeRendering()
         isRendering = true
         if (config.blackBackground) {
             updateStatusbarColor(Color.BLACK)
@@ -74,15 +76,20 @@ open class PanoramaPhotoActivity : SimpleActivity() {
 
     override fun onPause() {
         super.onPause()
-        panorama_view.pauseRendering()
+        binding.panoramaView.pauseRendering()
         isRendering = false
     }
 
     override fun onDestroy() {
         super.onDestroy()
         if (isRendering) {
-            panorama_view.shutdown()
+            binding.panoramaView.shutdown()
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        setupButtonMargins()
     }
 
     private fun checkIntent() {
@@ -101,7 +108,7 @@ open class PanoramaPhotoActivity : SimpleActivity() {
             ensureBackgroundThread {
                 val bitmap = getBitmapToLoad(path)
                 runOnUiThread {
-                    panorama_view.apply {
+                    binding.panoramaView.apply {
                         beVisible()
                         loadImageFromBitmap(bitmap, options)
                         setFlingingEnabled(true)
@@ -135,11 +142,6 @@ open class PanoramaPhotoActivity : SimpleActivity() {
         }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        setupButtonMargins()
-    }
-
     private fun getBitmapToLoad(path: String): Bitmap? {
         val options = BitmapFactory.Options()
         options.inSampleSize = 1
@@ -164,20 +166,20 @@ open class PanoramaPhotoActivity : SimpleActivity() {
 
     private fun setupButtonMargins() {
         val navBarHeight = navigationBarHeight
-        (cardboard.layoutParams as RelativeLayout.LayoutParams).apply {
+        (binding.cardboard.layoutParams as RelativeLayout.LayoutParams).apply {
             bottomMargin = navBarHeight
             rightMargin = navigationBarWidth
         }
 
-        (explore.layoutParams as RelativeLayout.LayoutParams).bottomMargin = navigationBarHeight
+        (binding.explore.layoutParams as RelativeLayout.LayoutParams).bottomMargin = navigationBarHeight
 
-        cardboard.onGlobalLayout {
-            panorama_gradient_background.layoutParams.height = navBarHeight + cardboard.height
+        binding.cardboard.onGlobalLayout {
+            binding.panoramaGradientBackground.layoutParams.height = navBarHeight + binding.cardboard.height
         }
     }
 
     private fun toggleButtonVisibility() {
-        arrayOf(cardboard, explore, panorama_gradient_background).forEach {
+        arrayOf(binding.cardboard, binding.explore, binding.panoramaGradientBackground).forEach {
             it.animate().alpha(if (isFullscreen) 0f else 1f)
             it.isClickable = !isFullscreen
         }

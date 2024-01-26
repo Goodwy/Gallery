@@ -5,6 +5,7 @@
     <string name="edit">Edita</string>
     <string name="open_camera">Obre la càmera</string>
     <string name="hidden">(ocult)</string>
+    <string name="excluded">(exclòs)</string>
     <string name="pin_folder">Fixa la carpeta</string>
     <string name="unpin_folder">No fixis la carpeta</string>
     <string name="pin_to_the_top">Fixa a dalt</string>
@@ -27,13 +28,6 @@
     <string name="dates_fixed_successfully">Data corregida correctament</string>
     <string name="no_date_takens_found">No s\'ha trobat cap valor de data de presa</string>
     <string name="share_resized">Comparteix una versió redimensionada</string>
-    <string name="upgraded_from_free">Hola,
-\n
-\nsembla que heu actualitzat des de l\'antiga aplicació gratuïta. Ara podeu desinstal·lar la versió antiga, que té un botó «Actualitza a Pro» a la part superior de la configuració de l\'aplicació.
-\n
-\nNomés s\'eliminaran els elements de la paperera de reciclatge, els elements preferits sense marcar i també caldrà restablir la vostra configuració de l\'aplicació.
-\n
-\nGràcies!</string>
     <string name="switch_to_file_search">Canvia a la cerca de fitxers per totes les carpetes visibles</string>
     <string name="set_as_default_folder">Estableix com a carpeta predeterminada</string>
     <string name="unset_as_default_folder">Desactiva com a carpeta predeterminada</string>
@@ -60,7 +54,8 @@
     <string name="hidden_folders">Carpetes ocultes</string>
     <string name="manage_hidden_folders">Gestiona les carpetes ocultes</string>
     <string name="hidden_folders_placeholder">Sembla que no teniu cap carpeta oculta amb el fitxer «.nomedia».</string>
-    <string name="hidden_all_files">You have to grant the app All Files access to see hidden files, else it cannot work.</string>
+    <string name="hidden_all_files">Cal concedir a l\'aplicació accés a tots els fitxers per veure els fitxers ocults, en cas contrari podria no funcionar.</string>
+    <string name="cant_unhide_folder">Si una carpeta o una de les seves carpetes superiors té un punt abans del seu nom, està amagada i no es pot mostrar aquí. Heu d\'eliminar el punt canviant el seu nom.</string>
     <!-- Include folders -->
     <string name="include_folders">Carpetes incloses</string>
     <string name="manage_included_folders">Gestiona les carpetes incloses</string>
@@ -75,8 +70,19 @@
     <string name="height">Alçada</string>
     <string name="keep_aspect_ratio">Mantén la relació d\'aspecte</string>
     <string name="invalid_values">Introduïu una resolució vàlida</string>
+    <string name="resize_multiple_images">Canvia la mida de diverses imatges</string>
+    <string name="resize_factor">Factor de canvi de mida</string>
+    <string name="resize_factor_info">Canvia la mida de les imatges al percentatge indicat, el valor ha d\'estar entre 10 i 90.</string>
+    <string name="resize_factor_error">Introduïu un número entre 10 i 90</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Ha fallat en canviar de mida %d imatge</item>
+        <item quantity="other">Ha fallat en canviar de mida %d imatges</item>
+    </plurals>
+    <string name="images_resized_successfully">Les imatges s\'han canviat de mida correctament</string>
     <!-- Editor -->
     <string name="editor">Editor</string>
+    <string name="basic_editor">Editor bàsic</string>
+    <string name="advanced_editor">Editor avançat</string>
     <string name="rotate">Gira</string>
     <string name="invalid_image_path">El camí de la imatge no és vàlid</string>
     <string name="invalid_video_path">El camí del vídeo no és vàlid</string>
@@ -96,6 +102,9 @@
     <string name="rotate_left">Gira a l\'esquerra</string>
     <string name="rotate_right">Gira a la dreta</string>
     <string name="rotate_one_eighty">Gira 180º</string>
+    <string name="transform">Transforma</string>
+    <string name="crop">Escapça</string>
+    <string name="draw">Dibuixa</string>
     <string name="flip">Inverteix</string>
     <string name="flip_horizontally">Inverteix horitzontalment</string>
     <string name="flip_vertically">Inverteix verticalment</string>
@@ -201,7 +210,9 @@
     <string name="limit_folder_title">Limita els títols llargs de carpeta a 1 línia</string>
     <string name="square">Quadrat</string>
     <string name="rounded_corners">Cantonades arrodonides</string>
-    <string name="export_favorite_paths">Exporta els camins dels fitxers preferits</string>
+    <string name="export_favorite_paths">Exporta els preferits</string>
+    <string name="import_favorite_paths">Importa els preferits</string>
+    <string name="paths_imported_successfully">Els camins s\'han importat correctament</string>
     <string name="media_management_prompt">Per assegurar que totes les operacions de fitxers funcionin de manera fiable, feu que aquesta aplicació sigui una aplicació de gestió multimèdia a la configuració del dispositiu.</string>
     <string name="password_protect_excluded">Protegeix amb contrasenya la visibilitat de les carpetes excloses</string>
     <string name="media_management_manual">S\'ha produït un error, aneu a la Configuració del dispositiu - Aplicacions - Accés especial a l\'aplicació - Aplicacions de gestió multimèdia i permeteu que aquesta aplicació gestioni el contingut multimèdia.</string>
@@ -210,6 +221,8 @@
     <string name="alternative_media_access">Alternativament, podeu permetre l\'accés només a fitxers multimèdia. En aquest cas, però, no podreu treballar amb fitxers ocults.</string>
     <string name="media_only">Només fitxers multimèdia</string>
     <string name="all_files">Tots els fitxers</string>
+    <string name="search_all_files">Cerca tots els fitxers en lloc de carpetes a la pantalla principal</string>
+    <string name="show_all_folders">Mostra un botó de menú per commutar «Mostra el contingut de totes les carpetes ràpidament»</string>
     <!-- Setting sections -->
     <string name="thumbnails">Miniatures</string>
     <string name="fullscreen_media">Contingut multimèdia a pantalla completa</string>
@@ -352,7 +365,7 @@
     <string name="faq_10_title">Puc escapçar imatges amb aquesta aplicació\?</string>
     <string name="faq_10_text">Sí, podeu escapçar imatges a l\'editor, arrossegant les cantonades de la imatge. Es pot accedir a l\'editor prement prolongadament una miniatura d\'imatge i seleccionant Edita o seleccionant Edita des de la visualització de pantalla completa.</string>
     <string name="faq_11_title">Puc agrupar d\'alguna manera les miniatures dels fitxers multimèdia\?</string>
-    <string name="faq_11_text">Si, només cal utilitzar l\'element de menú «Agrupa per» mentre esteu a la vista de miniatures. Podeu agrupar fitxers amb diversos criteris, inclosa la data de presa. Si utilitzeu la funció «Mostra el contingut de totes les carpetes», també podeu agrupar-les per carpetes.</string>
+    <string name="faq_11_text">Sí, només cal utilitzar l\'element de menú «Agrupa per» mentre esteu a la vista de miniatures. Podeu agrupar fitxers amb diversos criteris, inclosa la data de presa. Si utilitzeu la funció «Mostra el contingut de totes les carpetes», també podeu agrupar-les per carpetes.</string>
     <string name="faq_12_title">L\'ordenació per la data de presa no sembla funcionar correctament, com puc solucionar-ho\?</string>
     <string name="faq_12_text">Probablement, els fitxers s\'han copiat des de qualsevol lloc. Podeu arreglar-ho seleccionant les miniatures de fitxer i seleccionant «Corregeix el valor de la data de presa».</string>
     <string name="faq_13_title">Veig algunes bandes de colors a les imatges. Com puc millorar la qualitat\?</string>

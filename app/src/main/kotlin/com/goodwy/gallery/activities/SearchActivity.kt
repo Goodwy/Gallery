@@ -1,20 +1,12 @@
 package com.goodwy.gallery.activities
 
-import android.app.SearchManager
-import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import androidx.appcompat.widget.SearchView
-import androidx.core.view.MenuItemCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.goodwy.commons.extensions.*
-import com.goodwy.commons.helpers.NavigationIcon
 import com.goodwy.commons.helpers.VIEW_TYPE_GRID
 import com.goodwy.commons.helpers.ensureBackgroundThread
 import com.goodwy.commons.models.FileDirItem
@@ -22,6 +14,7 @@ import com.goodwy.commons.views.MyGridLayoutManager
 import com.goodwy.gallery.R
 import com.goodwy.gallery.adapters.MediaAdapter
 import com.goodwy.gallery.asynctasks.GetMediaAsynctask
+import com.goodwy.gallery.databinding.ActivitySearchBinding
 import com.goodwy.gallery.extensions.*
 import com.goodwy.gallery.helpers.GridSpacingItemDecoration
 import com.goodwy.gallery.helpers.MediaFetcher
@@ -30,32 +23,30 @@ import com.goodwy.gallery.helpers.SHOW_ALL
 import com.goodwy.gallery.interfaces.MediaOperationsListener
 import com.goodwy.gallery.models.Medium
 import com.goodwy.gallery.models.ThumbnailItem
-import kotlinx.android.synthetic.main.activity_search.*
 import java.io.File
 
 class SearchActivity : SimpleActivity(), MediaOperationsListener {
-    private var mIsSearchOpen = false
     private var mLastSearchedText = ""
 
-    private var mSearchMenuItem: MenuItem? = null
     private var mCurrAsyncTask: GetMediaAsynctask? = null
     private var mAllMedia = ArrayList<ThumbnailItem>()
 
+    private val binding by viewBinding(ActivitySearchBinding::inflate)
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        isMaterialActivity = true
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+        setContentView(binding.root)
         setupOptionsMenu()
-        search_empty_text_placeholder.setTextColor(getProperTextColor())
+        updateMaterialActivityViews(binding.searchCoordinator, binding.searchGrid, useTransparentNavigation = true, useTopSearchMenu = true)
+        binding.searchEmptyTextPlaceholder.setTextColor(getProperTextColor())
         getAllMedia()
-        search_fastscroller.updateColors(getProperPrimaryColor())
+        binding.searchFastscroller.updateColors(getProperPrimaryColor())
     }
 
     override fun onResume() {
         super.onResume()
-        setupToolbar(search_toolbar, NavigationIcon.Arrow, searchMenuItem = mSearchMenuItem, appBarLayout = search_app_bar_layout)
-        search_app_bar_layout.setBackgroundColor(getProperStatusBarColor())
-        search_toolbar.setBackgroundResource(R.drawable.search_bg)
-        search_toolbar.backgroundTintList = ColorStateList.valueOf(getBottomNavigationBackgroundColor())
+        updateMenuColors()
     }
 
     override fun onDestroy() {
@@ -64,8 +55,28 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
     }
 
     private fun setupOptionsMenu() {
-        setupSearch(search_toolbar.menu)
-        search_toolbar.setOnMenuItemClickListener { menuItem ->
+        binding.searchMenu.getToolbar().inflateMenu(R.menu.menu_search)
+        binding.searchMenu.toggleHideOnScroll(config.hideTopBarWhenScroll)
+        binding.searchMenu.setupMenu()
+        binding.searchMenu.toggleForceArrowBackIcon(true)
+        binding.searchMenu.focusView()
+        binding.searchMenu.updateHintText(getString(com.goodwy.commons.R.string.search_files))
+
+        binding.searchMenu.onNavigateBackClickListener = {
+            if (binding.searchMenu.getCurrentQuery().isEmpty()) {
+                finish()
+            } else {
+                binding.searchMenu.closeSearch()
+            }
+        }
+
+        binding.searchMenu.onSearchTextChangedListener = { text ->
+            mLastSearchedText = text
+            textChanged(text)
+            binding.searchMenu.clearSearch()
+        }
+
+        binding.searchMenu.getToolbar().setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.toggle_filename -> toggleFilenameVisibility()
                 else -> return@setOnMenuItemClickListener false
@@ -74,41 +85,9 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
         }
     }
 
-    private fun setupSearch(menu: Menu) {
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        mSearchMenuItem = menu.findItem(R.id.search)
-        MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, object : MenuItemCompat.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                mIsSearchOpen = true
-                return true
-            }
-
-            // this triggers on device rotation too, avoid doing anything
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                if (mIsSearchOpen) {
-                    mIsSearchOpen = false
-                    mLastSearchedText = ""
-                }
-                return true
-            }
-        })
-        mSearchMenuItem?.expandActionView()
-
-        (mSearchMenuItem?.actionView as? SearchView)?.apply {
-            setSearchableInfo(searchManager.getSearchableInfo(componentName))
-            isSubmitButtonEnabled = false
-            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String) = false
-
-                override fun onQueryTextChange(newText: String): Boolean {
-                    if (mIsSearchOpen) {
-                        mLastSearchedText = newText
-                        textChanged(newText)
-                    }
-                    return true
-                }
-            })
-        }
+    private fun updateMenuColors() {
+        updateStatusbarColor(getProperBackgroundColor())
+        binding.searchMenu.updateColors()
     }
 
     private fun textChanged(text: String) {
@@ -119,10 +98,10 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
                 val grouped = MediaFetcher(applicationContext).groupMedia(filtered as ArrayList<Medium>, "")
                 runOnUiThread {
                     if (grouped.isEmpty()) {
-                        search_empty_text_placeholder.text = getString(R.string.no_items_found)
-                        search_empty_text_placeholder.beVisible()
+                        binding.searchEmptyTextPlaceholder.text = getString(com.goodwy.commons.R.string.no_items_found)
+                        binding.searchEmptyTextPlaceholder.beVisible()
                     } else {
-                        search_empty_text_placeholder.beGone()
+                        binding.searchEmptyTextPlaceholder.beGone()
                     }
 
                     handleGridSpacing(grouped)
@@ -134,14 +113,14 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
     }
 
     private fun setupAdapter() {
-        val currAdapter = search_grid.adapter
+        val currAdapter = binding.searchGrid.adapter
         if (currAdapter == null) {
-            MediaAdapter(this, ArrayList(), this, false, false, "", search_grid) {
+            MediaAdapter(this, mAllMedia, this, false, false, "", binding.searchGrid) {
                 if (it is Medium) {
                     itemClicked(it.path)
                 }
             }.apply {
-                search_grid.adapter = this
+                binding.searchGrid.adapter = this
             }
             setupLayoutManager()
             handleGridSpacing(mAllMedia)
@@ -158,18 +137,18 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
     private fun handleGridSpacing(media: ArrayList<ThumbnailItem>) {
         val viewType = config.getFolderViewType(SHOW_ALL)
         if (viewType == VIEW_TYPE_GRID) {
-            if (search_grid.itemDecorationCount > 0) {
-                search_grid.removeItemDecorationAt(0)
+            if (binding.searchGrid.itemDecorationCount > 0) {
+                binding.searchGrid.removeItemDecorationAt(0)
             }
 
             val spanCount = config.mediaColumnCnt
             val spacing = config.thumbnailSpacing
             val decoration = GridSpacingItemDecoration(spanCount, spacing, config.scrollHorizontally, config.fileRoundedCorners, media, true)
-            search_grid.addItemDecoration(decoration)
+            binding.searchGrid.addItemDecoration(decoration)
         }
     }
 
-    private fun getMediaAdapter() = search_grid.adapter as? MediaAdapter
+    private fun getMediaAdapter() = binding.searchGrid.adapter as? MediaAdapter
 
     private fun toggleFilenameVisibility() {
         config.displayFileNames = !config.displayFileNames
@@ -199,13 +178,13 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
     }
 
     private fun setupGridLayoutManager() {
-        val layoutManager = search_grid.layoutManager as MyGridLayoutManager
+        val layoutManager = binding.searchGrid.layoutManager as MyGridLayoutManager
         if (config.scrollHorizontally) {
             layoutManager.orientation = RecyclerView.HORIZONTAL
-            search_grid.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            binding.searchGrid.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)
         } else {
             layoutManager.orientation = RecyclerView.VERTICAL
-            search_grid.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            binding.searchGrid.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         }
 
         layoutManager.spanCount = config.mediaColumnCnt
@@ -222,7 +201,7 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
     }
 
     private fun setupListLayoutManager() {
-        val layoutManager = search_grid.layoutManager as MyGridLayoutManager
+        val layoutManager = binding.searchGrid.layoutManager as MyGridLayoutManager
         layoutManager.spanCount = 1
         layoutManager.orientation = RecyclerView.VERTICAL
     }
@@ -230,7 +209,7 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
     private fun setupScrollDirection() {
         val viewType = config.getFolderViewType(SHOW_ALL)
         val scrollHorizontally = config.scrollHorizontally && viewType == VIEW_TYPE_GRID
-        search_fastscroller.setScrollVertically(!scrollHorizontally)
+        binding.searchFastscroller.setScrollVertically(!scrollHorizontally)
     }
 
     private fun getAllMedia() {
@@ -261,25 +240,25 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
         startAsyncTask(true)
     }
 
-    override fun tryDeleteFiles(fileDirItems: ArrayList<FileDirItem>) {
+    override fun tryDeleteFiles(fileDirItems: ArrayList<FileDirItem>, skipRecycleBin: Boolean) {
         val filtered = fileDirItems.filter { File(it.path).isFile && it.path.isMediaFile() } as ArrayList
         if (filtered.isEmpty()) {
             return
         }
 
-        if (config.useRecycleBin && !filtered.first().path.startsWith(recycleBinPath)) {
-            val movingItems = resources.getQuantityString(R.plurals.moving_items_into_bin, filtered.size, filtered.size)
+        if (config.useRecycleBin && !skipRecycleBin && !filtered.first().path.startsWith(recycleBinPath)) {
+            val movingItems = resources.getQuantityString(com.goodwy.commons.R.plurals.moving_items_into_bin, filtered.size, filtered.size)
             toast(movingItems)
 
             movePathsInRecycleBin(filtered.map { it.path } as ArrayList<String>) {
                 if (it) {
                     deleteFilteredFiles(filtered)
                 } else {
-                    toast(R.string.unknown_error_occurred)
+                    toast(com.goodwy.commons.R.string.unknown_error_occurred)
                 }
             }
         } else {
-            val deletingItems = resources.getQuantityString(R.plurals.deleting_items, filtered.size, filtered.size)
+            val deletingItems = resources.getQuantityString(com.goodwy.commons.R.plurals.deleting_items, filtered.size, filtered.size)
             toast(deletingItems)
             deleteFilteredFiles(filtered)
         }
@@ -288,7 +267,7 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
     private fun deleteFilteredFiles(filtered: ArrayList<FileDirItem>) {
         deleteFiles(filtered) {
             if (!it) {
-                toast(R.string.unknown_error_occurred)
+                toast(com.goodwy.commons.R.string.unknown_error_occurred)
                 return@deleteFiles
             }
 

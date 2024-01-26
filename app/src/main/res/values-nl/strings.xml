@@ -5,6 +5,7 @@
     <string name="edit">Bewerken</string>
     <string name="open_camera">Camera</string>
     <string name="hidden">(verborgen)</string>
+    <string name="excluded">(uitgesloten)</string>
     <string name="pin_folder">Map vastzetten</string>
     <string name="unpin_folder">Map losmaken</string>
     <string name="pin_to_the_top">Bovenaan vastzetten</string>
@@ -27,10 +28,7 @@
     <string name="dates_fixed_successfully">Datums zijn gecorrigeerd</string>
     <string name="no_date_takens_found">Geen opnamedatums gevonden</string>
     <string name="share_resized">Verkleinde versie delen</string>
-    <string name="upgraded_from_free">Het lijkt erop dat dit een upgrade is vanaf de oude gratis versie. Deze oude versie, met de knop \"Upgraden naar Pro\" bovenaan de instellingen, kan nu gedeïnstalleerd worden.
-\n
-\nDe items in de prullenbak zullen dan wel worden verwijderd, favorieten en instellingen zullen ook opnieuw moeten worden geconfigureerd!</string>
-    <string name="switch_to_file_search">Zoeken in alle zichtbare mappen</string>
+    <string name="switch_to_file_search">Naar bestanden in alle zichtbare mappen zoeken</string>
     <string name="set_as_default_folder">Als standaardmap instellen</string>
     <string name="unset_as_default_folder">Standaardmap herstellen</string>
     <string name="reorder_by_dragging">Volgorde mappen bepalen met sleepgebaren</string>
@@ -57,6 +55,7 @@
     <string name="manage_hidden_folders">Verborgen mappen beheren</string>
     <string name="hidden_folders_placeholder">Er zijn geen mappen gevonden die zijn verborgen door bestand \".nomedia\".</string>
     <string name="hidden_all_files">Geef de app het recht om alle bestanden te beheren om ook verborgen items te kunnen zien.</string>
+    <string name="cant_unhide_folder">Mappen waarvan de naam begint met een punt worden altijd verborgen. Verwijder de punt uit de naam om de map te weergeven.</string>
     <!-- Include folders -->
     <string name="include_folders">Toegevoegde mappen</string>
     <string name="manage_included_folders">Toegevoegde mappen beheren</string>
@@ -71,8 +70,19 @@
     <string name="height">Hoogte</string>
     <string name="keep_aspect_ratio">Beeldverhouding vergrendelen</string>
     <string name="invalid_values">Voer geldige afmetingen in</string>
+    <string name="resize_multiple_images">Afbeeldingsgrootte aanpassen</string>
+    <string name="resize_factor">Factor vergroten/verkleinen</string>
+    <string name="resize_factor_info">Pas de grootte van afbeeldingen aan (voer een percentage tussen 10 en 90 in).</string>
+    <string name="resize_factor_error">Voer een getal tussen 10 en 90 in</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">%d afbeelding is niet aangepast</item>
+        <item quantity="other">%d afbeeldingen zijn niet aangepast</item>
+    </plurals>
+    <string name="images_resized_successfully">Afbeeldingen zijn aangepast</string>
     <!-- Editor -->
     <string name="editor">Bewerken</string>
+    <string name="basic_editor">Eenvoudige bewerking</string>
+    <string name="advanced_editor">Uitgebreide bewerking</string>
     <string name="rotate">Draaien</string>
     <string name="invalid_image_path">Ongeldig pad naar afbeelding</string>
     <string name="invalid_video_path">Ongeldig pad naar video</string>
@@ -92,6 +102,9 @@
     <string name="rotate_left">Linksom draaien</string>
     <string name="rotate_right">Rechtsom draaien</string>
     <string name="rotate_one_eighty">180º draaien</string>
+    <string name="transform">Vervormen</string>
+    <string name="crop">Bijsnijden</string>
+    <string name="draw">Tekenen</string>
     <string name="flip">Omdraaien</string>
     <string name="flip_horizontally">Horizontaal spiegelen</string>
     <string name="flip_vertically">Verticaal spiegelen</string>
@@ -171,7 +184,7 @@
     <string name="allow_instant_change">Direct naar vorige/volgende door op de zijkanten van het scherm te tikken</string>
     <string name="allow_deep_zooming_images">Verder inzoomen mogelijk maken</string>
     <string name="hide_extended_details">Uitgebreide informatie niet tonen als de statusbalk is verborgen</string>
-    <string name="show_at_bottom">Enkele actieknoppen onder aan het scherm tonen</string>
+    <string name="show_at_bottom">Enkele actieknoppen onder in het scherm tonen</string>
     <string name="show_recycle_bin">Prullenbak weergeven in de mapweergave</string>
     <string name="deep_zoomable_images">Afbeeldingen ver inzoomen</string>
     <string name="show_highest_quality">Afbeeldingen in de hoogst mogelijke kwaliteit weergeven</string>
@@ -197,7 +210,9 @@
     <string name="limit_folder_title">Lange mapnamen tot 1 regel beperken</string>
     <string name="square">Vierkant</string>
     <string name="rounded_corners">Afgeronde hoeken</string>
-    <string name="export_favorite_paths">Locaties favorieten exporteren</string>
+    <string name="export_favorite_paths">Favorieten exporteren</string>
+    <string name="import_favorite_paths">Favorieten importeren</string>
+    <string name="paths_imported_successfully">Locaties zijn geïmporteerd</string>
     <string name="media_management_prompt">Maak van deze app in de systeeminstellingen een mediabeheer-app om er zeker van te zijn dat alle bestandsoperaties betrouwbaar werken.</string>
     <string name="password_protect_excluded">Zichtbaarheid van uitgesloten mappen met wachtwoord beveiligen</string>
     <string name="media_management_manual">Er is een fout opgetreden. Ga naar de systeeminstellingen - Apps - Geavanceerd - Speciale app-toegang - Mediabeheer en geef deze app toegang tot mediabestanden.</string>
@@ -206,11 +221,13 @@
     <string name="alternative_media_access">De app kan ook toegang tot alleen mediabestanden worden gegeven, maar er kan dan niet worden gewerkt met verborgen bestanden.</string>
     <string name="media_only">Mediabestanden</string>
     <string name="all_files">Alle bestanden</string>
+    <string name="search_all_files">Op het beginscherm niet naar mappen, maar bestanden in de zichtbare mappen zoeken</string>
+    <string name="show_all_folders">Menuknop ’Inhoud van alle mappen tonen’ tonen</string>
     <!-- Setting sections -->
     <string name="thumbnails">Miniaturen</string>
     <string name="fullscreen_media">Volledig scherm</string>
     <string name="extended_details">Uitgebreide informatie</string>
-    <string name="bottom_actions">Acties onder aan het scherm</string>
+    <string name="bottom_actions">Acties onderin het scherm</string>
     <!-- Bottom actions -->
     <string name="manage_bottom_actions">Actieknoppen onderaan beheren</string>
     <string name="toggle_favorite">Favoriet in-/uitschakelen</string>

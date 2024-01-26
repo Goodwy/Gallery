@@ -5,6 +5,7 @@
     <string name="edit">Editaţi</string>
     <string name="open_camera">Deschide camera</string>
     <string name="hidden">(ascuns)</string>
+    <string name="excluded">(excluded)</string>
     <string name="pin_folder">Fixează dosarul</string>
     <string name="unpin_folder">Desprinde dosarul</string>
     <string name="pin_to_the_top">Fixează în vârf</string>
@@ -27,13 +28,6 @@
     <string name="dates_fixed_successfully">Date stabilite cu succes</string>
     <string name="no_date_takens_found">Nu a fost găsită nicio valoare pentru data creării</string>
     <string name="share_resized">Distribuie o versiune redimensionată</string>
-    <string name="upgraded_from_free">Hei,
-\n
-\nse pare că ai făcut o actualizare de la aplicația gratuită la versiunea pro. Acum poţi dezinstala vechea versiune, care are un buton \'Upgrade to Pro\' în partea de sus a setărilor aplicației.
-\n
-\nVei avea doar elementele din coșul de reciclare șterse, elementele favorite vor fi demarcate și va trebui, de asemenea, să resetezi setările aplicației.
-\n
-\nMulțumesc!</string>
     <string name="switch_to_file_search">Treceți la căutarea de fișiere în toate dosarele vizibile</string>
     <string name="set_as_default_folder">Setază ca dosar implicit</string>
     <string name="unset_as_default_folder">Dezactivează ca dosar implicit</string>
@@ -61,6 +55,7 @@
     <string name="manage_hidden_folders">Gestionează dosarele ascunse</string>
     <string name="hidden_folders_placeholder">Se pare că nu ai niciun dosar ascuns cu un fișier \".nomedia\".</string>
     <string name="hidden_all_files">You have to grant the app All Files access to see hidden files, else it cannot work.</string>
+    <string name="cant_unhide_folder">If a folder or one of its parent folders has a dot before its name, it is hidden and cannot be unhidden like this. You have to remove the dot by renaming it.</string>
     <!-- Include folders -->
     <string name="include_folders">Dosare incluse</string>
     <string name="manage_included_folders">Gestionează dosarele incluse</string>
@@ -75,8 +70,19 @@
     <string name="height">Înălțime</string>
     <string name="keep_aspect_ratio">Păstrează raportul de aspect</string>
     <string name="invalid_values">Vă rugăm să introduceți o rezoluție validă</string>
+    <string name="resize_multiple_images">Resize multiple images</string>
+    <string name="resize_factor">Resize factor</string>
+    <string name="resize_factor_info">Resize images to the given percentage, value must be within 10 and 90.</string>
+    <string name="resize_factor_error">Enter a number between 10 and 90</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Failed to resize %d image</item>
+        <item quantity="other">Failed to resize %d images</item>
+    </plurals>
+    <string name="images_resized_successfully">Images resized successfully</string>
     <!-- Editor -->
     <string name="editor">Editor</string>
+    <string name="basic_editor">Basic Editor</string>
+    <string name="advanced_editor">Advanced Editor</string>
     <string name="rotate">Rotire</string>
     <string name="invalid_image_path">Calea imaginii este invalidă</string>
     <string name="invalid_video_path">Calea videoclupui este invalidă</string>
@@ -96,6 +102,9 @@
     <string name="rotate_left">Rotire la stânga</string>
     <string name="rotate_right">Rotire la dreapta</string>
     <string name="rotate_one_eighty">Rotire cu 180º</string>
+    <string name="transform">Transform</string>
+    <string name="crop">Crop</string>
+    <string name="draw">Draw</string>
     <string name="flip">Flip</string>
     <string name="flip_horizontally">Flip orizontal</string>
     <string name="flip_vertically">Flip vertical</string>
@@ -202,6 +211,8 @@
     <string name="square">Pătrat</string>
     <string name="rounded_corners">Colțuri rotunjite</string>
     <string name="export_favorite_paths">Exportă căile de acces ale fișierelor favorite</string>
+    <string name="import_favorite_paths">Import favorites</string>
+    <string name="paths_imported_successfully">Paths imported successfully</string>
     <string name="media_management_prompt">Pentru a vă asigura că toate operațiunile cu fișiere funcționează în mod fiabil, vă rugăm să selectați această aplicație ca aplicație de gestionare a mediilor în setările dispozitivului.</string>
     <string name="password_protect_excluded">Protejați cu parolă vizibilitatea dosarelor excluse</string>
     <string name="media_management_manual">Ceva nu a mers bine, vă rugăm să accesați Setări - Aplicații - Acces special la aplicații - Aplicații de gestionare media și permiteți acestei aplicații să gestioneze media.</string>
@@ -210,6 +221,8 @@
     <string name="alternative_media_access">Alternatively, you can allow accessing media files only. In that case you will not be able to work with hidden files though.</string>
     <string name="media_only">Media only</string>
     <string name="all_files">All files</string>
+    <string name="search_all_files">Search all files instead of folders on the main screen</string>
+    <string name="show_all_folders">Show a menu button for toggling Show All Folders Content quickly</string>
     <!-- Setting sections -->
     <string name="thumbnails">Miniaturi</string>
     <string name="fullscreen_media">Elemente media pe ecran complet</string>

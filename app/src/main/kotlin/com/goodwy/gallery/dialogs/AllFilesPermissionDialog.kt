@@ -13,7 +13,7 @@ class AllFilesPermissionDialog(
     private var dialog: AlertDialog? = null
 
     init {
-        val view = activity.layoutInflater.inflate(R.layout.dialog_message, null)
+        val view = activity.layoutInflater.inflate(com.goodwy.commons.R.layout.dialog_message, null)
         view.findViewById<TextView>(R.id.message).text = message
 
         activity.getAlertDialogBuilder().setPositiveButton(R.string.all_files) { dialog, which -> positivePressed() }

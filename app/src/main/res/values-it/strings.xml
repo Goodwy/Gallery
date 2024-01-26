@@ -5,6 +5,7 @@
     <string name="edit">Modifica</string>
     <string name="open_camera">Apri fotocamera</string>
     <string name="hidden">(nascosta)</string>
+    <string name="excluded">(esclusa)</string>
     <string name="pin_folder">Blocca cartella</string>
     <string name="unpin_folder">Sblocca cartella</string>
     <string name="pin_to_the_top">Fissa in alto</string>
@@ -27,13 +28,6 @@
     <string name="dates_fixed_successfully">Date aggiornate correttamente</string>
     <string name="no_date_takens_found">Nessun valore trovato per data creazione</string>
     <string name="share_resized">Condividi una versione ridimensionata</string>
-    <string name="upgraded_from_free">Ehi,
-\n
-\nhai aggiornato dalla vecchia versione gratuita. Puoi disinstallare le vecchia versione, che ha un pulsante \'Aggiorna a Pro\' in alto nelle impostazioni.
-\n
-\nNon potrai recuperare gli elementi dal cestino, gli elementi marcati come preferiti e dovrai anche reimpostare le impostazioni dell\'app.
-\n
-\nGrazie!</string>
     <string name="switch_to_file_search">Passa alla ricerca file su tutte le cartelle visibili</string>
     <string name="set_as_default_folder">Imposta come cartella predefinita</string>
     <string name="unset_as_default_folder">Non impostare come cartella predefinita</string>
@@ -60,7 +54,8 @@
     <string name="hidden_folders">Cartelle nascoste</string>
     <string name="manage_hidden_folders">Gestisci le cartelle nascoste</string>
     <string name="hidden_folders_placeholder">Non c\'è alcuna cartella nascosta con un file .nomedia.</string>
-    <string name="hidden_all_files">You have to grant the app All Files access to see hidden files, else it cannot work.</string>
+    <string name="hidden_all_files">È necessario concedere all\'applicazione l\'accesso a Tutti i file per vedere i file nascosti, altrimenti non può funzionare.</string>
+    <string name="cant_unhide_folder">Se una cartella o una delle sue cartelle principali ha un punto prima del nome, è nascosta e non può essere scoperta in questo modo. Devi rimuovere il punto rinominandolo.</string>
     <!-- Include folders -->
     <string name="include_folders">Includi cartelle</string>
     <string name="manage_included_folders">Gestisci le cartelle incluse</string>
@@ -75,8 +70,20 @@
     <string name="height">Altezza</string>
     <string name="keep_aspect_ratio">Mantieni proporzioni</string>
     <string name="invalid_values">Inserisci una risoluzione valida</string>
+    <string name="resize_multiple_images">Ridimensiona più immagini</string>
+    <string name="resize_factor">Fattore di ridimensionamento</string>
+    <string name="resize_factor_info">Ridimensiona le immagini alla percentuale indicata, il cui valore deve essere compreso tra 10 e 90.</string>
+    <string name="resize_factor_error">Inserisci un numero compreso tra 10 e 90</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Impossibile ridimensionare %d immagine</item>
+        <item quantity="many">Impossibile ridimensionare le %d immagini di</item>
+        <item quantity="other">Impossibile ridimensionare le %d immagini di</item>
+    </plurals>
+    <string name="images_resized_successfully">Immagini ridimensionate con successo</string>
     <!-- Editor -->
     <string name="editor">Editor</string>
+    <string name="basic_editor">Editor di base</string>
+    <string name="advanced_editor">Editor avanzato</string>
     <string name="rotate">Ruota</string>
     <string name="invalid_image_path">Percorso dell\'immagine non valido</string>
     <string name="invalid_video_path">Percorso del video non valido</string>
@@ -96,6 +103,9 @@
     <string name="rotate_left">Ruota a sinistra</string>
     <string name="rotate_right">Ruota a destra</string>
     <string name="rotate_one_eighty">Ruota di 180º</string>
+    <string name="transform">Trasforma</string>
+    <string name="crop">Ritaglia</string>
+    <string name="draw">Disegna</string>
     <string name="flip">Capovolgi</string>
     <string name="flip_horizontally">Capovolgi orizzontalmente</string>
     <string name="flip_vertically">Capovolgi verticalmente</string>
@@ -201,7 +211,9 @@
     <string name="limit_folder_title">Limita i nomi lunghi delle cartelle a 1 riga</string>
     <string name="square">Quadrato</string>
     <string name="rounded_corners">Angoli arrotondati</string>
-    <string name="export_favorite_paths">Esporta i percorsi dei file preferiti</string>
+    <string name="export_favorite_paths">Esporta i preferiti</string>
+    <string name="import_favorite_paths">Importa i preferiti</string>
+    <string name="paths_imported_successfully">Percorsi importati correttamente</string>
     <string name="media_management_prompt">Per assicurarsi che tutte le operazioni sui file funzionino in modo affidabile, si prega di rendere questa app un\'app di gestione dei media nelle impostazioni del dispositivo.</string>
     <string name="password_protect_excluded">Proteggi con password la visibilità della cartella esclusa</string>
     <string name="media_management_manual">Qualcosa è andato storto, si prega di andare nelle Impostazioni del vostro dispositivo - App - Accesso speciale per le app - App di gestione contenuti multimediali e consentire a questa app di gestire i media.</string>
@@ -210,6 +222,8 @@
     <string name="alternative_media_access">In alternativa, è possibile consentire l\'accesso solo ai file multimediali. In questo caso, però, non sarà possibile lavorare con i file nascosti.</string>
     <string name="media_only">Solo media</string>
     <string name="all_files">Tutti i file</string>
+    <string name="search_all_files">Ricerca di tutti i file anziché delle cartelle nella schermata principale</string>
+    <string name="show_all_folders">Mostra un pulsante di menu per selezionare rapidamente Mostra tutti i contenuti delle cartelle</string>
     <!-- Setting sections -->
     <string name="thumbnails">Miniature</string>
     <string name="fullscreen_media">Media a schermo intero</string>

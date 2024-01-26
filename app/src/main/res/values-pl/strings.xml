@@ -5,6 +5,7 @@
     <string name="edit">Edytuj</string>
     <string name="open_camera">Otwórz aparat</string>
     <string name="hidden">(ukryte)</string>
+    <string name="excluded">(wykluczone)</string>
     <string name="pin_folder">Przypnij folder</string>
     <string name="unpin_folder">Odepnij folder</string>
     <string name="pin_to_the_top">Przypnij na górze</string>
@@ -27,13 +28,6 @@
     <string name="dates_fixed_successfully">Daty zostały naprawione</string>
     <string name="no_date_takens_found">Nie znaleziono dat wykonania</string>
     <string name="share_resized">Udostępnij wersję ze zmienionym rozmiarem</string>
-    <string name="upgraded_from_free">Witaj,
-\n
-\nwygląda na to, że uaktualniłeś(-aś) starą darmową aplikację na nową płatną. Możesz teraz odinstalować poprzednią przyciskiem „Uaktualnij do Pro” na górze w ustawieniach aplikacji.
-\n
-\nZostaną jedynie usunięte elementy z kosza, odznaczone ulubione elementy i konieczne będzie zresetowanie ustawień aplikacji.
-\n
-\nDzięki!</string>
     <string name="switch_to_file_search">Przełącz na przeszukiwanie plików we wszystkich widocznych folderach</string>
     <string name="set_as_default_folder">Ustaw jako folder domyślny</string>
     <string name="unset_as_default_folder">Anuluj ustawienie jako folder domyślny</string>
@@ -61,6 +55,7 @@
     <string name="manage_hidden_folders">Zarządzaj ukrytymi folderami</string>
     <string name="hidden_folders_placeholder">Wygląda na to, że nie masz żadnych ukrytych folderów z plikiem „.nomedia”.</string>
     <string name="hidden_all_files">Musisz przyznać aplikacji dostęp do wszystkich plików, aby widzieć ukryte pliki, inaczej to nie będzie działać.</string>
+    <string name="cant_unhide_folder">Jeśli folder lub jeden z jego folderów nadrzędnych ma kropkę przed swoją nazwą, jest ukryty i nie można go odkryć w ten sposób. Musisz usunąć kropkę, zmieniając jego nazwę.</string>
     <!-- Include folders -->
     <string name="include_folders">Dołączone foldery</string>
     <string name="manage_included_folders">Zarządzaj dołączonymi folderami</string>
@@ -75,8 +70,21 @@
     <string name="height">Wysokość</string>
     <string name="keep_aspect_ratio">Zachowaj proporcje</string>
     <string name="invalid_values">Podaj prawidłową rozdzielczość</string>
+    <string name="resize_multiple_images">Zmień rozmiar obrazów</string>
+    <string name="resize_factor">Współczynnik zmiany rozmiaru</string>
+    <string name="resize_factor_info">Zmień rozmiar obrazów o podany procent. Wartość musi być między 10 a 90</string>
+    <string name="resize_factor_error">Wprowadź liczbę między 10 a 90</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Nie udało się zmienić rozmiaru %d obrazu</item>
+        <item quantity="few">Nie udało się zmienić rozmiaru %d obrazów</item>
+        <item quantity="many">Nie udało się zmienić rozmiaru %d obrazów</item>
+        <item quantity="other">Nie udało się zmienić rozmiaru %d obrazów</item>
+    </plurals>
+    <string name="images_resized_successfully">Rozmiar obrazów został zmieniony</string>
     <!-- Editor -->
     <string name="editor">Edytor</string>
+    <string name="basic_editor">Podstawowy edytor</string>
+    <string name="advanced_editor">Zaawansowany edytor</string>
     <string name="rotate">Obróć</string>
     <string name="invalid_image_path">Nieprawidłowa ścieżka obrazu</string>
     <string name="invalid_video_path">Nieprawidłowa ścieżka wideo</string>
@@ -96,6 +104,9 @@
     <string name="rotate_left">Obróć w lewo</string>
     <string name="rotate_right">Obróć w prawo</string>
     <string name="rotate_one_eighty">Obróć o 180°</string>
+    <string name="transform">Przekształć</string>
+    <string name="crop">Wykadruj</string>
+    <string name="draw">Narysuj</string>
     <string name="flip">Odbij</string>
     <string name="flip_horizontally">Odbij w poziomie</string>
     <string name="flip_vertically">Odbij w pionie</string>
@@ -201,7 +212,9 @@
     <string name="limit_folder_title">Ograniczaj długie nazwy folderów do 1 linii</string>
     <string name="square">Kwadrat</string>
     <string name="rounded_corners">Zaokrąglone rogi</string>
-    <string name="export_favorite_paths">Eksportuj ścieżki ulubionych plików</string>
+    <string name="export_favorite_paths">Eksportuj ulubione</string>
+    <string name="import_favorite_paths">Importuj ulubione</string>
+    <string name="paths_imported_successfully">Ścieżki zostały zaimportowane</string>
     <string name="media_management_prompt">Aby mieć pewność, że wszystkie operacje na plikach działają niezawodnie, ustaw tę aplikację jako aplikację do zarządzania multimediami w ustawieniach urządzenia.</string>
     <string name="password_protect_excluded">Chroń hasłem widoczność wykluczonych folderów</string>
     <string name="media_management_manual">Coś poszło nie tak. Przejdź do ustawień swojego urządzenia -&gt; Aplikacje -&gt; Aplikacje ze specjalnym dostępem -&gt; Aplikacje do zarządzania multimediami i zezwól tej aplikacji na zarządzanie multimediami.</string>
@@ -210,6 +223,8 @@
     <string name="alternative_media_access">Alternatywnie możesz zezwolić na dostęp jedynie do plików multimedialnych. W takim przypadku nie będziesz jednak mógł/mogła pracować z ukrytymi plikami.</string>
     <string name="media_only">Tylko multimedia</string>
     <string name="all_files">Wszystkie pliki</string>
+    <string name="search_all_files">Przeszukuj wszystkie pliki zamiast folderów na ekranie głównym</string>
+    <string name="show_all_folders">Pokazuj przycisk w menu do szybkiego przełączania opcji „Pokaż zawartość wszystkich folderów”</string>
     <!-- Setting sections -->
     <string name="thumbnails">Miniaturki</string>
     <string name="fullscreen_media">Multimedia na pełnym ekranie</string>

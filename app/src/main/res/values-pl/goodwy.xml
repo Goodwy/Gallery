@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Galeria</string> <!--Not used-->
+    <string name="exclude_folder_description_g">Spowoduje to wykluczenie wybranego folderu i jego podfolderów z Right Gallery. Możesz zarządzać wykluczonymi folderami w Ustawieniach.</string>
+    <string name="excluded_activity_placeholder_g">Wykluczenie folderów spowoduje ukrycie ich wraz z podfolderami tylko w Right Gallery, w innych aplikacjach będą nadal widoczne.
+\n
+\nJeśli chcesz je ukryć także w innych aplikacjach, użyj funkcji „Ukryj folder”.</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">Jak mogę ustawić Right Gallery jako domyślną galerię urządzenia\?</string>
+    <string name="faq_1_text_g">Najpierw znajdź aktualnie domyślną galerię urządzenia w ustawieniach urządzenia (sekcja „Aplikacje”). Na ekranie z informacjami o niej wybierz „Otwórz domyślnie”, a następnie „Wyczyść domyślne”. Gdy podczas następnej próby otwarcia obrazu czy wideo system zapyta Cię, którą aplikacją to zrobić, wybierz Right Gallery i opcję zapamiętania tego wyboru.</string>
+    <string name="faq_5_text_g">Wykluczanie działa tylko w obrębie Right Gallery, podczas gdy ukrywanie ma wpływ także na inne galerie. Działa to przez dodanie do folderu pustego pliku „.nomedia”, który możesz potem usunąć w dowolnym menedżerze plików. Uwaga: Niektóre urządzenia nie pozwalają na ukrywanie folderów takich, jak Aparat, Zrzuty ekranu i Pobrane.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">Lata</string>
+    <string name="months">Miesiące</string>
+    <string name="days">Dni</string>
+    <string name="all_photos">Wszystkie zdjęcia</string>
+    <string name="by_last_modified_yearly_g">Data ostatniej modyfikacji (rocznie)</string>
+    <string name="by_date_taken_yearly_g">Data wykonania (rocznie)</string>
+
+    <string name="eraser">Gumka do mazania</string>
+    <string name="eyedropper">Zakraplacz</string>
+</resources>

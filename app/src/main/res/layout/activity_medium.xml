@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_holder"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -18,7 +19,7 @@
         android:id="@+id/top_shadow"
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_status_action_height"
-        android:background="@drawable/gradient_background_flipped"
+        android:background="@color/crop_image_view_background"
         android:contentDescription="@null" />
 
     <com.google.android.material.appbar.AppBarLayout
@@ -36,8 +37,10 @@
             android:layout_height="?attr/actionBarSize"
             app:menu="@menu/menu_viewpager"
             app:navigationIcon="@drawable/ic_arrow_left_vector"
+            app:titleMargin="@dimen/zero"
             app:titleTextAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:subtitleTextAppearance="@style/TextAppearance.AppCompat.Caption" />
-
+            app:subtitleTextAppearance="@style/TextAppearance.AppCompat.Caption"
+            tools:title="File"
+            tools:subtitle="Date" />
     </com.google.android.material.appbar.AppBarLayout>
 </RelativeLayout>

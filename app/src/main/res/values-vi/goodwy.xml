@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Thư viện</string> <!--Not used-->
+    <string name="exclude_folder_description_g">Điều này sẽ loại trừ lựa chọn cùng với các thư mục con của nó khỏi Right Gallery. Bạn có thể quản lý các thư mục loại trừ trong Cài đặt.</string>
+    <string name="excluded_activity_placeholder_g">Các thư mục loại trừ sẽ làm cho chúng cùng với các thư mục con của chúng bị ẩn chỉ trong Right Gallery, chúng vẫn sẽ hiển thị trong các ứng dụng khác.
+\n
+\nNếu bạn cũng muốn ẩn chúng khỏi các ứng dụng khác, hãy sử dụng chức năng Ẩn.</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">Làm thế nào để đặt Right Gallery thành thư viện mặc định\?</string>
+    <string name="faq_1_text_g">Trước tiên, bạn phải tìm thư viện hiện tại mặc định trong phần Ứng dụng trong Cài đặt thiết bị của bạn, tìm nút có nội dung như \"Mở theo mặc định\", nhấp vào đó, sau đó chọn \"Xóa mặc định\".          Lần tới, bạn hãy thử mở một hình ảnh hoặc video, bạn sẽ thấy một bộ chọn ứng dụng, nơi bạn có thể chọn Right Gallery và biến nó thành ứng dụng mặc định.</string>
+    <string name="faq_5_text_g">Loại trừ ngăn chỉ hiển thị thư mục trong Right Gallery, trong khi Ẩn hoạt động theo hệ thống và nó cũng ẩn thư mục khỏi các phòng trưng bày khác. Nó hoạt động bằng cách tạo một tệp \".nomedia\" trong thư mục đã cho, sau đó bạn cũng có thể xóa bằng bất kỳ trình quản lý tệp nào. Note that some devices do not allow hiding folders like Camera, Screenshots and Downloads.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">Năm</string>
+    <string name="months">Tháng</string>
+    <string name="days">Ngày</string>
+    <string name="all_photos">Tất cả ảnh</string>
+    <string name="by_last_modified_yearly_g">Sửa đổi lần cuối (hàng năm)</string>
+    <string name="by_date_taken_yearly_g">Ngày chụp (hàng năm)</string>
+
+    <string name="eraser">Cục tẩy</string>
+    <string name="eyedropper">ống nhỏ mắt</string>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Galleria</string> <!--Not used-->
+    <string name="exclude_folder_description_g">Tämä poissulkee valitun ja alikansiot vain Right Gallery. Voit hallinnoida poissuljettuja kansioita asetuksista.</string>
+    <string name="excluded_activity_placeholder_g">Kansion poissulkeminen piilottaa kansion alikansioineen vain Right Gallery, ne jäävät näkyviin muihin sovelluksiin.
+\n
+\nJos haluat piilottaa kansion myös muissa sovelluksissa, käytä piilota-toimintoa.</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">Miten voin tehdä Right Gallery oletusgalleriasovelluksen\?</string>
+    <string name="faq_1_text_g">Etsi ensin laitteen asetuksista oletusgalleriasovellus, valitse sen asetuksista \"Avaa oletuksena\" ja valitse \"Poista oletukset\". Seuraavalla kerralla kun avaat kuvan tai videon, pyydetään valitsemaan uusi oletussovellus.</string>
+    <string name="faq_5_text_g">Poissulku piilottaa kansion vain Right Gallery, piilotus taas piilottaa järjestelmänlaajuisesti muistakin galleriasovelluksista. Piilotustoiminto luo kansioon tyhjän \".nomedia\"-tiedoston jonka voi tarvittaessa poistaa millä tahansa tiedostonhallintasovelluksella. Huomioi, että jotkin laitteet eivät salli joidenkin kansioden, kuten Camera, Screenshots ja Downloads, piilotusta.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">Vuosia</string>
+    <string name="months">Kuukaudet</string>
+    <string name="days">Päivää</string>
+    <string name="all_photos">Kaikki valokuvat</string>
+    <string name="by_last_modified_yearly_g">Viimeksi muokattu (vuosittain)</string>
+    <string name="by_date_taken_yearly_g">Kuvanottopäivämäärä (vuosittain)</string>
+
+    <string name="eraser">Pyyhekumi</string>
+    <string name="eyedropper">Pipetti</string>
+</resources>

@@ -7,7 +7,6 @@ import android.view.MotionEvent
 import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.Fragment
 import com.goodwy.commons.extensions.*
-import com.goodwy.gallery.R
 import com.goodwy.gallery.extensions.config
 import com.goodwy.gallery.helpers.*
 import com.goodwy.gallery.models.Medium
@@ -141,6 +140,7 @@ abstract class ViewPagerFragment : Fragment() {
                 mTouchDownX = event.rawX
                 mTouchDownY = event.rawY
             }
+
             MotionEvent.ACTION_POINTER_DOWN -> mIgnoreCloseDown = true
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 val diffX = mTouchDownX - event.rawX
@@ -149,7 +149,7 @@ abstract class ViewPagerFragment : Fragment() {
                 val downGestureDuration = System.currentTimeMillis() - mTouchDownTime
                 if (!mIgnoreCloseDown && (Math.abs(diffY) > Math.abs(diffX)) && (diffY < -mCloseDownThreshold) && downGestureDuration < MAX_CLOSE_DOWN_GESTURE_DURATION && context?.config?.allowDownGesture == true) {
                     activity?.finish()
-                    activity?.overridePendingTransition(0, R.anim.slide_down)
+                    activity?.overridePendingTransition(0, com.goodwy.commons.R.anim.slide_down)
                 }
                 mIgnoreCloseDown = false
             }

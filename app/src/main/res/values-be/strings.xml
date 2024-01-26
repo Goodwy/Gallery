@@ -5,6 +5,7 @@
     <string name="edit">Рэдагаваць</string>
     <string name="open_camera">Адкрытая камера</string>
     <string name="hidden">(схаваны)</string>
+    <string name="excluded">(выключана)</string>
     <string name="pin_folder">Замацаваць папку</string>
     <string name="unpin_folder">Адмацаваць папку</string>
     <string name="pin_to_the_top">Замацаваць зверху</string>
@@ -62,13 +63,6 @@
     <string name="dates_fixed_successfully">Даты паспяхова выпраўлены</string>
     <string name="no_date_takens_found">Значэнні даты ўзяцця не знойдзены</string>
     <string name="share_resized">Абагуліць версію змененага памеру</string>
-    <string name="upgraded_from_free">Гэй,
-\n
-\nпадобна на тое, вы абнавіліся са старога бясплатнага прыкладання. Цяпер вы можаце выдаліць старую версію, у якой ёсць кнопка \"Абнавіць да Pro\" у верхняй частцы налад прыкладання.
-\n
-\nУ вас будуць выдаленыя толькі элементы кошыка, а выбраныя элементы не будуць пазначаныя, і вам таксама прыйдзецца скінуць налады прыкладання.
-\n
-\nДзякуй!</string>
     <string name="switch_to_file_search">Пераключыцеся на пошук файлаў ва ўсіх бачных папках</string>
     <string name="set_as_default_folder">Усталяваць у якасці папкі па змаўчанні</string>
     <string name="unset_as_default_folder">Адмяніць у якасці папкі па змаўчанні</string>
@@ -98,14 +92,28 @@
 \n
 \nДаданне некаторых элементаў сюды не прывядзе да выключэння якой-небудзь іншай тэчкі.</string>
     <string name="hidden_folders_placeholder">Здаецца, у вас няма тэчак, схаваных з файлам \".nomedia\".</string>
-    <string name="hidden_all_files">You have to grant the app All Files access to see hidden files, else it cannot work.</string>
+    <string name="hidden_all_files">Вы павінны даць праграме доступ да ўсіх файлаў, каб бачыць схаваныя файлы, інакш яна не можа працаваць.</string>
+    <string name="cant_unhide_folder">Калі папка або адна з яе бацькоўскіх тэчак мае кропку перад імем, яна схаваная і не можа быць паказана такім чынам. Вы павінны выдаліць кропку, перайменаваўшы яе.</string>
     <string name="height">Вышыня</string>
     <string name="keep_aspect_ratio">Захоўвайце суадносіны бакоў</string>
     <string name="invalid_values">Увядзіце сапраўднае рашэнне</string>
+    <string name="resize_multiple_images">Змяніць памер некалькіх малюнкаў</string>
+    <string name="resize_factor">Каэфіцыент змены памеру</string>
+    <string name="resize_factor_info">Зменіце памер выявы да вызначанага працэнта, значэнне павінна быць ад 10 да 90.</string>
+    <string name="resize_factor_error">Увядзіце лік ад 10 да 90</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Не ўдалося змяніць памер %d малюнка</item>
+        <item quantity="few">Не ўдалося змяніць памер %d малюнкаў</item>
+        <item quantity="many">Не ўдалося змяніць памер %d малюнкаў</item>
+        <item quantity="other">Не ўдалося змяніць памер %d малюнкаў</item>
+    </plurals>
+    <string name="images_resized_successfully">Памер малюнкаў паспяхова зменены</string>
     <string name="rotate">Павярнуць</string>
     <string name="invalid_image_path">Няправільны шлях выявы</string>
     <string name="invalid_video_path">Няправільны шлях відэа</string>
     <string name="editor">Рэдактар</string>
+    <string name="basic_editor">Базавы рэдактар</string>
+    <string name="advanced_editor">Пашыраны рэдактар</string>
     <string name="image_editing_failed">Збой рэдагавання выявы</string>
     <string name="video_editing_failed">Збой рэдагавання відэа</string>
     <string name="image_editing_cancelled">Рэдагаванне выявы скасавана</string>
@@ -116,6 +124,9 @@
     <string name="rotate_left">Павярнуць улева</string>
     <string name="rotate_right">Павярнуць управа</string>
     <string name="rotate_one_eighty">Павярнуць на 180°</string>
+    <string name="transform">Трансфармаваць</string>
+    <string name="crop">Абрэзаць</string>
+    <string name="draw">Маляваць</string>
     <string name="flip">Адлюстраваць</string>
     <string name="flip_horizontally">Адлюстраваць гарызантальна</string>
     <string name="wallpaper_set_successfully">Шпалеры ўсталяваны паспяхова</string>
@@ -131,7 +142,7 @@
     <string name="simple_wallpaper">Простыя шпалеры</string>
     <string name="set_as_wallpaper">Усталяваць у якасці шпалер</string>
     <string name="set_as_wallpaper_failed">Збой усталявання ў якасці шпалер</string>
-    <string name="interval">Interval</string>
+    <string name="interval">Інтэрвал</string>
     <string name="include_photos">Уключыце фатаграфіі</string>
     <string name="slide">Слайд</string>
     <string name="set_as_wallpaper_with">Усталяваць у якасці шпалер з:</string>
@@ -148,7 +159,7 @@
     <string name="no_animation">Няма</string>
     <string name="fade">Знікае</string>
     <string name="group_direct_subfolders">Згрупаваць прамыя падпапкі</string>
-    <string name="group_by">Групаваць па…</string>
+    <string name="group_by">Згрупаваць па</string>
     <string name="do_not_group_files">Не групаваць файлы</string>
     <string name="by_folder">Папка</string>
     <string name="by_file_type">Тып файла</string>
@@ -208,15 +219,19 @@
     <string name="limit_folder_title">Абмяжуйце доўгія назвы тэчак 1 радком</string>
     <string name="square">квадратны</string>
     <string name="rounded_corners">Скругленыя куты</string>
-    <string name="export_favorite_paths">Экспарт любімых шляхоў да файлаў</string>
+    <string name="export_favorite_paths">Экспарт абранага</string>
+    <string name="import_favorite_paths">Імпарт абранага</string>
+    <string name="paths_imported_successfully">Шляхі паспяхова імпартаваны</string>
     <string name="media_management_prompt">Каб пераканацца, што ўсе аперацыі з файламі працуюць надзейна, зрабіце гэта дадатак праграмай для кіравання мультымедыя ў наладах прылады.</string>
     <string name="password_protect_excluded">Бачнасць выключанай папкі абараніць паролем</string>
     <string name="media_management_manual">Нешта пайшло не так, калі ласка, перайдзіце ў Налады прылады - Прыкладанні - Спецыяльны доступ да праграм - Прыкладанні для кіравання мультымедыя і дазвольце гэтай праграме кіраваць мультымедыя.</string>
     <string name="media_management_note">Калі перанакіраванне не працуе, калі ласка, перайдзіце ў Налады прылады - Праграмы - Спецыяльны доступ да праграм - Праграмы для кіравання медыяфайламі і дазвольце гэтай праграме кіраваць медыяфайламі.</string>
-    <string name="media_management_alternative">If you do not want to do it, you can also go into your device Settings - Apps - Special app access - Media management apps and allow this app to manage media.</string>
-    <string name="alternative_media_access">Alternatively, you can allow accessing media files only. In that case you will not be able to work with hidden files though.</string>
-    <string name="media_only">Media only</string>
-    <string name="all_files">All files</string>
+    <string name="media_management_alternative">Калі вы не жадаеце гэтага рабіць, вы таксама можаце перайсці ў Налады прылады - Прыкладанні - Спецыяльны доступ да праграм - Прыкладанні для кіравання мультымедыя і дазволіць гэтай праграме кіраваць мультымедыя.</string>
+    <string name="alternative_media_access">Акрамя таго, вы можаце дазволіць доступ толькі да медыяфайлаў. У такім выпадку вы не зможаце працаваць са схаванымі файламі.</string>
+    <string name="media_only">Толькі мультымедыя</string>
+    <string name="all_files">Усе файлы</string>
+    <string name="search_all_files">Пошук ва ўсіх файлах замест тэчак на галоўным экране</string>
+    <string name="show_all_folders">Паказаць кнопку меню для хуткага пераключэння «Паказаць змесціва ўсіх папак»</string>
     <string name="thumbnails">Эскізы</string>
     <string name="fullscreen_media">Поўнаэкранны медыя</string>
     <string name="extended_details">Пашыраныя дэталі</string>
@@ -348,7 +363,7 @@
     <string name="faq_15_title">Чаму праграма займае так шмат месца\?</string>
     <string name="faq_15_text">Кэш праграмы можа займаць да 250 МБ, гэта забяспечвае больш хуткую загрузку малюнкаў. Калі праграма займае нават больш месца, гэта, хутчэй за ўсё, выклікана тым, што ў вас ёсць элементы ў кошыку. Гэтыя файлы ўлічваюцца ў памеры прыкладання. Вы можаце ачысціць кошык, адкрыўшы яе і выдаліўшы ўсе файлы, або з налад прыкладання. Кожны файл у кошыку аўтаматычна выдаляецца праз 30 дзён.</string>
     <string name="faq_16_text">Пачынаючы з Android 11 вы больш не можаце хаваць або паказваць файлы і папкі, вы таксама не можаце бачыць схаваныя ў праграмах галерэі з-за сістэмных абмежаванняў. Для гэтага вам спатрэбіцца выкарыстоўваць які-небудзь файлавы менеджэр.</string>
-    <string name="faq_16_text_extra">Or you can also grant this gallery access to All Files through your device settings, that will allow us showing hidden items and make file operations more reliable in general.</string>
+    <string name="faq_16_text_extra">Або вы таксама можаце даць гэтай галерэі доступ да ўсіх файлаў у наладах вашай прылады, што дазволіць нам паказваць схаваныя элементы і зрабіць працу з файламі ў цэлым больш надзейнай.</string>
     <string name="faq_17_title">Чаму я больш не магу ўключыць адсутныя папкі\?</string>
     <string name="faq_18_text">У нашых прыкладаннях наогул няма рэкламы. Калі вы бачыце іх падчас прайгравання відэа, вы, павінна быць, карыстаецеся відэаплэер якога-небудзь іншага прыкладання. Паспрабуйце знайсці свой відэаплэер па змаўчанні ў наладах прылады, затым выканаеце для яго \"ачысціць налады па змаўчанні\". У наступны раз, калі вы выклічаце якое-небудзь відэа-намер, вы ўбачыце запрашэнне выбару прыкладання, у якім вы можаце выбраць, якое дадатак вы хочаце выкарыстоўваць.</string>
     <!--

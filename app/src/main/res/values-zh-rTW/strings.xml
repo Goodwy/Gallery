@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">簡易相簿</string>
-    <string name="app_launcher_name">簡易相簿</string>
+    <string name="app_launcher_name">相簿</string>
     <string name="edit">編輯</string>
     <string name="open_camera">開啟相機</string>
     <string name="hidden">(隱藏)</string>
+    <string name="excluded">(已排除)</string>
     <string name="pin_folder">釘選資料夾</string>
     <string name="unpin_folder">取消釘選資料夾</string>
     <string name="pin_to_the_top">釘選在頂端</string>
-    <string name="show_all">資料夾內容全部顯示</string>
+    <string name="show_all">顯示全部資料夾內容</string>
     <string name="all_folders">全部資料夾</string>
     <string name="folder_view">切換成資料夾檢視</string>
     <string name="other_folder">其他資料夾</string>
@@ -27,18 +28,11 @@
     <string name="dates_fixed_successfully">日期修復成功</string>
     <string name="no_date_takens_found">未發現拍攝日期數值</string>
     <string name="share_resized">分享調整大小的版本</string>
-    <string name="upgraded_from_free">嘿
-\n
-\n你似乎從舊版免費 APP 升級了。現在你能解除安裝舊版了，在應用程式設定的頂端有個\'升級至專業版\'按鈕。
-\n
-\n將只有回收桶項目會被刪除，我的最愛項目會被解除標記，以及也會重置你的應用程式設定。
-\n
-\n感謝!</string>
     <string name="switch_to_file_search">檔案搜尋目標切換成全部的可見資料夾</string>
     <string name="set_as_default_folder">設為預設資料夾</string>
     <string name="unset_as_default_folder">取消設為預設資料夾</string>
     <string name="reorder_by_dragging">透過拖曳來重新排序資料夾</string>
-    <string name="reorder_by_dragging_pro">透過拖曳來重新排序資料夾 (Pro)</string>
+    <string name="reorder_by_dragging_pro">透過拖曳來重新排序資料夾 (專業版)</string>
     <string name="restore_to_path">還原到「%s」</string>
     <!-- Filter -->
     <string name="filter_media">篩選媒體檔案</string>
@@ -51,8 +45,7 @@
     <string name="no_media_with_filters">選擇的篩選條件未發現媒體檔案。</string>
     <string name="change_filters_underlined"><u>更改篩選條件</u></string>
     <!-- Hide / Exclude -->
-    <string name="hide_folder_description">這功能藉由新增一個\".nomedia\"檔案，來隱藏資料夾和所有子資料夾。您可以透過[設定]中的\"顯示隱藏的項目\"選項來檢視。
-\n是否繼續？</string>
+    <string name="hide_folder_description">啟用此功能將會在選定資料夾中建立「.nomedia」檔案，使該資料夾及其所有子資料夾被隱藏。如果您想查看這些隱藏的資料夾，可以在設定中選擇「顯示隱藏項目」的選項。是否繼續？</string>
     <string name="exclude_folder_description">此資料夾與子資料夾將只會都從簡易相簿中排除。您可以在設定中進行管理。</string>
     <string name="exclude_folder_parent">是否排除上層資料夾？</string>
     <string name="excluded_activity_placeholder">[排除資料夾]只會將選擇的資料夾與子資料夾一起從簡易相簿中隱藏，它們仍會出現在其他應用程式中。
@@ -61,13 +54,15 @@
     <string name="hidden_folders">隱藏資料夾</string>
     <string name="manage_hidden_folders">管理隱藏資料夾</string>
     <string name="hidden_folders_placeholder">看來沒有以「.nomedia」檔案來隱藏的資料夾。</string>
-    <string name="hidden_all_files">You have to grant the app All Files access to see hidden files, else it cannot work.</string>
+    <string name="hidden_all_files">為了讓您能夠查看隱藏的檔案，請務必開放「所有檔案存取」的權限給此應用程式，否則將無法正常使用。</string>
+    <string name="cant_unhide_folder">若資料夾或其母資料夾的名稱前方有「.」，該資料夾將會被隱藏，而此情況下不能直接取消隱藏。您需要改變資料夾名稱以移除前方的「.」。</string>
     <!-- Include folders -->
     <string name="include_folders">包含資料夾</string>
     <string name="manage_included_folders">管理包含資料夾</string>
     <string name="add_folder">增加資料夾</string>
-    <string name="included_activity_placeholder">如果有些資料夾含有媒體檔案，但本 app 沒有辨識到，您可以在此手動加入。
-\n在此加入項目不會排除其他資料夾。</string>
+    <string name="included_activity_placeholder">如果您擁有一些含有媒體文件但未被應用程式識別的資料夾，您可以手動於此新增它們。
+\n
+\n此處新增的項目不會將其他資料夾排除在外。</string>
     <string name="no_media_add_included">未發現媒體檔案。您可以手動加入包含媒體檔案的資料夾來解決。</string>
     <!-- Resizing -->
     <string name="resize_and_save">縮放所選區域並儲存</string>
@@ -75,8 +70,18 @@
     <string name="height">高度</string>
     <string name="keep_aspect_ratio">保持長寬比</string>
     <string name="invalid_values">請輸入有效的解析度</string>
+    <string name="resize_multiple_images">批量調整圖片大小</string>
+    <string name="resize_factor">調整比例</string>
+    <string name="resize_factor_info">請將圖片大小調整至指定百分比，數值範圍為 10 到 90。</string>
+    <string name="resize_factor_error">請輸入 10 到 90 之間的數值</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="other">%d 張圖片大小調整失敗</item>
+    </plurals>
+    <string name="images_resized_successfully">圖片調整大小成功</string>
     <!-- Editor -->
     <string name="editor">編輯器</string>
+    <string name="basic_editor">基礎編輯器</string>
+    <string name="advanced_editor">進階編輯器</string>
     <string name="rotate">旋轉</string>
     <string name="invalid_image_path">無效的圖片路徑</string>
     <string name="invalid_video_path">無效的影片路徑</string>
@@ -96,6 +101,9 @@
     <string name="rotate_left">向左轉</string>
     <string name="rotate_right">向右轉</string>
     <string name="rotate_one_eighty">旋轉180º</string>
+    <string name="transform">變形</string>
+    <string name="crop">裁切</string>
+    <string name="draw">繪畫</string>
     <string name="flip">翻轉</string>
     <string name="flip_horizontally">水平翻轉</string>
     <string name="flip_vertically">垂直翻轉</string>
@@ -145,7 +153,7 @@
     <string name="by_date_taken_monthly">拍攝日期 (按月)</string>
     <string name="by_file_type">檔案類型</string>
     <string name="by_extension">副檔名</string>
-    <string name="show_file_count_section_header">Show file count at section headers</string>
+    <string name="show_file_count_section_header">於分段標題顯示檔案數量</string>
     <string name="grouping_and_sorting">請注意，歸類和排序兩者是獨立的</string>
     <!-- Widgets -->
     <string name="folder_on_widget">在小工具顯示資料夾:</string>
@@ -193,7 +201,7 @@
     <string name="allow_zooming_videos">點兩下螢幕來縮放影片</string>
     <string name="folder_thumbnail_style">資料夾縮圖樣式</string>
     <string name="file_thumbnail_style">檔案縮圖樣式</string>
-    <string name="mark_favorite_items">Mark favorite items</string>
+    <string name="mark_favorite_items">標記我的最愛</string>
     <string name="thumbnail_spacing">縮圖的間隔</string>
     <string name="show_file_count_line">獨立一行顯示檔案數量</string>
     <string name="show_file_count_brackets">在括號內顯示檔案數量</string>
@@ -201,15 +209,19 @@
     <string name="limit_folder_title">資料夾名稱最長只顯示一行</string>
     <string name="square">方形</string>
     <string name="rounded_corners">圓角</string>
-    <string name="export_favorite_paths">Export favorite file paths</string>
-    <string name="media_management_prompt">To make sure that all file operations work reliably, please make this app a Media management app in your device settings.</string>
-    <string name="password_protect_excluded">Password protect excluded folder visibility</string>
+    <string name="export_favorite_paths">匯出我的最愛</string>
+    <string name="import_favorite_paths">匯入我的最愛</string>
+    <string name="paths_imported_successfully">路徑匯入成功</string>
+    <string name="media_management_prompt">為了確保所有檔案操作都能可靠地運作，請將此 app 設為裝置設定中的媒體管理 app。</string>
+    <string name="password_protect_excluded">密碼保護以隱藏特定資料夾</string>
     <string name="media_management_manual">出錯了，請至裝置的設定 - 應用程式（和通知） - 特殊應用程式存取權 - 媒體管理應用程式，允許本 app 管理媒體。</string>
     <string name="media_management_note">若重新導向未順利運作，請至裝置的設定 - 應用程式（和通知） - 特殊應用程式存取權 - 媒體管理應用程式，允許本 app 管理媒體。</string>
-    <string name="media_management_alternative">If you do not want to do it, you can also go into your device Settings - Apps - Special app access - Media management apps and allow this app to manage media.</string>
-    <string name="alternative_media_access">Alternatively, you can allow accessing media files only. In that case you will not be able to work with hidden files though.</string>
-    <string name="media_only">Media only</string>
-    <string name="all_files">All files</string>
+    <string name="media_management_alternative">如果您不想這麼做，也可以進入您的裝置設定 - 應用程式 - 特殊應用程式存取 - 媒體管理應用程式，並允許此應用程式管理媒體。</string>
+    <string name="alternative_media_access">或者，您只能允許存取媒體檔案。但在這種情況下，您將無法處理隱藏檔案。</string>
+    <string name="media_only">僅媒體</string>
+    <string name="all_files">所有檔案</string>
+    <string name="search_all_files">在主畫面搜尋所有檔案，而非資料夾</string>
+    <string name="show_all_folders">顯示一個選單按鈕，快速切換「顯示所有資料夾內容」</string>
     <!-- Setting sections -->
     <string name="thumbnails">縮圖</string>
     <string name="fullscreen_media">全螢幕媒體檔案</string>
@@ -285,29 +297,29 @@
     <string name="pesdk_sticker_button_color">顏色</string>
     <string name="pesdk_sticker_button_delete">刪除</string>
     <string name="pesdk_sticker_button_bringToFront">移到最上層</string>
-    <string name="pesdk_sticker_button_straighten">Straighten</string>
+    <string name="pesdk_sticker_button_straighten">矯正</string>
     <string name="pesdk_sticker_button_replace">更改</string>
     <string name="pesdk_sticker_button_opacity">不透明度</string>
     <string name="pesdk_sticker_button_contrast">對比</string>
     <string name="pesdk_sticker_button_saturation">飽和度</string>
     <string name="pesdk_sticker_button_brightness">亮度</string>
-    <string name="pesdk_sticker_category_name_custom">Uploads</string>
-    <string name="pesdk_overlay_title_name">Overlay</string>
+    <string name="pesdk_sticker_category_name_custom">上傳</string>
+    <string name="pesdk_overlay_title_name">覆蓋</string>
     <string name="pesdk_overlay_button_blendModeNormal">Normal</string>
-    <string name="pesdk_overlay_button_blendModeDarken">Darken</string>
+    <string name="pesdk_overlay_button_blendModeDarken">變暗</string>
     <string name="pesdk_overlay_button_blendModeScreen">Screen</string>
-    <string name="pesdk_overlay_button_blendModeOverlay">Overlay</string>
-    <string name="pesdk_overlay_button_blendModeLighten">Lighten</string>
-    <string name="pesdk_overlay_button_blendModeMultiply">Multiply</string>
-    <string name="pesdk_overlay_button_blendModeColorBurn">Color Burn</string>
-    <string name="pesdk_overlay_button_blendModeSoftLight">Soft Light</string>
-    <string name="pesdk_overlay_button_blendModeHardLight">Hard Light</string>
+    <string name="pesdk_overlay_button_blendModeOverlay">覆蓋</string>
+    <string name="pesdk_overlay_button_blendModeLighten">變亮</string>
+    <string name="pesdk_overlay_button_blendModeMultiply">色彩增值</string>
+    <string name="pesdk_overlay_button_blendModeColorBurn">加深顏色</string>
+    <string name="pesdk_overlay_button_blendModeSoftLight">柔光</string>
+    <string name="pesdk_overlay_button_blendModeHardLight">實光</string>
     <string name="pesdk_overlay_asset_none">無</string>
-    <string name="pesdk_overlay_asset_golden">Golden</string>
-    <string name="pesdk_overlay_asset_lightleak1">Lightleak 1</string>
-    <string name="pesdk_overlay_asset_mosaic">Mosaic</string>
-    <string name="pesdk_overlay_asset_paper">Paper</string>
-    <string name="pesdk_overlay_asset_rain">Rain</string>
+    <string name="pesdk_overlay_asset_golden">金色</string>
+    <string name="pesdk_overlay_asset_lightleak1">光漏 1</string>
+    <string name="pesdk_overlay_asset_mosaic">馬賽克</string>
+    <string name="pesdk_overlay_asset_paper">紙質</string>
+    <string name="pesdk_overlay_asset_rain">雨</string>
     <string name="pesdk_overlay_asset_vintage">Vintage</string>
     <string name="pesdk_common_button_flipH">水平翻轉</string>
     <string name="pesdk_common_button_flipV">垂直翻轉</string>
@@ -331,7 +343,7 @@
     <string name="pesdk_common_title_greenColor">綠色</string>
     <string name="pesdk_common_title_aquamarinColor">藍綠</string>
     <string name="pesdk_common_title_pipettableColor">顏色吸取器</string>
-    <string name="vesdk_video_trim_title_name">Trim</string>
+    <string name="vesdk_video_trim_title_name">修剪</string>
     <!-- FAQ -->
     <string name="faq_1_title">如何將簡易相簿設為裝置的預設相簿？</string>
     <string name="faq_1_text">首先開啟裝置的設定，在應用程式相關設定處找到目前的預設相簿。 選擇「預設為開啟」或類似的選項，然後按「清除預設值」。 之後開啟圖片或影片檔案時會出現選擇 APP 的畫面，此時即可將簡易相簿設為預設相簿。</string>
@@ -363,11 +375,11 @@
     <string name="faq_15_text">APP 快取最高會佔用 250MB，來讓圖片載入得更快。如果本 APP 佔用了超過 250MB 的空間，很有可能是因為有檔案在回收桶裡，這些檔案也會算在 APP 佔用的空間上。您可以開啟回收桶並刪除所有檔案，或是從設定中清空它。檔案被丟入回收桶 30 天後將會自動被刪除。</string>
     <string name="faq_16_title">檔案／資料夾隱藏怎麼了？為什麼我看不到隱藏的項目了？</string>
     <string name="faq_16_text">自 Android 11 開始，因系統限制，無法隱藏或解除隱藏檔案或資料夾，也無法在相簿 app 中看到已隱藏的項目。請使用檔案管理程式達成上述操作。</string>
-    <string name="faq_16_text_extra">Or you can also grant this gallery access to All Files through your device settings, that will allow us showing hidden items and make file operations more reliable in general.</string>
+    <string name="faq_16_text_extra">或者，您也可以通過您的裝置設定授予此相簿存取所有檔案的權限，這將允許我們顯示隱藏項目並使檔案操作更為可靠。</string>
     <string name="faq_17_title">為什麼不能再包含缺漏的資料夾了？</string>
     <string name="faq_17_text">因 Android 11 的系統變更，這項功能無法再運作。app 沒辦法瀏覽實際的資料夾，而是透過所謂的 MediaStorage 來擷取資料。</string>
-    <string name="faq_18_title">Why do I see ads during video playback\?</string>
-    <string name="faq_18_text">Our apps have no ads whatsoever. If you see them during video playback, you must be using some other apps video player. Try finding your default video player in the device settings, then do a \"Clear defaults\" on it. The next time you invoke some video intent you will see an app picker prompt, where you can select what app you want to use.</string>
+    <string name="faq_18_title">為什麼我在播放影片時看到廣告？</string>
+    <string name="faq_18_text">我們的應用程式完全沒有廣告。如果您在播放影片時看到它們，那麼您一定是在使用其他應用程式的影片播放器。嘗試在裝置設定中找到您的預設影片播放器，然後對其進行清除其預設值。下次您嘗試播放影片時，系統會提示您選擇應用程式，您可以在此選擇您想要使用的影片播放器。</string>
     <!--
         Haven't found some strings? There's more at
         https://github.com/SimpleMobileTools/Simple-Commons/tree/master/commons/src/main/res

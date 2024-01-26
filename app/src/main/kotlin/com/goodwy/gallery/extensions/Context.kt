@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.PictureDrawable
 import android.media.AudioManager
 import android.os.Process
@@ -14,11 +15,17 @@ import android.provider.MediaStore.Images
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
+import com.bumptech.glide.integration.webp.WebpBitmapFactory
+import com.bumptech.glide.integration.webp.decoder.WebpDownsampler
+import com.bumptech.glide.integration.webp.decoder.WebpDrawable
+import com.bumptech.glide.integration.webp.decoder.WebpDrawableTransformation
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.DecodeFormat
+import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
@@ -36,12 +43,12 @@ import com.goodwy.gallery.interfaces.*
 import com.goodwy.gallery.models.*
 import com.goodwy.gallery.svg.SvgSoftwareLayerSetter
 import com.squareup.picasso.Picasso
-import pl.droidsonroids.gif.GifDrawable
 import java.io.File
 import java.io.FileInputStream
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
 import kotlin.collections.set
+import kotlin.math.max
 
 val Context.audioManager get() = getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
@@ -136,6 +143,7 @@ fun Context.getSortedDirectories(source: ArrayList<Directory>): ArrayList<Direct
                     o1.sortValue.normalizeString().toLowerCase().compareTo(o2.sortValue.normalizeString().toLowerCase())
                 }
             }
+
             sorting and SORT_BY_PATH != 0 -> {
                 if (o1.sortValue.isEmpty()) {
                     o1.sortValue = o1.path.toLowerCase()
@@ -151,6 +159,7 @@ fun Context.getSortedDirectories(source: ArrayList<Directory>): ArrayList<Direct
                     o1.sortValue.toLowerCase().compareTo(o2.sortValue.toLowerCase())
                 }
             }
+
             sorting and SORT_BY_PATH != 0 -> AlphanumericComparator().compare(o1.sortValue.toLowerCase(), o2.sortValue.toLowerCase())
             sorting and SORT_BY_SIZE != 0 -> (o1.sortValue.toLongOrNull() ?: 0).compareTo(o2.sortValue.toLongOrNull() ?: 0)
             sorting and SORT_BY_DATE_MODIFIED != 0 -> (o1.sortValue.toLongOrNull() ?: 0).compareTo(o2.sortValue.toLongOrNull() ?: 0)
@@ -173,12 +182,14 @@ fun Context.getDirsToShow(dirs: ArrayList<Directory>, allDirs: ArrayList<Directo
             it.subfoldersMediaCount = it.mediaCnt
         }
 
-        val parentDirs = getDirectParentSubfolders(dirs, currentPathPrefix)
-        updateSubfolderCounts(dirs, parentDirs)
+        val filledDirs = fillWithSharedDirectParents(dirs)
+        val parentDirs = getDirectParentSubfolders(filledDirs, currentPathPrefix)
+        updateSubfolderCounts(filledDirs, parentDirs)
 
         // show the current folder as an available option too, not just subfolders
         if (currentPathPrefix.isNotEmpty()) {
-            val currentFolder = allDirs.firstOrNull { parentDirs.firstOrNull { it.path == currentPathPrefix } == null && it.path == currentPathPrefix }
+            val currentFolder =
+                allDirs.firstOrNull { parentDirs.firstOrNull { it.path.equals(currentPathPrefix, true) } == null && it.path.equals(currentPathPrefix, true) }
             currentFolder?.apply {
                 subfoldersCount = 1
                 parentDirs.add(this)
@@ -192,11 +203,73 @@ fun Context.getDirsToShow(dirs: ArrayList<Directory>, allDirs: ArrayList<Directo
     }
 }
 
+private fun Context.addParentWithoutMediaFiles(into: ArrayList<Directory>, path: String): Boolean {
+    val isSortingAscending = config.sorting.isSortingAscending()
+    val subDirs = into.filter { File(it.path).parent.equals(path, true) } as ArrayList<Directory>
+    val newDirId = max(1000L, into.maxOf { it.id ?: 0L })
+    if (subDirs.isNotEmpty()) {
+        val lastModified = if (isSortingAscending) {
+            subDirs.minByOrNull { it.modified }?.modified
+        } else {
+            subDirs.maxByOrNull { it.modified }?.modified
+        } ?: 0
+
+        val dateTaken = if (isSortingAscending) {
+            subDirs.minByOrNull { it.taken }?.taken
+        } else {
+            subDirs.maxByOrNull { it.taken }?.taken
+        } ?: 0
+
+        var mediaTypes = 0
+        subDirs.forEach {
+            mediaTypes = mediaTypes or it.types
+        }
+
+        val directory = Directory(
+            newDirId + 1,
+            path,
+            subDirs.first().tmb,
+            getFolderNameFromPath(path),
+            subDirs.sumBy { it.mediaCnt },
+            lastModified,
+            dateTaken,
+            subDirs.sumByLong { it.size },
+            getPathLocation(path),
+            mediaTypes,
+            ""
+        )
+
+        directory.containsMediaFilesDirectly = false
+        into.add(directory)
+        return true
+    }
+    return false
+}
+
+fun Context.fillWithSharedDirectParents(dirs: ArrayList<Directory>): ArrayList<Directory> {
+    val allDirs = ArrayList<Directory>(dirs)
+    val childCounts = mutableMapOf<String, Int>()
+    for (dir in dirs) {
+        File(dir.path).parent?.let {
+            val current = childCounts[it] ?: 0
+            childCounts.put(it, current + 1)
+        }
+    }
+
+    childCounts
+        .filter { dir -> dir.value > 1 && dirs.none { it.path.equals(dir.key, true) } }
+        .toList()
+        .sortedByDescending { it.first.length }
+        .forEach { (parent, _) ->
+            addParentWithoutMediaFiles(allDirs, parent)
+        }
+    return allDirs
+}
+
 fun Context.getDirectParentSubfolders(dirs: ArrayList<Directory>, currentPathPrefix: String): ArrayList<Directory> {
     val folders = dirs.map { it.path }.sorted().toMutableSet() as HashSet<String>
     val currentPaths = LinkedHashSet<String>()
     val foldersWithoutMediaFiles = ArrayList<String>()
-    var newDirId = 1000L
 
     for (path in folders) {
         if (path == RECYCLE_BIN || path == FAVORITES) {
@@ -213,7 +286,7 @@ fun Context.getDirectParentSubfolders(dirs: ArrayList<Directory>, currentPathPre
             }
         }
 
-        if (currentPathPrefix.isNotEmpty() && path == currentPathPrefix || File(path).parent.equals(currentPathPrefix, true)) {
+        if (currentPathPrefix.isNotEmpty() && path.equals(currentPathPrefix, true) || File(path).parent.equals(currentPathPrefix, true)) {
             currentPaths.add(path)
         } else if (folders.any { !it.equals(path, true) && (File(path).parent.equals(it, true) || File(it).parent.equals(File(path).parent, true)) }) {
             // if we have folders like
@@ -221,45 +294,9 @@ fun Context.getDirectParentSubfolders(dirs: ArrayList<Directory>, currentPathPre
             // /storage/emulated/0/Pictures/Screenshots,
             // but /storage/emulated/0/Pictures is empty, still Pictures with the first folders thumbnails and proper other info
             val parent = File(path).parent
-            if (parent != null && !folders.contains(parent) && dirs.none { it.path == parent }) {
+            if (parent != null && !folders.contains(parent) && dirs.none { it.path.equals(parent, true) }) {
                 currentPaths.add(parent)
-                val isSortingAscending = config.sorting.isSortingAscending()
-                val subDirs = dirs.filter { File(it.path).parent.equals(File(path).parent, true) } as ArrayList<Directory>
-                if (subDirs.isNotEmpty()) {
-                    val lastModified = if (isSortingAscending) {
-                        subDirs.minByOrNull { it.modified }?.modified
-                    } else {
-                        subDirs.maxByOrNull { it.modified }?.modified
-                    } ?: 0
-
-                    val dateTaken = if (isSortingAscending) {
-                        subDirs.minByOrNull { it.taken }?.taken
-                    } else {
-                        subDirs.maxByOrNull { it.taken }?.taken
-                    } ?: 0
-
-                    var mediaTypes = 0
-                    subDirs.forEach {
-                        mediaTypes = mediaTypes or it.types
-                    }
-
-                    val directory = Directory(
-                        newDirId++,
-                        parent,
-                        subDirs.first().tmb,
-                        getFolderNameFromPath(parent),
-                        subDirs.sumBy { it.mediaCnt },
-                        lastModified,
-                        dateTaken,
-                        subDirs.sumByLong { it.size },
-                        getPathLocation(parent),
-                        mediaTypes,
-                        ""
-                    )
-
-                    directory.containsMediaFilesDirectly = false
-                    dirs.add(directory)
-                    currentPaths.add(parent)
+                if (addParentWithoutMediaFiles(dirs, parent)) {
                     foldersWithoutMediaFiles.add(parent)
                 }
             }
@@ -417,11 +454,11 @@ fun Context.checkAppendingHidden(path: String, hidden: String, includedFolders: 
 
 fun Context.getFolderNameFromPath(path: String): String {
     return when (path) {
-        internalStoragePath -> getString(R.string.internal)
-        sdCardPath -> getString(R.string.sd_card)
-        otgPath -> getString(R.string.usb)
-        FAVORITES -> getString(R.string.favorites)
-        RECYCLE_BIN -> getString(R.string.recycle_bin)
+        internalStoragePath -> getString(com.goodwy.commons.R.string.internal)
+        sdCardPath -> getString(com.goodwy.commons.R.string.sd_card)
+        otgPath -> getString(com.goodwy.commons.R.string.usb)
+        FAVORITES -> getString(com.goodwy.commons.R.string.favorites)
+        RECYCLE_BIN -> getString(com.goodwy.commons.R.string.recycle_bin)
         else -> path.getFilenameFromPath()
     }
 }
@@ -431,31 +468,11 @@ fun Context.loadImage(
     roundCorners: Int, signature: ObjectKey, skipMemoryCacheAtPaths: ArrayList<String>? = null
 ) {
     target.isHorizontalScrolling = horizontalScroll
-    if (type == TYPE_IMAGES || type == TYPE_VIDEOS || type == TYPE_RAWS || type == TYPE_PORTRAITS) {
-        if (type == TYPE_IMAGES && path.isPng()) {
-            loadPng(path, target, cropThumbnails, roundCorners, signature, skipMemoryCacheAtPaths)
-        } else {
-            loadJpg(path, target, cropThumbnails, roundCorners, signature, skipMemoryCacheAtPaths)
-        }
-    } else if (type == TYPE_GIFS) {
-        if (!animateGifs) {
-            loadStaticGIF(path, target, cropThumbnails, roundCorners, signature, skipMemoryCacheAtPaths)
-            return
-        }
-
-        try {
-            val gifDrawable = GifDrawable(path)
-            target.setImageDrawable(gifDrawable)
-            gifDrawable.start()
-
-            target.scaleType = if (cropThumbnails) ImageView.ScaleType.CENTER_CROP else ImageView.ScaleType.FIT_CENTER
-        } catch (e: Exception) {
-            loadStaticGIF(path, target, cropThumbnails, roundCorners, signature, skipMemoryCacheAtPaths)
-        } catch (e: OutOfMemoryError) {
-            loadStaticGIF(path, target, cropThumbnails, roundCorners, signature, skipMemoryCacheAtPaths)
-        }
-    } else if (type == TYPE_SVGS) {
+    if (type == TYPE_SVGS) {
         loadSVG(path, target, cropThumbnails, roundCorners, signature)
+    } else {
+        val tryLoadingWithPicasso = type == TYPE_IMAGES && path.isPng()
+        loadImageBase(path, target, cropThumbnails, roundCorners, signature, skipMemoryCacheAtPaths, animateGifs, tryLoadingWithPicasso)
     }
 }
 
@@ -480,105 +497,74 @@ fun Context.getPathLocation(path: String): Int {
     }
 }
 
-fun Context.loadPng(
+fun Context.loadImageBase(
     path: String,
     target: MySquareImageView,
     cropThumbnails: Boolean,
     roundCorners: Int,
     signature: ObjectKey,
-    skipMemoryCacheAtPaths: ArrayList<String>? = null
+    skipMemoryCacheAtPaths: ArrayList<String>? = null,
+    animate: Boolean = false,
+    tryLoadingWithPicasso: Boolean = false,
+    crossFadeDuration: Int = 300
 ) {
     val options = RequestOptions()
         .signature(signature)
         .skipMemoryCache(skipMemoryCacheAtPaths?.contains(path) == true)
-        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
         .priority(Priority.LOW)
+        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
         .format(DecodeFormat.PREFER_ARGB_8888)
 
-    if (cropThumbnails) options.centerCrop() else options.fitCenter()
+    if (cropThumbnails) {
+        options.optionalTransform(CenterCrop())
+        options.optionalTransform(WebpDrawable::class.java, WebpDrawableTransformation(CenterCrop()))
+    } else {
+        options.optionalTransform(FitCenter())
+        options.optionalTransform(WebpDrawable::class.java, WebpDrawableTransformation(FitCenter()))
+    }
+
+    // animation is only supported without rounded corners
+    if (animate && roundCorners == ROUNDED_CORNERS_NONE) {
+        // this is required to make glide cache aware of changes
+        options.decode(Drawable::class.java)
+    } else {
+        options.dontAnimate()
+        // don't animate is not enough for webp files, decode as bitmap forces first frame use in animated webps
+        options.decode(Bitmap::class.java)
+    }
+
+    if (roundCorners != ROUNDED_CORNERS_NONE) {
+        val cornerSize = if (roundCorners == ROUNDED_CORNERS_SMALL) com.goodwy.commons.R.dimen.rounded_corner_radius_big else com.goodwy.commons.R.dimen.dialog_corner_radius
+        val cornerRadius = resources.getDimension(cornerSize).toInt()
+        val roundedCornersTransform = RoundedCorners(cornerRadius)
+        options.optionalTransform(MultiTransformation(CenterCrop(), roundedCornersTransform))
+        options.optionalTransform(WebpDrawable::class.java, MultiTransformation(WebpDrawableTransformation(CenterCrop()), WebpDrawableTransformation(roundedCornersTransform)))
+    }
+
+    WebpBitmapFactory.sUseSystemDecoder = false // CVE-2023-4863
     var builder = Glide.with(applicationContext)
-        .asBitmap()
         .load(path)
         .apply(options)
-        .listener(object : RequestListener<Bitmap> {
-            override fun onLoadFailed(e: GlideException?, model: Any?, targetBitmap: Target<Bitmap>?, isFirstResource: Boolean): Boolean {
+        .set(WebpDownsampler.USE_SYSTEM_DECODER, false) // CVE-2023-4863
+        .transition(DrawableTransitionOptions.withCrossFade(crossFadeDuration))
+
+    if (tryLoadingWithPicasso) {
+        builder = builder.listener(object : RequestListener<Drawable> {
+            override fun onLoadFailed(e: GlideException?, model: Any?, targetBitmap: Target<Drawable>, isFirstResource: Boolean): Boolean {
                 tryLoadingWithPicasso(path, target, cropThumbnails, roundCorners, signature)
                 return true
             }
 
             override fun onResourceReady(
-                resource: Bitmap?,
-                model: Any?,
-                targetBitmap: Target<Bitmap>?,
-                dataSource: DataSource?,
+                resource: Drawable,
+                model: Any,
+                targetBitmap: Target<Drawable>,
+                dataSource: DataSource,
                 isFirstResource: Boolean
             ): Boolean {
                 return false
             }
         })
-
-    if (roundCorners != ROUNDED_CORNERS_NONE) {
-        val cornerSize = if (roundCorners == ROUNDED_CORNERS_SMALL) R.dimen.rounded_corner_radius_small else R.dimen.rounded_corner_radius_big
-        val cornerRadius = resources.getDimension(cornerSize).toInt()
-        builder = builder.transform(CenterCrop(), RoundedCorners(cornerRadius))
-    }
-
-    builder.into(target)
-}
-
-fun Context.loadJpg(
-    path: String,
-    target: MySquareImageView,
-    cropThumbnails: Boolean,
-    roundCorners: Int,
-    signature: ObjectKey,
-    skipMemoryCacheAtPaths: ArrayList<String>? = null
-) {
-    val options = RequestOptions()
-        .signature(signature)
-        .skipMemoryCache(skipMemoryCacheAtPaths?.contains(path) == true)
-        .priority(Priority.LOW)
-        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-
-    if (cropThumbnails) options.centerCrop() else options.fitCenter()
-    var builder = Glide.with(applicationContext)
-        .load(path)
-        .apply(options)
-        .transition(DrawableTransitionOptions.withCrossFade())
-
-    if (roundCorners != ROUNDED_CORNERS_NONE) {
-        val cornerSize = if (roundCorners == ROUNDED_CORNERS_SMALL) R.dimen.rounded_corner_radius_small else R.dimen.rounded_corner_radius_big
-        val cornerRadius = resources.getDimension(cornerSize).toInt()
-        builder = builder.transform(CenterCrop(), RoundedCorners(cornerRadius))
-    }
-
-    builder.into(target)
-}
-
-fun Context.loadStaticGIF(
-    path: String,
-    target: MySquareImageView,
-    cropThumbnails: Boolean,
-    roundCorners: Int,
-    signature: ObjectKey,
-    skipMemoryCacheAtPaths: ArrayList<String>? = null
-) {
-    val options = RequestOptions()
-        .signature(signature)
-        .skipMemoryCache(skipMemoryCacheAtPaths?.contains(path) == true)
-        .priority(Priority.LOW)
-        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-
-    if (cropThumbnails) options.centerCrop() else options.fitCenter()
-    var builder = Glide.with(applicationContext)
-        .asBitmap() // make sure the GIF wont animate
-        .load(path)
-        .apply(options)
-
-    if (roundCorners != ROUNDED_CORNERS_NONE) {
-        val cornerSize = if (roundCorners == ROUNDED_CORNERS_SMALL) R.dimen.rounded_corner_radius_small else R.dimen.rounded_corner_radius_big
-        val cornerRadius = resources.getDimension(cornerSize).toInt()
-        builder = builder.transform(CenterCrop(), RoundedCorners(cornerRadius))
     }
 
     builder.into(target)
@@ -596,7 +582,8 @@ fun Context.loadSVG(path: String, target: MySquareImageView, cropThumbnails: Boo
         .transition(DrawableTransitionOptions.withCrossFade())
 
     if (roundCorners != ROUNDED_CORNERS_NONE) {
-        val cornerSize = if (roundCorners == ROUNDED_CORNERS_SMALL) R.dimen.rounded_corner_radius_small else R.dimen.rounded_corner_radius_big
+        val cornerSize =
+            if (roundCorners == ROUNDED_CORNERS_SMALL) com.goodwy.commons.R.dimen.rounded_corner_radius_small else com.goodwy.commons.R.dimen.rounded_corner_radius_big
         val cornerRadius = resources.getDimension(cornerSize).toInt()
         builder = builder.transform(CenterCrop(), RoundedCorners(cornerRadius))
     }
@@ -621,7 +608,8 @@ fun Context.tryLoadingWithPicasso(path: String, view: MySquareImageView, cropThu
         }
 
         if (roundCorners != ROUNDED_CORNERS_NONE) {
-            val cornerSize = if (roundCorners == ROUNDED_CORNERS_SMALL) R.dimen.rounded_corner_radius_small else R.dimen.rounded_corner_radius_big
+            val cornerSize =
+                if (roundCorners == ROUNDED_CORNERS_SMALL) com.goodwy.commons.R.dimen.rounded_corner_radius_small else com.goodwy.commons.R.dimen.rounded_corner_radius_big
             val cornerRadius = resources.getDimension(cornerSize).toInt()
             builder = builder.transform(PicassoRoundedCornersTransformation(cornerRadius.toFloat()))
         }
@@ -635,6 +623,7 @@ fun Context.getCachedDirectories(
     getVideosOnly: Boolean = false,
     getImagesOnly: Boolean = false,
     forceShowHidden: Boolean = false,
+    forceShowExcluded: Boolean = false,
     callback: (ArrayList<Directory>) -> Unit
 ) {
     ensureBackgroundThread {
@@ -654,7 +643,7 @@ fun Context.getCachedDirectories(
         }
 
         val shouldShowHidden = config.shouldShowHidden || forceShowHidden
-        val excludedPaths = if (config.temporarilyShowExcluded) {
+        val excludedPaths = if (config.temporarilyShowExcluded || forceShowExcluded) {
             HashSet()
         } else {
             config.excludedFolders
@@ -859,7 +848,7 @@ fun Context.updateFavorite(path: String, isFavorite: Boolean) {
             favoritesDB.deleteFavoritePath(path)
         }
     } catch (e: Exception) {
-        toast(R.string.unknown_error_occurred)
+        toast(com.goodwy.commons.R.string.unknown_error_occurred)
     }
 }
 

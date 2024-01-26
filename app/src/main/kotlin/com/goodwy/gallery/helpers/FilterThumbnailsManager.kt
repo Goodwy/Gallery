@@ -2,7 +2,6 @@ package com.goodwy.gallery.helpers
 
 import android.graphics.Bitmap
 import com.goodwy.gallery.models.FilterItem
-import java.util.*
 
 class FilterThumbnailsManager {
     private var filterThumbnails = ArrayList<FilterItem>(10)

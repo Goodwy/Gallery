@@ -8,7 +8,7 @@ import com.google.gson.reflect.TypeToken
 import com.goodwy.commons.helpers.*
 import com.goodwy.gallery.R
 import com.goodwy.gallery.models.AlbumCover
-import java.util.*
+import java.util.Arrays
 
 class Config(context: Context) : BaseConfig(context) {
     companion object {
@@ -205,7 +205,7 @@ class Config(context: Context) : BaseConfig(context) {
         set(display) = prefs.edit().putBoolean(DISPLAY_FILE_NAMES, display).apply()
 
     var blackBackground: Boolean
-        get() = prefs.getBoolean(BLACK_BACKGROUND, true)
+        get() = prefs.getBoolean(BLACK_BACKGROUND, false)
         set(blackBackground) = prefs.edit().putBoolean(BLACK_BACKGROUND, blackBackground).apply()
 
     var filterMedia: Int
@@ -367,6 +367,10 @@ class Config(context: Context) : BaseConfig(context) {
         get() = prefs.getBoolean(TEMP_SKIP_DELETE_CONFIRMATION, false)
         set(tempSkipDeleteConfirmation) = prefs.edit().putBoolean(TEMP_SKIP_DELETE_CONFIRMATION, tempSkipDeleteConfirmation).apply()
 
+    var tempSkipRecycleBin: Boolean
+        get() = prefs.getBoolean(TEMP_SKIP_RECYCLE_BIN, false)
+        set(tempSkipRecycleBin) = prefs.edit().putBoolean(TEMP_SKIP_RECYCLE_BIN, tempSkipRecycleBin).apply()
+
     var wereFavoritesPinned: Boolean
         get() = prefs.getBoolean(WERE_FAVORITES_PINNED, false)
         set(wereFavoritesPinned) = prefs.edit().putBoolean(WERE_FAVORITES_PINNED, wereFavoritesPinned).apply()
@@ -437,6 +441,10 @@ class Config(context: Context) : BaseConfig(context) {
         "$internalStoragePath/WhatsApp/Media/WhatsApp Images/Sent",
         "$internalStoragePath/WhatsApp/Media/WhatsApp Video",
         "$internalStoragePath/WhatsApp/Media/WhatsApp Video/Sent",
+        "$internalStoragePath/WhatsApp/Media/.Statuses",
+        "$internalStoragePath/Android/media/com.whatsapp/WhatsApp/Media",
+        "$internalStoragePath/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Images",
+        "$internalStoragePath/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Video"
     )
 
     var showRecycleBinAtFolders: Boolean
@@ -550,4 +558,17 @@ class Config(context: Context) : BaseConfig(context) {
     var avoidShowingAllFilesPrompt: Boolean
         get() = prefs.getBoolean(AVOID_SHOWING_ALL_FILES_PROMPT, false)
         set(avoidShowingAllFilesPrompt) = prefs.edit().putBoolean(AVOID_SHOWING_ALL_FILES_PROMPT, avoidShowingAllFilesPrompt).apply()
+
+    var searchAllFilesByDefault: Boolean
+        get() = prefs.getBoolean(SEARCH_ALL_FILES_BY_DEFAULT, false)
+        set(searchAllFilesByDefault) = prefs.edit().putBoolean(SEARCH_ALL_FILES_BY_DEFAULT, searchAllFilesByDefault).apply()
+
+    var lastExportedFavoritesFolder: String
+        get() = prefs.getString(LAST_EXPORTED_FAVORITES_FOLDER, "")!!
+        set(lastExportedFavoritesFolder) = prefs.edit().putString(LAST_EXPORTED_FAVORITES_FOLDER, lastExportedFavoritesFolder).apply()
+
+    //Goodwy
+    var showWarning: Boolean
+        get() = prefs.getBoolean(SHOW_WARNING, true)
+        set(showWarning) = prefs.edit().putBoolean(SHOW_WARNING, showWarning).apply()
 }

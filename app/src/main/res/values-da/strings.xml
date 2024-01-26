@@ -2,9 +2,10 @@
 <resources>
     <string name="app_name">Simple Gallery</string>
     <string name="app_launcher_name">Galleri</string>
-    <string name="edit">Rediger</string>
+    <string name="edit">Redigér</string>
     <string name="open_camera">Åbn kamera</string>
     <string name="hidden">(skjult)</string>
+    <string name="excluded">(ekskluderet)</string>
     <string name="pin_folder">Fastgør mappe</string>
     <string name="unpin_folder">Frigør mappe</string>
     <string name="pin_to_the_top">Fastgør til toppen</string>
@@ -27,13 +28,6 @@
     <string name="dates_fixed_successfully">Datoer fikset med succes</string>
     <string name="no_date_takens_found">Ingen eksponeringsdatoer er fundet</string>
     <string name="share_resized">Del en skaleret version</string>
-    <string name="upgraded_from_free">Hej
-\n
-\nDet ser ud til at du har opgraderet fra den gamle, gratis app. Du kan afinstallere den gamle version, som har en \"Opgrader til Pro\"-knap i toppen af appens indstillinger.
-\n
-\nDu vil blot få papirkurvens elementer slettet, favoritter vil blive umarkeret og du vil også skulle genopsætte din apps indstillinger.
-\n
-\nTak!</string>
     <string name="switch_to_file_search">Skift til filsøgning på tværs af synlige mapper</string>
     <string name="set_as_default_folder">Vælg som standardmappe</string>
     <string name="unset_as_default_folder">Fravælg som standardmappe</string>
@@ -60,7 +54,8 @@
     <string name="hidden_folders">Skjulte mapper</string>
     <string name="manage_hidden_folders">Administrer skjulte mapper</string>
     <string name="hidden_folders_placeholder">Det ser ikke ud til at du har nogen skjulte mapper med en \".nomedia\"-fil.</string>
-    <string name="hidden_all_files">You have to grant the app All Files access to see hidden files, else it cannot work.</string>
+    <string name="hidden_all_files">Du skal give app\'en "Alle filer" tilladelsen for at se skjulte filer, ellers vil det ikke fungere.</string>
+    <string name="cant_unhide_folder">If a folder or one of its parent folders has a dot before its name, it is hidden and cannot be unhidden like this. You have to remove the dot by renaming it.</string>
     <!-- Include folders -->
     <string name="include_folders">Inkluderede mapper</string>
     <string name="manage_included_folders">Administrer inkluderede mapper</string>
@@ -75,8 +70,19 @@
     <string name="height">Højde</string>
     <string name="keep_aspect_ratio">Bevar billedformat</string>
     <string name="invalid_values">Indtast en gyldig opløsning</string>
+    <string name="resize_multiple_images">Ændr størrelsen på flere billeder</string>
+    <string name="resize_factor">Størrelsesfaktor</string>
+    <string name="resize_factor_info">Ændr billedstørrelser til den angivne procentdel, værdien skal være mellem 10 og 90.</string>
+    <string name="resize_factor_error">Indtast et tal mellem 10 og 90</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Kunne ikke ændre størrelse på %d billede</item>
+        <item quantity="other">Kunne ikke ændre størrelse på %d billeder</item>
+    </plurals>
+    <string name="images_resized_successfully">Billedstørrelser ændret</string>
     <!-- Editor -->
     <string name="editor">Editor</string>
+    <string name="basic_editor">Grundlæggende editor</string>
+    <string name="advanced_editor">Avanceret editor</string>
     <string name="rotate">Roter</string>
     <string name="invalid_image_path">Ugyldig sti til billede</string>
     <string name="invalid_video_path">Ugyldig sti til video</string>
@@ -87,8 +93,8 @@
     <string name="file_edited_successfully">Fil redigeret med succes</string>
     <string name="image_edited_successfully">Billede redigeret med succes</string>
     <string name="video_edited_successfully">Video redigeret med succes</string>
-    <string name="edit_image_with">Rediger billede med:</string>
-    <string name="edit_video_with">Rediger video med:</string>
+    <string name="edit_image_with">Redigér billede med:</string>
+    <string name="edit_video_with">Redigér video med:</string>
     <string name="no_image_editor_found">Der blev ikke fundet en editor til billedbehandling</string>
     <string name="no_video_editor_found">Der blev ikke fundet en videoeditor</string>
     <string name="unknown_file_location">Ukendt filplacering</string>
@@ -96,6 +102,9 @@
     <string name="rotate_left">Roter mod venstre</string>
     <string name="rotate_right">Roter mod højre</string>
     <string name="rotate_one_eighty">Roter 180º</string>
+    <string name="transform">Transformér</string>
+    <string name="crop">Beskær</string>
+    <string name="draw">Tegn</string>
     <string name="flip">Spejlvend</string>
     <string name="flip_horizontally">Spejlvend vandret</string>
     <string name="flip_vertically">Spejlvend lodret</string>
@@ -201,7 +210,9 @@
     <string name="limit_folder_title">Begræns lange mappenavne til 1 linje</string>
     <string name="square">Firkant</string>
     <string name="rounded_corners">Afrundede hjørner</string>
-    <string name="export_favorite_paths">Eksporter favoritfil-stier</string>
+    <string name="export_favorite_paths">Eksportér favoritter</string>
+    <string name="import_favorite_paths">Importér favoritter</string>
+    <string name="paths_imported_successfully">Stier blev importeret</string>
     <string name="media_management_prompt">For at sikre at alle filhandlinger fungerer pålideligt, skal du gøre denne app en mediestyringsapp i dine enhedsindstillinger.</string>
     <string name="password_protect_excluded">Beskyt synligheden af udelukkede mapper med adgangskode</string>
     <string name="media_management_manual">Noget gik galt, gå ind på din enhed Indstillinger - Apps - Særlig app-adgang - Mediehåndteringsapps, og tillad denne app at håndtere medier.</string>
@@ -210,6 +221,8 @@
     <string name="alternative_media_access">Alternativt kan du kun tillade adgang til mediefiler. I så fald vil du dog ikke kunne arbejde med skjulte filer.</string>
     <string name="media_only">Kun medier</string>
     <string name="all_files">Alle filer</string>
+    <string name="search_all_files">Søg i alle filer i stedet for mapper på hovedskærmen</string>
+    <string name="show_all_folders">Vis en menuknap til at slå "Vis indholdet af alle mapper" til og fra hurtigt</string>
     <!-- Setting sections -->
     <string name="thumbnails">Miniaturebilleder</string>
     <string name="fullscreen_media">Fuldskærmsmedier</string>

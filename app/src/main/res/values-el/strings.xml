@@ -5,6 +5,7 @@
     <string name="edit">Επεξεργασία</string>
     <string name="open_camera">Άνοιγμα κάμερας</string>
     <string name="hidden">(κρυφά)</string>
+    <string name="excluded">(εξαιρούνται)</string>
     <string name="pin_folder">Καρφίτσωμα φακέλου</string>
     <string name="unpin_folder">Ξεκαρφίτσωμα φακέλου</string>
     <string name="pin_to_the_top">Καρφίτσωμα στην κορυφή</string>
@@ -27,13 +28,6 @@
     <string name="dates_fixed_successfully">Η Ημερ. διορθώθηκε με επιτυχία</string>
     <string name="no_date_takens_found">Δεν βρέθηκαν Τιμές Ημερομηνίας όταν ελήφθησαν</string>
     <string name="share_resized">Διαμοιρασμός έκδοσης με αλλαγμένο μέγεθος</string>
-    <string name="upgraded_from_free">Γεια σας,
-\n
-\nΦαίνεται πως αναβαθμίσατε από την παλιά δωρεάν εφαρμογή. Τώρα θα πρέπει να απεγκαταστήσετε την παλιά έκδοση, από το πλήκτρο \"Αναβάθμιση σε Pro\" στο επάνω των ρυθμίσεων της εφαρμογής.
-\n
-\nΘα πρέπει να διαγράψετε μόνο τα αντικείμενα του Κάδου, πρέπει να επαναφέρετε τα αγαπημένα στοιχεία που δεν έχουν επισημανθεί καθώς και τις ρυθμίσεις της εφαρμογής σας.
-\n
-\nΣας ευχαριστώ!</string>
     <string name="switch_to_file_search">Εναλλαγή αναζήτησης αρχείων σε όλους τους ορατούς φακέλους</string>
     <string name="set_as_default_folder">Ορισμός ως προεπιλεγμένου φακέλου</string>
     <string name="unset_as_default_folder">Κατάργηση ως προεπιλεγμένου φακέλου</string>
@@ -60,7 +54,8 @@
     <string name="hidden_folders">Κρυφοί φάκελοι</string>
     <string name="manage_hidden_folders">Διαχείριση κρυφών φακέλων</string>
     <string name="hidden_folders_placeholder">Φαίνεται πως δεν υπάρχουν κρυφοί φάκελοι με \".nomedia\" αρχείο.</string>
-    <string name="hidden_all_files">You have to grant the app All Files access to see hidden files, else it cannot work.</string>
+    <string name="hidden_all_files">Πρέπει να εκχωρήσετε στην εφαρμογή πρόσβαση σε \"Όλα τα αρχεία\" για να δείτε τα κρυφά αρχεία, διαφορετικά δεν μπορεί να λειτουργήσει.</string>
+    <string name="cant_unhide_folder">Εάν ένας φάκελος ή ένας από τους αρχικούς του φακέλους έχει μια τελεία πριν από το όνομά του, είναι κρυφός και δεν μπορεί να εμφανιστεί με αυτόν τον τρόπο. Πρέπει να αφαιρέσετε την τελεία μετονομάζοντάς τον.</string>
     <!-- Include folders -->
     <string name="include_folders">Συμπεριλαμβανόμενοι Φάκελοι</string>
     <string name="manage_included_folders">Διαχείριση συμπεριλαμβανόμενων Φακέλων</string>
@@ -75,8 +70,19 @@
     <string name="height">Ύψος</string>
     <string name="keep_aspect_ratio">Διατήρηση αναλογίας</string>
     <string name="invalid_values">Παρακαλώ εισάγετε σωστή ανάλυση</string>
+    <string name="resize_multiple_images">Αλλαγή μεγέθους πολλών εικόνων</string>
+    <string name="resize_factor">Συντελεστής αλλαγής μεγέθους</string>
+    <string name="resize_factor_info">Αλλάξτε το μέγεθος των εικόνων στο δεδομένο ποσοστό. Η τιμή πρέπει να είναι μεταξύ 10 και 90.</string>
+    <string name="resize_factor_error">Εισάγετε έναν αριθμό μεταξύ 10 και 90</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Αποτυχία αλλαγής μεγέθους %d εικόνας</item>
+        <item quantity="other">Αποτυχία αλλαγής μεγέθους %d εικόνων</item>
+    </plurals>
+    <string name="images_resized_successfully">Το μέγεθος των εικόνων άλλαξε με επιτυχία</string>
     <!-- Editor -->
     <string name="editor">Επεξεργαστής</string>
+    <string name="basic_editor">Βασικός επεξεργαστής</string>
+    <string name="advanced_editor">Προηγμένος επεξεργαστής</string>
     <string name="rotate">Περιστροφή</string>
     <string name="invalid_image_path">Άκυρη διαδρομή εικόνας</string>
     <string name="invalid_video_path">Άκυρη διαδρομή βίντεο</string>
@@ -96,6 +102,9 @@
     <string name="rotate_left">Περιστροφή αριστερά</string>
     <string name="rotate_right">Περιστροφή δεξιά</string>
     <string name="rotate_one_eighty">Περιστροφή κατά 180º</string>
+    <string name="transform">Μεταμόρφωση</string>
+    <string name="crop">Περικοπή</string>
+    <string name="draw">Σχεδίαση</string>
     <string name="flip">Περιστροφή</string>
     <string name="flip_horizontally">Οριζόντια περιστροφή</string>
     <string name="flip_vertically">Κατακόρυφη περιστροφή</string>
@@ -201,7 +210,9 @@
     <string name="limit_folder_title">Περιορισμός μεγάλων τίτλων φακέλων σε 1 γραμμή</string>
     <string name="square">Τετράγωνο</string>
     <string name="rounded_corners">Στρογγυλεμένες γωνίες</string>
-    <string name="export_favorite_paths">Εξαγωγή διαδρομών αρχείων αγαπημένων</string>
+    <string name="export_favorite_paths">Εξαγωγή αγαπημένων</string>
+    <string name="import_favorite_paths">Εισαγωγή αγαπημένων</string>
+    <string name="paths_imported_successfully">Οι Διαδρομές εισήχθησαν με επιτυχία</string>
     <string name="media_management_prompt">Για να βεβαιωθείτε ότι όλες οι λειτουργίες αρχείων λειτουργούν αξιόπιστα, παρακαλούμε ορίστε την, \"Εφαρμογή Διαχείρισης Πολυμέσων\" στις ρυθμίσεις της συσκευής σας.</string>
     <string name="password_protect_excluded">Προστασία ορατότητας αποκλεισμένου φακέλου με κωδικό</string>
     <string name="media_management_manual">Κάτι πήγε λάθος, μεταβείτε στις Ρυθμίσεις της συσκευής σας - Εφαρμογές - Ειδική πρόσβαση εφαρμογών - Εφαρμογές διαχείρισης πολυμέσων και επιτρέψτε σε αυτή την εφαρμογή να διαχειρίζεται πολυμέσα.</string>
@@ -210,6 +221,8 @@
     <string name="alternative_media_access">Εναλλακτικά, μπορείτε να επιτρέψετε την πρόσβαση μόνο σε αρχεία πολυμέσων. Σε αυτή την περίπτωση, όμως, δεν θα μπορείτε να εργαστείτε με κρυφά αρχεία.</string>
     <string name="media_only">Πολυμέσα μόνο</string>
     <string name="all_files">Όλα τα Αρχεία</string>
+    <string name="search_all_files">Αναζήτηση όλων των αρχείων αντί φακέλων στην κύρια οθόνη</string>
+    <string name="show_all_folders">Εμφάνιση κουμπιού μενού για εναλλαγή προβολή περιεχομένου Όλων των Φακέλων ταχύτερα</string>
     <!-- Setting sections -->
     <string name="thumbnails">Εικονίδια</string>
     <string name="fullscreen_media">Πολυμέσα πλήρους οθόνης</string>
@@ -261,18 +274,18 @@
     <string name="pesdk_text_button_bringToFront">Σε Γραμ/σειρά</string>
     <string name="pesdk_text_button_delete">Διαγραφή</string>
     <string name="pesdk_text_text_editTextPlaceholder">Το κειμενό μου</string>
-    <string name="pesdk_brush_title_name">Βούρτσα</string>
+    <string name="pesdk_brush_title_name">Πινέλο</string>
     <string name="pesdk_brush_button_color">Χρώμα</string>
     <string name="pesdk_brush_button_size">Μέγεθος</string>
     <string name="pesdk_brush_button_hardness">Σκληρότητα</string>
     <string name="pesdk_brush_button_bringToFront">Σε Γραμ/σειρά</string>
     <string name="pesdk_brush_button_delete">Διαγραφή</string>
-    <string name="pesdk_brush_title_brushColor">Χρώμα Βούρτσας</string>
+    <string name="pesdk_brush_title_brushColor">Χρώμα Πινέλου</string>
     <string name="pesdk_editor_title_name">Επεξεργαστής</string>
     <string name="pesdk_editor_title_closeEditorAlert">Κλείσιμο Επεξεργαστή\?</string>
     <string name="pesdk_editor_text_closeEditorAlert">Θέλετε πραγματικά να απορρίψετε τις αλλαγές;</string>
-    <string name="pesdk_editor_button_closeEditorAlertConfirmation">Ναί</string>
-    <string name="pesdk_editor_button_closeEditorAlertCancelation">Όχι</string>
+    <string name="pesdk_editor_button_closeEditorAlertConfirmation">Αποδοχή</string>
+    <string name="pesdk_editor_button_closeEditorAlertCancelation">Ακύρωση</string>
     <string name="pesdk_editor_cancel">Ακύρωση</string>
     <string name="pesdk_editor_accept">Αποδοχή</string>
     <string name="pesdk_editor_save">Αποθήκευση</string>
@@ -294,10 +307,10 @@
     <string name="pesdk_sticker_category_name_custom">Μεταφορτώσεις</string>
     <string name="pesdk_overlay_title_name">Επικάλυψη</string>
     <string name="pesdk_overlay_button_blendModeNormal">Κανονικό</string>
-    <string name="pesdk_overlay_button_blendModeDarken">Σκούρο</string>
+    <string name="pesdk_overlay_button_blendModeDarken">Σκοτεινό</string>
     <string name="pesdk_overlay_button_blendModeScreen">Οθόνη</string>
     <string name="pesdk_overlay_button_blendModeOverlay">Επικάλυψη</string>
-    <string name="pesdk_overlay_button_blendModeLighten">Ξάνοιγμα</string>
+    <string name="pesdk_overlay_button_blendModeLighten">Φωτεινό</string>
     <string name="pesdk_overlay_button_blendModeMultiply">Πολλαπ/σμός</string>
     <string name="pesdk_overlay_button_blendModeColorBurn">Κάψιμο χρώματος</string>
     <string name="pesdk_overlay_button_blendModeSoftLight">Απαλό φως</string>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Galería</string> <!--Not used-->
+    <string name="exclude_folder_description_g">Isto ocultará a selección xunto cos seus subcartafoles só en Right Gallery. Podes xestionar os cartafoles ocultos en Axustes.</string>
+    <string name="excluded_activity_placeholder_g">Excluír un cartafol xunto cos subcartafoles só terá efecto en Right Gallery, seguirán sendo visibles noutros aplicativos.
+\n
+\nSe tamén queres excluílos noutros aplicativos, utiliza a opción Agochar.</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">Como podo facer que Right Gallery sexa a galería por defecto no meu dispositivo\?</string>
+    <string name="faq_1_text_g">Primeiro debes atopar a galería por omisión actual na sección de App nos axustes do dispositivo, buscar un botón que diga algo como \"Abrir por omisión\", pulsalo e despois seleccionar \"Limpar por omisión\". A próxima vez que intentes abrir unha imaxe ou vídeo aparecerá un selector de aplicativos onde podes escoller Right Gallery e facela a aplicativo por defecto/n.</string>
+    <string name="faq_5_text_g">A exclusión prevén que se mostre o cartafol só en Right Gallery, mentras Agochar funciona para todo o sistema e agocha o cartafol para outras galerías tamén. Esto funciona creando un ficheiro baldeiro de nome \".nomedia\" no cartafol, que tamén pode quitar con calquera xestor de ficheiros.Teña en conta que algúns dispositivos non permiten cartafoles agochados como Cámara, Capturas de pantalla e Descargas.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">Anos</string>
+    <string name="months">Meses</string>
+    <string name="days">Días</string>
+    <string name="all_photos">Todas as fotos</string>
+    <string name="by_last_modified_yearly_g">Último modificado (anualmente)</string>
+    <string name="by_date_taken_yearly_g">Data de captura (anualmente)</string>
+
+    <string name="eraser">Borrador</string>
+    <string name="eyedropper">Contagotas</string>
+</resources>

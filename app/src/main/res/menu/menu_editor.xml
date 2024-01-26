@@ -9,13 +9,13 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/undo"
-        android:icon="@drawable/ic_undo_round_gray"
+        android:icon="@drawable/ic_undo_gray"
         android:title="@string/edit_with"
         android:enabled="false"
         app:showAsAction="always" />
     <item
         android:id="@+id/redo"
-        android:icon="@drawable/ic_redo_round_gray"
+        android:icon="@drawable/ic_redo_gray"
         android:title="@string/edit_with"
         android:enabled="false"
         app:showAsAction="always" />

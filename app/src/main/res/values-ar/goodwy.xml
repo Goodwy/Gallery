@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">الاستديو</string> <!--Not used-->
+    <string name="exclude_folder_description_g">سيؤدي ذلك إلى استبعاد التحديد مع المجلدات الفرعية من الاستديو فقط. يمكنك إدارة المجلدات المستبعدة في الإعدادات.</string>
+    <string name="excluded_activity_placeholder_g">سيؤدي استبعاد المجلدات إلى جعلها هي والمجلدات الفرعية مخفية في الاستديو فقط، وستظل مرئية في تطبيقات أخرى.
+\n
+\nإذا كنت تريد إخفاءها من التطبيقات الأخرى أيضاً، فاستخدم وظيفة الإخفاء.</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">كيف يمكنني جعل تطبيق الاستديو معرض الجهاز الإفتراضي؟</string>
+    <string name="faq_1_text_g">أولًا، يجب عليك العثور على المعرض الافتراضي الحالي في قسم التطبيقات من إعدادات الجهاز، ثم ابحث عن زر يقول شيئاً مثل \"فتح كافتراضي\" ثم انقر عليه، ثم حدد \"مسح الإعدادات الإفتراضية\". في المرة القادمة التي ستحاول فيها فتح صورة أو مقطع فيديو يجب أن ترى اختيار تطبيق، حيث يمكنك تحديد تطبيق الاستديو وجعله التطبيق الافتراضي.</string>
+    <string name="faq_5_text_g">لاحظ أن بعض الأجهزة لا تسمح بإخفاء المجلدات مثل الكاميرا ولقطات الشاشة والتنزيلات. الاستبعاد يمنع عرض المجلد فقط في الاستديو، بينما الإخفاء يعمل على مستوى النظام ويخفي المجلد من المعارض الأخرى أيضاً. يعمل عن طريق إنشاء ملف فارغ .nomedia \" في المجلد المحدد، والذي يمكنك إزالته بعد ذلك بواسطة أي مدير ملفات أيضًا.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">سنين</string>
+    <string name="months">شهور</string>
+    <string name="days">أيام</string>
+    <string name="all_photos">جميع الصور</string>
+    <string name="by_last_modified_yearly_g">آخر تعديل (سنوي)</string>
+    <string name="by_date_taken_yearly_g">تاريخ الالتقاط (سنوي)</string>
+
+    <string name="eraser">ممحاة</string>
+    <string name="eyedropper">القطارة</string>
+</resources>

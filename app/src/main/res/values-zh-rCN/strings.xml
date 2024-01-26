@@ -5,6 +5,7 @@
     <string name="edit">编辑</string>
     <string name="open_camera">打开相机</string>
     <string name="hidden">（已隐藏）</string>
+    <string name="excluded">(已排除)</string>
     <string name="pin_folder">固定文件夹</string>
     <string name="unpin_folder">取消固定文件夹</string>
     <string name="pin_to_the_top">置顶固定</string>
@@ -27,13 +28,6 @@
     <string name="dates_fixed_successfully">日期修复成功</string>
     <string name="no_date_takens_found">没有找到拍摄日期</string>
     <string name="share_resized">调整尺寸并分享</string>
-    <string name="upgraded_from_free">嘿，
-\n
-\n您似乎已经从旧的免费版应用升级。您现在可以卸载旧版本，在该版本的应用设置顶部有一个“升级到专业版”按钮。
-\n
-\n此操作只会删除回收站项目，取消标记收藏项目，并重置应用设置。
-\n
-\n谢谢！</string>
     <string name="switch_to_file_search">切换文件搜索范围为所有可见的文件夹</string>
     <string name="set_as_default_folder">设置为默认文件夹</string>
     <string name="unset_as_default_folder">取消设置为默认文件夹</string>
@@ -60,7 +54,8 @@
     <string name="hidden_folders">隐藏的文件夹</string>
     <string name="manage_hidden_folders">管理隐藏的文件夹</string>
     <string name="hidden_folders_placeholder">看起来您没有任何使用“.nomedia”文件隐藏的目录。</string>
-    <string name="hidden_all_files">You have to grant the app All Files access to see hidden files, else it cannot work.</string>
+    <string name="hidden_all_files">你必须授予访问所有文件的权限，应用才能看到隐藏的文件。</string>
+    <string name="cant_unhide_folder">如果某个文件夹或其父级文件夹中的一个在文件夹名称前有一个 . 的话，这样的文件夹会被隐藏且无法像这样取消隐藏。你必须进行重命名操作移除这个 . 符号。</string>
     <!-- Include folders -->
     <string name="include_folders">包含的文件夹</string>
     <string name="manage_included_folders">管理包含的文件夹</string>
@@ -75,8 +70,19 @@
     <string name="height">高度</string>
     <string name="keep_aspect_ratio">保持高宽比</string>
     <string name="invalid_values">请输入有效的分辨率</string>
+    <string name="resize_multiple_images">调整多张图片尺寸</string>
+    <string name="resize_factor">调整比率</string>
+    <string name="resize_factor_info">将图片尺寸调整到给定比例，值须在 10 到 90 以内。</string>
+    <string name="resize_factor_error">输入 10 到 90之间的数字</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Failed to resize %d image</item>
+        <item quantity="other">Failed to resize %d images</item>
+    </plurals>
+    <string name="images_resized_successfully">成功调整了图片尺寸</string>
     <!-- Editor -->
     <string name="editor">编辑器</string>
+    <string name="basic_editor">基础编辑器</string>
+    <string name="advanced_editor">高级编辑器</string>
     <string name="rotate">旋转</string>
     <string name="invalid_image_path">无效的图片路径</string>
     <string name="invalid_video_path">无效的视频路径</string>
@@ -96,6 +102,9 @@
     <string name="rotate_left">向左旋转</string>
     <string name="rotate_right">向右旋转</string>
     <string name="rotate_one_eighty">旋转 180º</string>
+    <string name="transform">改变形态</string>
+    <string name="crop">裁剪</string>
+    <string name="draw">绘制</string>
     <string name="flip">翻转</string>
     <string name="flip_horizontally">水平翻转</string>
     <string name="flip_vertically">垂直翻转</string>
@@ -197,11 +206,13 @@
     <string name="thumbnail_spacing">缩略图间距</string>
     <string name="show_file_count_line">在单独一行中显示计数</string>
     <string name="show_file_count_brackets">在括号中显示计数</string>
-    <string name="show_file_count_none">不显示计数</string>
+    <string name="show_file_count_none">不显示文件数</string>
     <string name="limit_folder_title">将较长的文件夹标题字符限制为1行</string>
     <string name="square">方形</string>
     <string name="rounded_corners">圆角</string>
-    <string name="export_favorite_paths">导出收藏文件路径</string>
+    <string name="export_favorite_paths">导出收藏</string>
+    <string name="import_favorite_paths">导入收藏</string>
+    <string name="paths_imported_successfully">路径导入成功</string>
     <string name="media_management_prompt">为了确保所有文件操作可靠地工作，请在你的设备设置中使此应用成为媒体管理应用。</string>
     <string name="password_protect_excluded">密码保护已排除文件夹的可见性</string>
     <string name="media_management_manual">出错了，请转到设备的“设置” - “应用” -“特殊应用权限” - “媒体管理应用” 并允许本应用管理媒体文件。</string>
@@ -210,6 +221,8 @@
     <string name="alternative_media_access">你也可以只允许访问媒体文件。但那样的话将无法处理隐藏的文件。</string>
     <string name="media_only">仅媒体文件</string>
     <string name="all_files">所有文件</string>
+    <string name="search_all_files">在主屏幕上搜索所有文件而不是文件夹</string>
+    <string name="show_all_folders">显示可快速切换“显示所有文件夹内容”选项的菜单按钮</string>
     <!-- Setting sections -->
     <string name="thumbnails">缩略图</string>
     <string name="fullscreen_media">全屏显示媒体</string>

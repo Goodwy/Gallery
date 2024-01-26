@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Galerie</string> <!--Not used-->
+    <string name="exclude_folder_description_g">Acest lucru va exclude selecția, împreună cu subdosarele sale, numai din Right Gallery. Poţi gestiona dosarele excluse în Setări.</string>
+    <string name="excluded_activity_placeholder_g">Excluderea dosarelor le va face ca acestea, împreună cu subdosarele lor, să fie ascunse doar în Right Gallery, ele vor fi în continuare vizibile în alte aplicații.
+\n
+\nDacă doreşti să le ascunzi și pentru alte aplicații, utilizează funcția Ascundere.</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">Cum pot face ca Right Gallery să fie galeria implicită a dispozitivului\?</string>
+    <string name="faq_1_text_g">Mai întâi trebuie să găsiți galeria implicită curentă în secțiunea Aplicații din setările dispozitivului, căutați un buton pe care scrie ceva de genul a \"Setare ca implicită\", apăsaţi pe acesta, apoi selectați \"Ştergeţi valorile implicite\". Data viitoare când veți încerca să deschideți o imagine sau un videoclip, ar trebui să vedeți un selector de aplicații, unde puteți selecta Right Gallery și să o transformați în aplicația implicită.</string>
+    <string name="faq_5_text_g">Exclude previne afișarea dosarului doar în Right Gallery, în timp ce Hide funcționează la nivel de sistem și ascunde dosarul și din alte galerii. Funcționează prin crearea unui fișier gol \".nomedia\" în dosarul dat, pe care îl puteți elimina apoi și cu orice manager de fișiere. Rețineți că unele dispozitive nu permit ascunderea unor dosare precum Camera, Imagini de ecran și Descărcări.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">Ani</string>
+    <string name="months">Luni</string>
+    <string name="days">Zile</string>
+    <string name="all_photos">Toate fotografiile</string>
+    <string name="by_last_modified_yearly_g">Ultima modificare (anual)</string>
+    <string name="by_date_taken_yearly_g">Data realizării (anual)</string>
+
+    <string name="eraser">Radieră</string>
+    <string name="eyedropper">Picura</string>
+</resources>

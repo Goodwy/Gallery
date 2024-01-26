@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Galerie</string> <!--Not used-->
+    <string name="exclude_folder_description_g">Diese Funktion schließt die ausgewählten Ordner und deren Unterordner nur in dieser App aus. Ausgeschlossene Ordner können in den Einstellungen verwaltet werden.</string>
+    <string name="excluded_activity_placeholder_g">„Ordner ausschließen“ wird die gewählten Ordner und deren Unterordner nur in dieser App ausblenden. Andere Apps werden sie weiterhin anzeigen.
+\n
+\nWenn du Ordner auch für andere Apps verstecken willst, verwende die Funktion „Ordner verstecken“.</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">Wie kann ich Right Gallery als Standardanwendung auswählen\?</string>
+    <string name="faq_1_text_g">Zunächst muss man unter „Apps“ in den Geräteeinstellungen die aktuelle Standardgalerie finden, dort nach einer Bedienfläche wie „Standardmäßig öffnen“ suchen, diese betätigen und „Standardeinstellungen löschen“ wählen. Beim nächsten Öffnen eines Bildes oder eines Videos, sollte ein Auswahlfenster erscheinen, in dem man Right Gallery als Standard-Anwendung auswählen kann.</string>
+    <string name="faq_5_text_g">„Ausschließen“ verhindert, dass der Ordner nur in der Right Gallery angezeigt wird, während „Verstecken“ systemweit funktioniert und den Ordner auch vor anderen Galerien verbirgt. Dabei wird eine leere .nomedia-Datei im angegebenen Ordner erstellt, die man mit einem beliebigen Dateimanager auch wieder entfernen kann. Zu beachten ist, dass einige Geräte das Verstecken von Ordnern wie Kamera, Bildschirmfotos und Heruntergeladene nicht zulassen.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">Jahre</string>
+    <string name="months">Monate</string>
+    <string name="days">Tage</string>
+    <string name="all_photos">Alle Fotos</string>
+    <string name="by_last_modified_yearly_g">Zuletzt geändert (jährlich)</string>
+    <string name="by_date_taken_yearly_g">Aufnahmedatum (jährlich)</string>
+
+    <string name="eraser">Radiergummi</string>
+    <string name="eyedropper">Pipette</string>
+</resources>

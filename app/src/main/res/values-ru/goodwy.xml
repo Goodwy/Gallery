@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Галерея</string> <!--Not used-->
+    <string name="exclude_folder_description_g">Эта функция исключит выбранные папки вместе с подпапками только для Right Gallery. Можно управлять исключёнными папками из настроек.</string>
+    <string name="excluded_activity_placeholder_g">Исключая папки, вы сделаете их скрытыми вместе с подпапками в Right Gallery, но они будут видны в других приложениях.
+\n
+\nЕсли вы хотите скрыть их и в других приложениях, используйте функцию \"Скрыть\".</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">Как сделать Right Gallery галереей по умолчанию\?</string>
+    <string name="faq_1_text_g">Сначала вы должны найти галерею по умолчанию в разделе \"Приложения\" настроек вашего устройства; найдите кнопку, названную \"Открыть по умолчанию\",затем нажмите на неё и выберите \"Очистить значения по умолчанию\". В следующий раз, когда попробуете открыть изображение или видео, вы увидите выбор приложений, где сможете выбрать Right Gallery и сделать её приложением по умолчанию.</string>
+    <string name="faq_5_text_g">Исключение запрещает отображение папки только в Right Gallery, в то время как скрытие работает системно и скрывает папку из других галерей. Это достигается путём создания пустого файла \".nomedia\" в данной папке, который впоследствии можно удалить любым файловым менеджером. Обратите внимание, что некоторые устройства не позволяют скрывать папки, такие как \"Camera\", \"Screenshot\" и \"Download\".</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">Годы</string>
+    <string name="months">Месяцы</string>
+    <string name="days">Дни</string>
+    <string name="all_photos">Все фото</string>
+    <string name="by_last_modified_yearly_g">Последнее изменение (год)</string>
+    <string name="by_date_taken_yearly_g">Дата съёмки (год)</string>
+
+    <string name="eraser">Ластик</string>
+    <string name="eyedropper">Пипетка</string>
+</resources>

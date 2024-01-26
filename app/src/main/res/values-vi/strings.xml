@@ -5,6 +5,7 @@
     <string name="edit">Chỉnh sửa</string>
     <string name="open_camera">Mở Camera</string>
     <string name="hidden">(ẩn)</string>
+    <string name="excluded">(loại trừ)</string>
     <string name="pin_folder">Ghim thư mục</string>
     <string name="unpin_folder">Bỏ ghim thư mục</string>
     <string name="pin_to_the_top">Ghim lên đầu</string>
@@ -27,11 +28,6 @@
     <string name="dates_fixed_successfully">Sửa ngày thành công</string>
     <string name="no_date_takens_found">Không tìm thấy Ngày chụp phù hợp</string>
     <string name="share_resized">Chia sẻ phiên bản đã thay đổi kích thước</string>
-    <string name="upgraded_from_free">Xin chào, có vẻ như bạn đã nâng cấp từ ứng dụng miễn phí cũ. Giờ đây, bạn có thể gỡ cài đặt phiên bản cũ có nút \'Nâng cấp lên Pro\' ở đầu Cài đặt ứng dụng.
-\n
-\nBạn sẽ chỉ xóa các mục Thùng rác, các mục yêu thích không được đánh dấu và bạn cũng sẽ phải đặt lại những cài đặt của ứng dụng.
-\n
-\nCảm ơn!</string>
     <string name="switch_to_file_search">Chuyển sang tìm kiếm tệp trên tất cả các thư mục hiển thị</string>
     <string name="set_as_default_folder">Đặt làm thư mục mặc định</string>
     <string name="unset_as_default_folder">Bỏ đặt làm thư mục mặc định</string>
@@ -58,7 +54,8 @@
     <string name="hidden_folders">Các thư mục ẩn</string>
     <string name="manage_hidden_folders">Quản lý thư mục ẩn</string>
     <string name="hidden_folders_placeholder">Có vẻ như bạn không có bất kỳ thư mục nào bị ẩn với tệp \".nomedia\".</string>
-    <string name="hidden_all_files">You have to grant the app All Files access to see hidden files, else it cannot work.</string>
+    <string name="hidden_all_files">Bạn phải cấp cho ứng dụng quyền truy cập Tất cả các tệp để xem các tệp ẩn, nếu không ứng dụng sẽ không thể hoạt động.</string>
+    <string name="cant_unhide_folder">If a folder or one of its parent folders has a dot before its name, it is hidden and cannot be unhidden like this. You have to remove the dot by renaming it.</string>
     <!-- Include folders -->
     <string name="include_folders">Bao gồm các thư mục</string>
     <string name="manage_included_folders">Quản lý các thư mục được bao gồm</string>
@@ -73,8 +70,19 @@
     <string name="height">Chiều cao</string>
     <string name="keep_aspect_ratio">Giữ tỷ lệ khung hình</string>
     <string name="invalid_values">Vui lòng nhập độ phân giải hợp lệ</string>
+    <string name="resize_multiple_images">Thay đổi kích thước nhiều hình ảnh</string>
+    <string name="resize_factor">Thay đổi kích thước yếu tố</string>
+    <string name="resize_factor_info">Thay đổi kích thước hình ảnh theo tỷ lệ phần trăm nhất định, giá trị phải nằm trong khoảng 10 và 90.</string>
+    <string name="resize_factor_error">Nhập một số từ 10 đến 90</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Failed to resize %d image</item>
+        <item quantity="other">Failed to resize %d images</item>
+    </plurals>
+    <string name="images_resized_successfully">Thay đổi kích thước hình ảnh thành công</string>
     <!-- Editor -->
     <string name="editor">Trình biên tập</string>
+    <string name="basic_editor">Trình chỉnh sửa cơ bản</string>
+    <string name="advanced_editor">Trình chỉnh sửa nâng cao</string>
     <string name="rotate">Xoay</string>
     <string name="invalid_image_path">Đường dẫn hình ảnh không hợp lệ</string>
     <string name="invalid_video_path">Đường dẫn video không hợp lệ</string>
@@ -94,6 +102,9 @@
     <string name="rotate_left">Xoay trái</string>
     <string name="rotate_right">Xoay phải</string>
     <string name="rotate_one_eighty">Xoay 180 độ</string>
+    <string name="transform">Biến đổi</string>
+    <string name="crop">Xén</string>
+    <string name="draw">Vẽ</string>
     <string name="flip">Lật</string>
     <string name="flip_horizontally">Lật theo chiều ngang</string>
     <string name="flip_vertically">Lật theo chiều dọc</string>
@@ -113,7 +124,7 @@
     <string name="home_screen">Màn hình chính</string>
     <string name="lock_screen">Màn hình khóa</string>
     <string name="home_and_lock_screen">Màn hình chính và khóa</string>
-    <string name="allow_changing_aspect_ratio">Allow changing the aspect ratio</string>
+    <string name="allow_changing_aspect_ratio">Cho phép thay đổi tỷ lệ khung hình</string>
     <!-- Slideshow -->
     <string name="slideshow">Trình chiếu</string>
     <string name="interval">Khoảng thời gian</string>
@@ -143,7 +154,7 @@
     <string name="by_date_taken_monthly">Ngày chụp (hàng tháng)</string>
     <string name="by_file_type">Loại tệp</string>
     <string name="by_extension">Phần mở rộng</string>
-    <string name="show_file_count_section_header">Show file count at section headers</string>
+    <string name="show_file_count_section_header">Hiển thị số lượng tệp ở tiêu đề phần</string>
     <string name="grouping_and_sorting">Xin lưu ý rằng Nhóm và Sắp xếp là 2 trường độc lập</string>
     <!-- Widgets -->
     <string name="folder_on_widget">Thư mục hiển thị trên widget:</string>
@@ -188,26 +199,30 @@
     <string name="compromise">Thỏa hiệp</string>
     <string name="avoid_showing_invalid_files">Tránh hiển thị các tệp không hợp lệ</string>
     <string name="show_image_file_types">Hiển thị các loại tệp hình ảnh</string>
-    <string name="allow_zooming_videos">Allow zooming videos with double tapping them</string>
-    <string name="folder_thumbnail_style">Folder thumbnail style</string>
-    <string name="file_thumbnail_style">File thumbnail style</string>
-    <string name="mark_favorite_items">Mark favorite items</string>
-    <string name="thumbnail_spacing">Thumbnail spacing</string>
-    <string name="show_file_count_line">Show file count on a separate line</string>
-    <string name="show_file_count_brackets">Show file count in brackets</string>
-    <string name="show_file_count_none">Do not show file count</string>
-    <string name="limit_folder_title">Limit long folder titles to 1 line</string>
-    <string name="square">Square</string>
-    <string name="rounded_corners">Rounded corners</string>
-    <string name="export_favorite_paths">Export favorite file paths</string>
+    <string name="allow_zooming_videos">Cho phép phóng to video bằng cách nhấn đúp vào chúng</string>
+    <string name="folder_thumbnail_style">Kiểu thu nhỏ thư mục</string>
+    <string name="file_thumbnail_style">Kiểu hình thu nhỏ của tệp</string>
+    <string name="mark_favorite_items">Đánh dấu các mục yêu thích</string>
+    <string name="thumbnail_spacing">khoảng cách hình thu nhỏ</string>
+    <string name="show_file_count_line">Hiển thị số lượng tệp trên một dòng riêng biệt</string>
+    <string name="show_file_count_brackets">Hiển thị số lượng tệp trong ngoặc</string>
+    <string name="show_file_count_none">Không hiển thị số lượng tệp</string>
+    <string name="limit_folder_title">Giới hạn tiêu đề thư mục dài trong 1 dòng</string>
+    <string name="square">Vuông</string>
+    <string name="rounded_corners">Góc tròn</string>
+    <string name="export_favorite_paths">Xuất yêu thích</string>
+    <string name="import_favorite_paths">Nhập yêu thích</string>
+    <string name="paths_imported_successfully">Đường dẫn được nhập thành công</string>
     <string name="media_management_prompt">To make sure that all file operations work reliably, please make this app a Media management app in your device settings.</string>
-    <string name="password_protect_excluded">Password protect excluded folder visibility</string>
+    <string name="password_protect_excluded">Mật khẩu bảo vệ khả năng hiển thị thư mục bị loại trừ</string>
     <string name="media_management_manual">Something went wrong, please go into your device Settings - Apps - Special app access - Media management apps and allow this app to manage media.</string>
     <string name="media_management_note">If the redirection does not work, please go into your device Settings - Apps - Special app access - Media management apps and allow this app to manage media.</string>
     <string name="media_management_alternative">If you do not want to do it, you can also go into your device Settings - Apps - Special app access - Media management apps and allow this app to manage media.</string>
     <string name="alternative_media_access">Alternatively, you can allow accessing media files only. In that case you will not be able to work with hidden files though.</string>
     <string name="media_only">Media only</string>
     <string name="all_files">All files</string>
+    <string name="search_all_files">Search all files instead of folders on the main screen</string>
+    <string name="show_all_folders">Show a menu button for toggling Show All Folders Content quickly</string>
     <!-- Setting sections -->
     <string name="thumbnails">Hình thu nhỏ</string>
     <string name="fullscreen_media">Toàn màn hình</string>
@@ -215,7 +230,7 @@
     <string name="bottom_actions">Hành động dưới cùng</string>
     <!-- Bottom actions -->
     <string name="manage_bottom_actions">Quản lý các hành động dưới cùng có thể nhìn thấy</string>
-    <string name="toggle_favorite">Yêu thích</string>
+    <string name="toggle_favorite">Chuyển đổi yêu thích</string>
     <string name="toggle_file_visibility">Ẩn/bỏ ẩn</string>
     <!-- New editor strings -->
     <string name="pesdk_transform_button_freeCrop">Tùy chỉnh</string>
@@ -360,7 +375,7 @@
     <string name="faq_15_title">Tại sao ứng dụng chiếm quá nhiều dung lượng \?</string>
     <string name="faq_15_text">Bộ nhớ cache ứng dụng có thể mất tới 250MB, nó đảm bảo tải hình ảnh nhanh hơn. Nếu ứng dụng chiếm nhiều dung lượng hơn, rất có thể là do bạn có nhiều mục trong Thùng rác. Những tập tin đó được tính vào kích thước ứng dụng. Bạn có thể xóa thùng rác bằng cách mở nó và xóa tất cả các tệp hoặc từ Cài đặt ứng dụng. Mọi tệp trong Thùng rác sẽ tự động bị xóa sau 30 ngày.</string>
     <string name="faq_16_title">What happened to file and folder hiding and why cannot I see hidden items anymore\?</string>
-    <string name="faq_16_text">Starting with Android 11 you cannot hide or unhide files or folders anymore, you cannot see the hidden ones in gallery apps either. You will have to use some file manager for that.</string>
+    <string name="faq_16_text">Bắt đầu với Android 11, bạn không thể ẩn hoặc hiện các tệp hoặc thư mục nữa, bạn cũng không thể nhìn thấy những tệp hoặc thư mục bị ẩn trong ứng dụng thư viện. Bạn sẽ phải sử dụng một số trình quản lý tệp cho điều đó.</string>
     <string name="faq_16_text_extra">Or you can also grant this gallery access to All Files through your device settings, that will allow us showing hidden items and make file operations more reliable in general.</string>
     <string name="faq_17_title">Why cannot I include missing folders anymore\?</string>
     <string name="faq_17_text">That stopped working due to the system changes that came with Android 11 too, the app cannot browse real folders anymore, it relies on the so called MediaStore at fetching data.</string>

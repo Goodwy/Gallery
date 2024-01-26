@@ -108,8 +108,8 @@ class EditorDrawCanvas(context: Context, attrs: AttributeSet) : View(context, at
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        val x = event.x //val x = event.rawX
-        val y = event.y //val y = event.rawY
+        val x = event.x
+        val y = event.y
 
         when (event.action and MotionEvent.ACTION_MASK) {
             MotionEvent.ACTION_DOWN -> {
@@ -120,11 +120,13 @@ class EditorDrawCanvas(context: Context, attrs: AttributeSet) : View(context, at
                 mUndoneOperations.clear()
                 updateRedoVisibility(false)
             }
+
             MotionEvent.ACTION_MOVE -> {
                 if (event.pointerCount == 1 && !mWasMultitouch) {
                     actionMove(x, y)
                 }
             }
+
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> actionUp()
             MotionEvent.ACTION_POINTER_DOWN -> mWasMultitouch = true
         }

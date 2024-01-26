@@ -63,9 +63,12 @@
 
         </RadioGroup>
 
-        <include
-            android:id="@+id/sorting_dialog_order_divider"
-            layout="@layout/divider" />
+        <ImageView
+            android:id="@+id/sorting_dialog_sorting_divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:background="@color/divider_grey"
+            android:importantForAccessibility="no" />
 
         <RadioGroup
             android:id="@+id/sorting_dialog_radio_order"
@@ -87,24 +90,25 @@
                 android:text="@string/descending" />
         </RadioGroup>
 
-        <include
-            android:id="@+id/use_for_this_folder_divider"
-            layout="@layout/divider" />
+        <ImageView
+            android:id="@+id/sorting_dialog_order_divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:background="@color/divider_grey"
+            android:importantForAccessibility="no" />
 
         <com.goodwy.commons.views.MyAppCompatCheckbox
             android:id="@+id/sorting_dialog_numeric_sorting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/activity_margin"
-            android:paddingBottom="@dimen/activity_margin"
+            android:minHeight="@dimen/min_radio_checkbox_height"
             android:text="@string/sort_numeric_parts" />
 
         <com.goodwy.commons.views.MyAppCompatCheckbox
             android:id="@+id/sorting_dialog_use_for_this_folder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/activity_margin"
-            android:paddingBottom="@dimen/activity_margin"
+            android:minHeight="@dimen/min_radio_checkbox_height"
             android:text="@string/use_for_this_folder" />
 
         <com.goodwy.commons.views.MyTextView

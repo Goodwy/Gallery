@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">相簿</string> <!--Not used-->
+    <string name="exclude_folder_description_g">此資料夾與子資料夾將只會都從Right Gallery中排除。您可以在設定中進行管理。</string>
+    <string name="excluded_activity_placeholder_g">[排除資料夾]只會將選擇的資料夾與子資料夾一起從Right Gallery中隱藏，它們仍會出現在其他應用程式中。
+\n
+\n如果您要在其他應用程式中也隱藏，請使用[隱藏]功能。</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">如何將Right Gallery設為裝置的預設相簿？</string>
+    <string name="faq_1_text_g">首先開啟裝置的設定，在應用程式相關設定處找到目前的預設相簿。 選擇「預設為開啟」或類似的選項，然後按「清除預設值」。 之後開啟圖片或影片檔案時會出現選擇 APP 的畫面，此時即可將Right Gallery設為預設相簿。</string>
+    <string name="faq_5_text_g">「排除」只會使該資料夾在Right Gallery中隱藏；而「隱藏」則會影響整個系統，使其也會在其他的相簿 APP 中隱藏，其運作原理是在該資料夾中建立一個空的「.nomedia」檔案（您可使用任意檔案管理器移除此檔案）。另外，某些裝置不允許隱藏相片、螢幕擷圖、下載等資料夾。</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">年</string>
+    <string name="months">月</string>
+    <string name="days">天</string>
+    <string name="all_photos">所有照片</string>
+    <string name="by_last_modified_yearly_g">最後修改 (每年)</string>
+    <string name="by_date_taken_yearly_g">拍攝日期 (每年)</string>
+
+    <string name="eraser">橡皮</string>
+    <string name="eyedropper">滴管</string>
+</resources>

@@ -5,6 +5,7 @@
     <string name="edit">Редактировать</string>
     <string name="open_camera">Камера</string>
     <string name="hidden">(скрыто)</string>
+    <string name="excluded">(исключено)</string>
     <string name="pin_folder">Закрепить папку</string>
     <string name="unpin_folder">Открепить папку</string>
     <string name="pin_to_the_top">Закрепить сверху</string>
@@ -27,18 +28,11 @@
     <string name="dates_fixed_successfully">Даты исправлены</string>
     <string name="no_date_takens_found">Дата съёмки не найдена</string>
     <string name="share_resized">Поделиться изменённой версией</string>
-    <string name="upgraded_from_free">Привет,
-\n
-\nпохоже, что вы обновились со старого бесплатного приложения. Теперь вы можете удалить старую версию, которая содержит кнопку \"Обновить до Pro\" в верхней части настроек приложения.
-\n
-\nБудет очищена корзина, сняты отметки избранного, а также вам придётся сбросить настройки приложения.
-\n
-\nСпасибо!</string>
     <string name="switch_to_file_search">Переключиться на поиск файлов по всем видимым папкам</string>
     <string name="set_as_default_folder">Установить как папку по умолчанию</string>
     <string name="unset_as_default_folder">Отключить как папку по умолчанию</string>
-    <string name="reorder_by_dragging">Менять порядок папок перетаскиванием</string>
-    <string name="reorder_by_dragging_pro">Менять порядок папок перетаскиванием (Pro)</string>
+    <string name="reorder_by_dragging">Сортировка папок перетаскиванием</string>
+    <string name="reorder_by_dragging_pro">Сортировка папок перетаскиванием (Pro)</string>
     <string name="restore_to_path">Восстановление в \"%s\"</string>
     <!-- Filter -->
     <string name="filter_media">Фильтр медиа</string>
@@ -52,15 +46,16 @@
     <string name="change_filters_underlined"><u>Изменить фильтры</u></string>
     <!-- Hide / Exclude -->
     <string name="hide_folder_description">Эта функция скрывает папку, добавляя в неё файл \".nomedia\". Также будут скрыты все подпапки. Можно показать их, переключая \"Показывать скрытые папки\" в настройках. Продолжить\?</string>
-    <string name="exclude_folder_description">Эта функция исключит выбранные папки вместе с подпапками только для Simple Gallery. Можно управлять исключёнными папками из настроек.</string>
+    <string name="exclude_folder_description">Эта функция исключит выбранные папки вместе с подпапками только для \"Простой галереи\". Можно управлять исключёнными папками из настроек.</string>
     <string name="exclude_folder_parent">Исключить только родительскую папку\?</string>
-    <string name="excluded_activity_placeholder">Исключая папки, вы сделаете их скрытыми вместе с подпапками в Simple Gallery, но они будут видны в других приложениях.
+    <string name="excluded_activity_placeholder">Исключая папки, вы сделаете их скрытыми вместе с подпапками в \"Простой галерее\", но они будут видны в других приложениях.
 \n
 \nЕсли вы хотите скрыть их и в других приложениях, используйте функцию \"Скрыть\".</string>
     <string name="hidden_folders">Скрытые папки</string>
     <string name="manage_hidden_folders">Управление скрытыми папками</string>
     <string name="hidden_folders_placeholder">Похоже, у вас нет папок, скрытых файлом \".nomedia\".</string>
-    <string name="hidden_all_files">You have to grant the app All Files access to see hidden files, else it cannot work.</string>
+    <string name="hidden_all_files">Чтобы видеть скрытые файлы, необходимо предоставить приложению доступ ко всем файлам.</string>
+    <string name="cant_unhide_folder">Если папка или одна из её родительских папок имеет точку перед именем, то она является скрытой и не может быть показана таким образом. Необходимо удалить точку, переименовав папку.</string>
     <!-- Include folders -->
     <string name="include_folders">Включённые папки</string>
     <string name="manage_included_folders">Управление включёнными папками</string>
@@ -75,8 +70,21 @@
     <string name="height">Высота</string>
     <string name="keep_aspect_ratio">Сохранять соотношение сторон</string>
     <string name="invalid_values">Указано недопустимое разрешение</string>
+    <string name="resize_multiple_images">Изменить размер изображений</string>
+    <string name="resize_factor">Коэффициент изменения размера</string>
+    <string name="resize_factor_info">Изменение размера изображения на заданный процент, значение должно быть в пределах 10 и 90.</string>
+    <string name="resize_factor_error">Введите число от 10 до 90</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Невозможно изменить размер %d изображения</item>
+        <item quantity="few">Невозможно изменить размер %d изображений</item>
+        <item quantity="many">Невозможно изменить размер %d изображений</item>
+        <item quantity="other">Невозможно изменить размер %d изображений</item>
+    </plurals>
+    <string name="images_resized_successfully">Размер изображений изменён</string>
     <!-- Editor -->
     <string name="editor">Редактор</string>
+    <string name="basic_editor">Простой редактор</string>
+    <string name="advanced_editor">Расширенный редактор</string>
     <string name="rotate">Поворот</string>
     <string name="invalid_image_path">Недопустимый путь изображения</string>
     <string name="invalid_video_path">Недопустимый путь видео</string>
@@ -96,6 +104,9 @@
     <string name="rotate_left">Повернуть влево</string>
     <string name="rotate_right">Повернуть вправо</string>
     <string name="rotate_one_eighty">Перевернуть на 180°</string>
+    <string name="transform">Трансформация</string>
+    <string name="crop">Обрезать</string>
+    <string name="draw">Рисовать</string>
     <string name="flip">Отразить</string>
     <string name="flip_horizontally">По горизонтали</string>
     <string name="flip_vertically">По вертикали</string>
@@ -134,7 +145,7 @@
     <!-- View types -->
     <string name="group_direct_subfolders">Объединять вложенные папки</string>
     <!-- Grouping at media thumbnails -->
-    <string name="group_by">Группировать по</string>
+    <string name="group_by">Группировать по…</string>
     <string name="do_not_group_files">Не группировать</string>
     <string name="by_folder">Папка</string>
     <string name="by_last_modified">Последнее изменение</string>
@@ -201,7 +212,9 @@
     <string name="limit_folder_title">Длинное название папки одной строкой</string>
     <string name="square">Квадраты</string>
     <string name="rounded_corners">Закруглённые углы</string>
-    <string name="export_favorite_paths">Экспорт путей избранных файлов</string>
+    <string name="export_favorite_paths">Экспорт избранного</string>
+    <string name="import_favorite_paths">Импорт избранного</string>
+    <string name="paths_imported_successfully">Пути успешно импортированы</string>
     <string name="media_management_prompt">Чтобы быть уверенным в надёжной работе операций с файлами, сделайте это приложение основным менеджером медиафайлов в настройках устройства.</string>
     <string name="password_protect_excluded">Защита паролем отображения исключённых папок</string>
     <string name="media_management_manual">Что-то пошло не так. Откройте настройки устройства и перейдите в: \"Приложения\" → \"Специальный доступ\" → \"Приложения для управления медиа\" и разрешите этому приложению управлять медиа.</string>
@@ -210,6 +223,8 @@
     <string name="alternative_media_access">Также можно разрешить доступ только к медиафайлам. Однако в этом случае вы не сможете работать со скрытыми файлами.</string>
     <string name="media_only">Только медиафайлы</string>
     <string name="all_files">Все файлы</string>
+    <string name="search_all_files">Поиск всех файлов, а не только в папках на главном экране</string>
+    <string name="show_all_folders">Показывать кнопку меню для быстрого переключения \"Показать все медиафайлы\"</string>
     <!-- Setting sections -->
     <string name="thumbnails">Эскизы</string>
     <string name="fullscreen_media">Просмотр медиафайлов</string>
@@ -264,7 +279,7 @@
     <string name="pesdk_brush_title_name">Кисть</string>
     <string name="pesdk_brush_button_color">Цвет</string>
     <string name="pesdk_brush_button_size">Размер</string>
-    <string name="pesdk_brush_button_hardness">Чёткость</string>
+    <string name="pesdk_brush_button_hardness">Плотность</string>
     <string name="pesdk_brush_button_bringToFront">Спереди</string>
     <string name="pesdk_brush_button_delete">Удалить</string>
     <string name="pesdk_brush_title_brushColor">Цвет кисти</string>
@@ -333,8 +348,8 @@
     <string name="pesdk_common_title_pipettableColor">Цвет заливки</string>
     <string name="vesdk_video_trim_title_name">Обрезка</string>
     <!-- FAQ -->
-    <string name="faq_1_title">Как сделать Simple Gallery галереей по умолчанию\?</string>
-    <string name="faq_1_text">Сначала вы должны найти галерею по умолчанию в разделе \"Приложения\" настроек вашего устройства; найдите кнопку, названную \"Открыть по умолчанию\",затем нажмите на неё и выберите \"Очистить значения по умолчанию\". В следующий раз, когда попробуете открыть изображение или видео, вы увидите выбор приложений, где сможете выбрать Simple Gallery и сделать её приложением по умолчанию.</string>
+    <string name="faq_1_title">Как сделать \"Простую галерею\" галереей по умолчанию\?</string>
+    <string name="faq_1_text">Сначала вы должны найти галерею по умолчанию в разделе \"Приложения\" настроек вашего устройства; найдите кнопку, названную \"Открыть по умолчанию\",затем нажмите на неё и выберите \"Очистить значения по умолчанию\". В следующий раз, когда попробуете открыть изображение или видео, вы увидите выбор приложений, где сможете выбрать \"Простую галерею\" и сделать её приложением по умолчанию.</string>
     <string name="faq_2_title">Я заблокировал приложение паролем, но забыл его. Что мне теперь делать\?</string>
     <string name="faq_2_text">Это можно решить двумя способами. Вы можете переустановить приложение или найти его в настройках вашего устройства и выбрать пункт \"Очистить данные\", что сбросит все настройки приложения, но не удалит медиафайлы.</string>
     <string name="faq_3_title">Как я могу сделать альбом всегда отображающимся сверху\?</string>
@@ -342,7 +357,7 @@
     <string name="faq_4_title">Как ускорить перемотку видео\?</string>
     <string name="faq_4_text">Можно дважды нажать на кромку экрана или нажать на цифры текущего положения или максимальной длительности видео рядом с панелью поиска. Если в настройках приложения включено воспроизведение видео на отдельном экране, то также можно использовать горизонтальные жесты.</string>
     <string name="faq_5_title">В чём разница между скрытием и исключением папки\?</string>
-    <string name="faq_5_text">Исключение запрещает отображение папки только в Simple Gallery, в то время как скрытие работает системно и скрывает папку из других галерей. Это достигается путём создания пустого файла \".nomedia\" в данной папке, который впоследствии можно удалить любым файловым менеджером. Обратите внимание, что некоторые устройства не позволяют скрывать папки, такие как \"Camera\", \"Screenshot\" и \"Download\".</string>
+    <string name="faq_5_text">Исключение запрещает отображение папки только в \"Простой галерее\", в то время как скрытие работает на уровне системы и скрывает папку из других галерей. Это достигается путём создания пустого файла \".nomedia\" в данной папке, который впоследствии можно удалить любым файловым менеджером. Обратите внимание, что некоторые устройства не позволяют скрывать папки, такие как \"Camera\", \"Screenshot\" и \"Download\".</string>
     <string name="faq_6_title">Почему отображаются папки с музыкальными обложками\?</string>
     <string name="faq_6_text">Может случиться так, что вы увидите необычные альбомы. Вы можете легко убрать их, долго нажав на них и выбрав пункт \"Исключить\". В следующем диалоговом окне вы сможете выбрать родительскую папку, что, скорее всего, также предотвратит появление других похожих альбомов.</string>
     <string name="faq_7_title">Папка с изображениями не отображается, что можно сделать\?</string>
@@ -352,7 +367,7 @@
     <string name="faq_10_title">Можно ли обрезать изображения с помощью данного приложения\?</string>
     <string name="faq_10_text">Да, вы можете обрезать изображения в редакторе, перетаскивая за углы. К редактированию можно перейти, выбрав соответствующий пункт в меню, открывающемуся длительным нажатием на миниатюру или изображение в полноэкранном режиме.</string>
     <string name="faq_11_title">Могу ли я как-то сгруппировать миниатюры медиафайлов\?</string>
-    <string name="faq_11_text">Конечно, просто используйте пункт меню \"Группировать по…\" во время просмотра миниатюр. Вы можете группировать файлы по нескольким критериям, включая дату съёмки. Если вы используете функцию \"Отобразить все медиафайлы\", то также можете группировать их по папкам.</string>
+    <string name="faq_11_text">Конечно, просто используйте пункт меню \"Группировать по…\" во время просмотра миниатюр. Вы можете группировать файлы по нескольким критериям, включая дату съёмки. Если вы используете функцию \"Показать все медиафайлы\", то также можете группировать их по папкам.</string>
     <string name="faq_12_title">Сортировка по дате, похоже, не работает должным образом. Как это можно исправить\?</string>
     <string name="faq_12_text">Скорее всего, проблема вызвано тем, что файлы были откуда-то скопированы. Это можно исправить, выделив миниатюры файлов и выбрав \"Исправить дату\".</string>
     <string name="faq_13_title">Я вижу какие-то цветовые полосы на изображениях. Как я могу улучшить качество\?</string>

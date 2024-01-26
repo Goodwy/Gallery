@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Galeri</string> <!--Not used-->
+    <string name="exclude_folder_description_g">Bu, alt klasörleriyle birlikte seçimi yalnızca Right Gallery hariç tutacaktır. Hariç tutulan klasörleri Ayarlar\'dan yönetebilirsiniz.</string>
+    <string name="excluded_activity_placeholder_g">Klasörleri hariç tutmak, onları yalnızca Right Gallery gizlenen alt klasörleriyle bir araya getirecek, diğer uygulamalarda görünmeye devam edecektir.
+\n
+\nBunları diğer uygulamalardan gizlemek istiyorsanız, Gizle işlevini kullanın.</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">Right Gallery nasıl öntanımlı aygıt galerisi yapabilirim\?</string>
+    <string name="faq_1_text_g">Önce aygıt ayarlarınızın Uygulamalar bölümünde öntanımlı galeriyi bulmanız, \"Öntanımlı olarak aç\" gibi bir şey söyleyen bir düğme aramanız, üzerine tıklamanız ve ardından \"Öntanımlıları Temizle\" seçeneğini seçmeniz gerekir. Gelecek sefer video veya resim açmayı denediğinizde, Right Gallery seçip öntanımlı uygulama haline getirebileceğiniz bir uygulama seçicisini görmelisiniz.</string>
+    <string name="faq_5_text_g">Hariç tut, klasörü yalnızca Right Gallery görüntülemeyi engellerken, Gizle sistem genelinde çalışır ve klasörü diğer galerilerden de gizler. Verilen klasörde boş bir \".nomedia\" dosyası oluşturarak çalışır, daha sonra herhangi bir dosya yöneticisi ile kaldırabilirsiniz. Bazı aygıtların Kamera, Ekran Görüntüleri ve İndirilenler gibi klasörlerin gizlenmesine izin vermediğini unutmayın.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">Yıl</string>
+    <string name="months">Aylar</string>
+    <string name="days">Gün</string>
+    <string name="all_photos">Tüm fotoğraflar</string>
+    <string name="by_last_modified_yearly_g">Son değiştirilme (yıllık)</string>
+    <string name="by_date_taken_yearly_g">Çekildiği tarih (yıllık)</string>
+
+    <string name="eraser">Silgi</string>
+    <string name="eyedropper">Damlalık</string>
+</resources>

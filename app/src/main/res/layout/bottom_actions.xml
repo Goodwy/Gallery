@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/bottom_actions_height"
     android:layout_alignParentBottom="true"
-    android:background="@drawable/gradient_background"
-    android:paddingTop="@dimen/medium_margin">
+    android:background="@color/crop_image_view_background"
+    android:paddingTop="@dimen/normal_margin">
+    <!--android:background="@drawable/gradient_background"-->
 
     <ImageView
         android:id="@+id/bottom_share"
@@ -62,14 +63,14 @@
         android:padding="@dimen/medium_margin"
         android:src="@drawable/ic_volume_mute"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/bottom_properties"
+        app:layout_constraintEnd_toStartOf="@+id/bottomProperties"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/bottom_play_pause"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
-        android:id="@+id/bottom_properties"
+        android:id="@+id/bottomProperties"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackgroundBorderless"
@@ -95,7 +96,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/bottom_edit"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/bottom_properties"
+        app:layout_constraintStart_toEndOf="@+id/bottomProperties"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 

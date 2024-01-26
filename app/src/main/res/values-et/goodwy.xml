@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Galerii</string> <!--Not used-->
+    <string name="exclude_folder_description_g">See välistab valiku koos selle alamkaustadega ainult Right Gallery\'st. Väljajäetud kaustu saate hallata seadetes.</string>
+    <string name="excluded_activity_placeholder_g">Kaustade välistamine peidab kaustad koos nende alamkaustadega vaid Right Gallery ning nad jäävad nähtavaks muudele rakendustele.
+\n
+\nKui sa tahad neid varjata ka muude rakenduste eest, siis kasuta peitmise funktsionaalsust.</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">Kuidas teha Right Gallery seadme vaikimisi galeriiks\?</string>
+    <string name="faq_1_text_g">Kõigepealt tuleb leida seadme seadete rakenduste sektsioonist praegune vaikimisi galerii, otsida nuppu, millel on midagi sellist nagu \"Ava vaikimisi\", klõpsata sellel ja valida \"Tühista vaikimisi\". Järgmine kord, kui proovite pilti või videot avada, peaksite nägema rakenduste valijat, kus saate valida Right Gallery ja teha selle vaikimisi rakenduseks.</string>
+    <string name="faq_5_text_g">Exclude takistab kausta kuvamist ainult Right Gallery\'s, samas kui Hide töötab süsteemipõhiselt ja peidab kausta ka teistest galeriidest. See töötab, luues antud kausta tühja \".nomedia\" faili, mille saate seejärel eemaldada ka mis tahes failihalduriga. Pange tähele, et mõned seadmed ei võimalda kaustade, nagu Camera, Screenshots ja Downloads, peitmist.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">Aastaid</string>
+    <string name="months">Kuud</string>
+    <string name="days">Päevad</string>
+    <string name="all_photos">Kõik fotod</string>
+    <string name="by_last_modified_yearly_g">Viimati muudetud (igal aastal)</string>
+    <string name="by_date_taken_yearly_g">Võetud kuupäev (igal aastal)</string>
+
+    <string name="eraser">Kustutuskumm</string>
+    <string name="eyedropper">Pipetti</string>
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Галерия</string> <!--Not used-->
+    <string name="exclude_folder_description_g">Това ще изключи селекцията заедно с вътрешните ѝ папки само от Right Gallery. Можете да управлявате изключените папки в Настройки.</string>
+    <string name="excluded_activity_placeholder_g">Изключването на папките ще ги скрие, заедно с вътрешните им папки, само в Right Gallery; те ще бъдат видими в други приложения.
+\n
+\nАко искате да ги скриете също и от други приложения, използвайте функцията Скриване.</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">Как мога да задам Right Gallery да бъде основната галерия на устройството\?</string>
+    <string name="faq_1_text_g">First you have to find the currently default gallery in the Apps section of your device settings, look for a button that says something like \"Open by default\", click on it, then select \"Clear defaults\".
+        The next time you will try opening an image or video you should see an app picker, where you can select Right Gallery and make it the default app.</string>
+    <string name="faq_5_text_g">Изключването предотвратява показването на папката само в Right Gallery, докато Скриването работи системно и скрива папката и от други галерии. Това работи чрез създаване на празен \".nomedia\" файл в дадената папка, който след това можете да премахнете и с всеки файлов мениджър. Имайте предвид, че някои устройства не позволяват скриване на папки като Камера, Екранни снимки и Изтегляния.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">Години</string>
+    <string name="months">Месеци</string>
+    <string name="days">Дни</string>
+    <string name="all_photos">Всички снимки</string>
+    <string name="by_last_modified_yearly_g">Последно изменение (годишно)</string>
+    <string name="by_date_taken_yearly_g">Дата на заснемане (годишно)</string>
+
+    <string name="eraser">Гумичка</string>
+    <string name="eyedropper">Пипетка за очи</string>
+</resources>

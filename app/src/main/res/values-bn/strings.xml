@@ -5,6 +5,7 @@
     <string name="edit">সম্পাদনা</string>
     <string name="open_camera">ক্যামেরা খুলুন</string>
     <string name="hidden">(লুকানো)</string>
+    <string name="excluded">(excluded)</string>
     <string name="pin_folder">ফোল্ডার পিন করুন</string>
     <string name="unpin_folder">ফোল্ডার আনপিন করুন</string>
     <string name="pin_to_the_top">একদম উপরে পিন করুন</string>
@@ -27,11 +28,6 @@
     <string name="dates_fixed_successfully">তারিখ সফলভাবে ঠিক করা হয়েছে</string>
     <string name="no_date_takens_found">তোলার তারিখ নেই</string>
     <string name="share_resized">পরিবর্তিত একা সংস্করণ নিন</string>
-    <string name="upgraded_from_free">অই,
-\n
-\n মনে হচ্ছে আপনি অ্যাপটি পুরোনো মুক্ত সংস্করণ থেকে হালনাগাদ করেছেন, যেটার সেটিংসে \'প্রোতে হালনাগাদ করুন\' বাটন রয়েছে।
-\n
-\nধন্যবাদ!</string>
     <string name="switch_to_file_search">সব দেখা যাওয়া ফোল্ডারে ফাইল সার্চে চলে যান</string>
     <string name="set_as_default_folder">ডিফল্ট ফোল্ডার হিশেবে সেট করুন</string>
     <string name="unset_as_default_folder">ডিফল্ট ফোল্ডার হিশেবে আর রাখবেন না</string>
@@ -59,6 +55,7 @@
     <string name="manage_hidden_folders">লুকানো ফোল্ডারগুলি পরিচালনা করুন</string>
     <string name="hidden_folders_placeholder">দেখে মনে হচ্ছে আপনার সাথে কোনও ফোল্ডার লুকানো নেই \".nomedia\" ফাইল।</string>
     <string name="hidden_all_files">You have to grant the app All Files access to see hidden files, else it cannot work.</string>
+    <string name="cant_unhide_folder">If a folder or one of its parent folders has a dot before its name, it is hidden and cannot be unhidden like this. You have to remove the dot by renaming it.</string>
     <!-- Include folders -->
     <string name="include_folders">অন্তর্ভুক্ত ফোল্ডার</string>
     <string name="manage_included_folders">অন্তর্ভুক্ত ফোল্ডার ব্যবস্থাপনা করুন</string>
@@ -73,8 +70,19 @@
     <string name="height">দৈর্ঘ্য</string>
     <string name="keep_aspect_ratio">অনুপাত রাখুন</string>
     <string name="invalid_values">দয়া করে একটি বৈধ রেজোলিউশন দিন।</string>
+    <string name="resize_multiple_images">Resize multiple images</string>
+    <string name="resize_factor">Resize factor</string>
+    <string name="resize_factor_info">Resize images to the given percentage, value must be within 10 and 90.</string>
+    <string name="resize_factor_error">Enter a number between 10 and 90</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Failed to resize %d image</item>
+        <item quantity="other">Failed to resize %d images</item>
+    </plurals>
+    <string name="images_resized_successfully">Images resized successfully</string>
     <!-- Editor -->
     <string name="editor">সম্পাদক</string>
+    <string name="basic_editor">Basic Editor</string>
+    <string name="advanced_editor">Advanced Editor</string>
     <string name="rotate">ঘোরান</string>
     <string name="invalid_image_path">ভুল ছবির পথ</string>
     <string name="invalid_video_path">ভুল ভিডিওর পথ</string>
@@ -94,6 +102,9 @@
     <string name="rotate_left">বামে ঘোরান</string>
     <string name="rotate_right">ডানে ঘোরান</string>
     <string name="rotate_one_eighty">১৮০º ঘোরান</string>
+    <string name="transform">Transform</string>
+    <string name="crop">Crop</string>
+    <string name="draw">Draw</string>
     <string name="flip">ঘোরান</string>
     <string name="flip_horizontally">অবতলভাবে ঘোরান</string>
     <string name="flip_vertically">খাড়াখাড়িভাবে ঘোরান</string>
@@ -199,7 +210,9 @@
     <string name="limit_folder_title">Limit long folder titles to 1 line</string>
     <string name="square">বর্গ</string>
     <string name="rounded_corners">Rounded corners</string>
-    <string name="export_favorite_paths">Export favorite file paths</string>
+    <string name="export_favorite_paths">Export favorites</string>
+    <string name="import_favorite_paths">Import favorites</string>
+    <string name="paths_imported_successfully">Paths imported successfully</string>
     <string name="media_management_prompt">To make sure that all file operations work reliably, please make this app a Media management app in your device settings.</string>
     <string name="password_protect_excluded">Password protect excluded folder visibility</string>
     <string name="media_management_manual">Something went wrong, please go into your device Settings - Apps - Special app access - Media management apps and allow this app to manage media.</string>
@@ -208,6 +221,8 @@
     <string name="alternative_media_access">Alternatively, you can allow accessing media files only. In that case you will not be able to work with hidden files though.</string>
     <string name="media_only">Media only</string>
     <string name="all_files">All files</string>
+    <string name="search_all_files">Search all files instead of folders on the main screen</string>
+    <string name="show_all_folders">Show a menu button for toggling Show All Folders Content quickly</string>
     <!-- Setting sections -->
     <string name="thumbnails">থাম্বনেল</string>
     <string name="fullscreen_media">পুরো স্ক্রিনের মিডিয়া</string>

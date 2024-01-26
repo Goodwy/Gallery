@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Galería sinxela</string>
+    <string name="app_name">Galería Simple</string>
     <string name="app_launcher_name">Galería</string>
     <string name="edit">Editar</string>
     <string name="open_camera">Abrir cámara</string>
     <string name="hidden">(oculto)</string>
+    <string name="excluded">(excluído)</string>
     <string name="pin_folder">Fixar cartafol</string>
     <string name="unpin_folder">Soltar cartafol</string>
     <string name="pin_to_the_top">Fixar arriba</string>
@@ -27,13 +28,6 @@
     <string name="dates_fixed_successfully">Datas arranxadas con éxito</string>
     <string name="no_date_takens_found">Non se atoparon valores de Datas de Captura</string>
     <string name="share_resized">Comparte unha versión reducida</string>
-    <string name="upgraded_from_free">Ola,
-\n
-\nsemella que actualizaches desde o vello aplicativo gratuito. Podes desinstalar a versión vella, que ten un botón \'Mellorar a Pro\' enriba da pantalla de configuración.
-\n
-\nSo terás os elementos borrados da Papeleira de reciclaxe, os elementos favoritos sen marcar e tamén terás que reiniciar os Axustes.
-\n
-\nGrazas!</string>
     <string name="switch_to_file_search">Cambiala procura de ficheiros en todolos cartafoles visibles</string>
     <string name="set_as_default_folder">Poñer como cartafol predeterminado</string>
     <string name="unset_as_default_folder">Desactivar como cartafol predeterminado</string>
@@ -60,7 +54,8 @@
     <string name="hidden_folders">Cartafoles ocultos</string>
     <string name="manage_hidden_folders">Xestionar cartafoles ocultos</string>
     <string name="hidden_folders_placeholder">Semella que non tes ningún cartafol oculto cun ficheiro \".nomedia\".</string>
-    <string name="hidden_all_files">You have to grant the app All Files access to see hidden files, else it cannot work.</string>
+    <string name="hidden_all_files">Ten que concederlle acceso á aplicación a todolos ficheiros para velos ficheiros ocultos, se non, a aplicación non pode funcionar.</string>
+    <string name="cant_unhide_folder">Se un cartafol ou algún dos seus cartoles nai ten un punto antes do nome fará que esté agochado. Debes eliminar o punto cambiándolle o nome.</string>
     <!-- Include folders -->
     <string name="include_folders">Cartafoles incluídos</string>
     <string name="manage_included_folders">Xestionar cartafoles incluídos</string>
@@ -75,8 +70,19 @@
     <string name="height">Alto</string>
     <string name="keep_aspect_ratio">Manter proporcións</string>
     <string name="invalid_values">Por favor escribe unha resolución válida</string>
+    <string name="resize_multiple_images">Cambiar tamaño a varias imaxes</string>
+    <string name="resize_factor">Factor de escala</string>
+    <string name="resize_factor_info">Escalar a unha porcentaxe dada, o valor debe estar entre 10 e 90.</string>
+    <string name="resize_factor_error">Escribe un número entre 10 e 90</string>
+    <plurals name="failed_to_resize_images">
+        <item quantity="one">Fallou o escalado de %d imaxe</item>
+        <item quantity="other">Fallou o escalado de %d imaxes</item>
+    </plurals>
+    <string name="images_resized_successfully">Escalado de imaxes correcto</string>
     <!-- Editor -->
     <string name="editor">Editor</string>
+    <string name="basic_editor">Editor básico</string>
+    <string name="advanced_editor">Editor avanzado</string>
     <string name="rotate">Rotar</string>
     <string name="invalid_image_path">Ruta á imaxe non válida</string>
     <string name="invalid_video_path">Ruta do vídeo non válida</string>
@@ -96,6 +102,9 @@
     <string name="rotate_left">Virar a esquerda</string>
     <string name="rotate_right">Virar a dereita</string>
     <string name="rotate_one_eighty">Virar 180º</string>
+    <string name="transform">Transformar</string>
+    <string name="crop">Recortar</string>
+    <string name="draw">Debuxa</string>
     <string name="flip">Virar</string>
     <string name="flip_horizontally">Virar horizontalmente</string>
     <string name="flip_vertically">Virar verticalmente</string>
@@ -201,7 +210,9 @@
     <string name="limit_folder_title">Limitalos títulos longos dos cartafoles a 1 liña</string>
     <string name="square">Praza</string>
     <string name="rounded_corners">Cantos redondeados</string>
-    <string name="export_favorite_paths">Exportalas rutas dos ficheiros favoritos</string>
+    <string name="export_favorite_paths">Exportalos favoritos</string>
+    <string name="import_favorite_paths">Importalos favoritos</string>
+    <string name="paths_imported_successfully">As rutas importáronse correctamente</string>
     <string name="media_management_prompt">Para asegurarte de que todalas operacións cos ficheiros funcionan de forma fiable, fai desta aplicación unha aplicación de xestión multimedia na configuración do teu dispositivo.</string>
     <string name="password_protect_excluded">Visibilidade do cartafol protexida con contrasinal</string>
     <string name="media_management_manual">Produciuse un erro, acceda Configuración do teu dispositivo - Aplicacións - Acceso especial ás aplicacións - Aplicacións de xestión multimedia e permite que esta aplicación xestione o contido multimedia.</string>
@@ -210,6 +221,8 @@
     <string name="alternative_media_access">Alternativamente, só pode permitilo acceso a ficheiros multimedia. Nese caso non poderás traballar con ficheiros ocultos.</string>
     <string name="media_only">Só medios</string>
     <string name="all_files">Todolos ficheiros</string>
+    <string name="search_all_files">Busca todolos ficheiros en lugar de cartafoles na pantalla principal</string>
+    <string name="show_all_folders">Mostrar un botón de menú para alternar Mostralo contido de todolos cartafoles rapidamente</string>
     <!-- Setting sections -->
     <string name="thumbnails">Miniaturas</string>
     <string name="fullscreen_media">Medios a pantalla completa</string>
@@ -270,7 +283,7 @@
     <string name="pesdk_brush_title_brushColor">Cor do Pincel</string>
     <string name="pesdk_editor_title_name">Editor</string>
     <string name="pesdk_editor_title_closeEditorAlert">Pechalo Editor\?</string>
-    <string name="pesdk_editor_text_closeEditorAlert">De verdade queres descartalos cambios\?</string>
+    <string name="pesdk_editor_text_closeEditorAlert">De verdade queres desbotar os cambios\?</string>
     <string name="pesdk_editor_button_closeEditorAlertConfirmation">Si</string>
     <string name="pesdk_editor_button_closeEditorAlertCancelation">Non</string>
     <string name="pesdk_editor_cancel">Cancelar</string>

@@ -3,31 +3,32 @@ package com.goodwy.gallery.dialogs
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import com.goodwy.commons.activities.BaseSimpleActivity
-import com.goodwy.commons.extensions.getAlertDialogBuilder
-import com.goodwy.commons.extensions.setupDialogStuff
-import com.goodwy.commons.extensions.showKeyboard
-import com.goodwy.commons.extensions.value
+import com.goodwy.commons.extensions.*
 import com.goodwy.gallery.R
-import kotlinx.android.synthetic.main.dialog_custom_aspect_ratio.view.*
+import com.goodwy.gallery.databinding.DialogCustomAspectRatioBinding
 
 class CustomAspectRatioDialog(
     val activity: BaseSimpleActivity, val defaultCustomAspectRatio: Pair<Float, Float>?, val callback: (aspectRatio: Pair<Float, Float>) -> Unit
 ) {
     init {
-        val view = activity.layoutInflater.inflate(R.layout.dialog_custom_aspect_ratio, null).apply {
-            aspect_ratio_width.setText(defaultCustomAspectRatio?.first?.toInt()?.toString() ?: "")
-            aspect_ratio_height.setText(defaultCustomAspectRatio?.second?.toInt()?.toString() ?: "")
+        val binding = DialogCustomAspectRatioBinding.inflate(activity.layoutInflater).apply {
+            aspectRatioWidth.setText(defaultCustomAspectRatio?.first?.toInt()?.toString() ?: "")
+            aspectRatioHeight.setText(defaultCustomAspectRatio?.second?.toInt()?.toString() ?: "")
         }
 
         activity.getAlertDialogBuilder()
-            .setPositiveButton(R.string.ok, null)
-            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(com.goodwy.commons.R.string.ok, null)
+            .setNegativeButton(com.goodwy.commons.R.string.cancel, null)
             .apply {
-                activity.setupDialogStuff(view, this) { alertDialog ->
-                    alertDialog.showKeyboard(view.aspect_ratio_width)
+                activity.setupDialogStuff(binding.root, this) { alertDialog ->
+                    alertDialog.showKeyboard(binding.aspectRatioWidth)
                     alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                        val width = getViewValue(view.aspect_ratio_width)
-                        val height = getViewValue(view.aspect_ratio_height)
+                        val width = getViewValue(binding.aspectRatioWidth)
+                        val height = getViewValue(binding.aspectRatioHeight)
+                        if (width <= 0 || height <= 0) {
+                            activity.toast(R.string.invalid_values)
+                            return@setOnClickListener
+                        }
                         callback(Pair(width, height))
                         alertDialog.dismiss()
                     }

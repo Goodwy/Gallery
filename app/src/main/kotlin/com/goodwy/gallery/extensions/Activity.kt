@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.graphics.Point
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.net.Uri
@@ -34,10 +35,15 @@ import com.goodwy.commons.models.FAQItem
 import com.goodwy.commons.models.FileDirItem
 import com.goodwy.gallery.BuildConfig
 import com.goodwy.gallery.R
+import com.goodwy.gallery.activities.MediaActivity
 import com.goodwy.gallery.activities.SettingsActivity
 import com.goodwy.gallery.activities.SimpleActivity
 import com.goodwy.gallery.dialogs.AllFilesPermissionDialog
 import com.goodwy.gallery.dialogs.PickDirectoryDialog
+import com.goodwy.gallery.helpers.DIRECTORY
+import com.goodwy.gallery.dialogs.ResizeMultipleImagesDialog
+import com.goodwy.gallery.dialogs.ResizeWithPathDialog
+import com.goodwy.gallery.helpers.DIRECTORY
 import com.goodwy.gallery.helpers.RECYCLE_BIN
 import com.goodwy.gallery.models.DateTaken
 import com.squareup.picasso.Picasso
@@ -86,8 +92,7 @@ fun SimpleActivity.launchSettings() {
 
 fun SimpleActivity.launchAbout() {
     val licenses = LICENSE_GLIDE or LICENSE_CROPPER or LICENSE_RTL or LICENSE_SUBSAMPLING or LICENSE_PATTERN or LICENSE_REPRINT or LICENSE_GIF_DRAWABLE or
-        LICENSE_PICASSO or LICENSE_EXOPLAYER or LICENSE_PANORAMA_VIEW or LICENSE_SANSELAN or LICENSE_FILTERS or LICENSE_GESTURE_VIEWS or
-        LICENSE_APNG
+        LICENSE_PICASSO or LICENSE_EXOPLAYER or LICENSE_PANORAMA_VIEW or LICENSE_SANSELAN or LICENSE_FILTERS or LICENSE_GESTURE_VIEWS or LICENSE_APNG
 
     val faqItems = arrayListOf(
         FAQItem(R.string.faq_3_title, R.string.faq_3_text),
@@ -95,7 +100,7 @@ fun SimpleActivity.launchAbout() {
         FAQItem(R.string.faq_7_title, R.string.faq_7_text),
         FAQItem(R.string.faq_14_title, R.string.faq_14_text),
         FAQItem(R.string.faq_1_title_g, R.string.faq_1_text_g),
-        FAQItem(R.string.faq_5_title_commons, R.string.faq_5_text_commons),
+        FAQItem(com.goodwy.commons.R.string.faq_5_title_commons, com.goodwy.commons.R.string.faq_5_text_commons),
         FAQItem(R.string.faq_5_title, R.string.faq_5_text_g),
         FAQItem(R.string.faq_4_title, R.string.faq_4_text),
         FAQItem(R.string.faq_6_title, R.string.faq_6_text),
@@ -106,14 +111,14 @@ fun SimpleActivity.launchAbout() {
         FAQItem(R.string.faq_15_title, R.string.faq_15_text),
         FAQItem(R.string.faq_2_title, R.string.faq_2_text),
         FAQItem(R.string.faq_18_title, R.string.faq_18_text),
-        FAQItem(R.string.faq_9_title_commons, R.string.faq_9_text_commons),
+        FAQItem(com.goodwy.commons.R.string.faq_9_title_commons, com.goodwy.commons.R.string.faq_9_text_commons),
     )
 
-    if (!resources.getBoolean(R.bool.hide_google_relations)) {
-        faqItems.add(FAQItem(R.string.faq_2_title_commons, R.string.faq_2_text_commons_g))
-        faqItems.add(FAQItem(R.string.faq_6_title_commons, R.string.faq_6_text_commons))
-        faqItems.add(FAQItem(R.string.faq_7_title_commons, R.string.faq_7_text_commons))
-        faqItems.add(FAQItem(R.string.faq_10_title_commons, R.string.faq_10_text_commons))
+    if (!resources.getBoolean(com.goodwy.commons.R.bool.hide_google_relations)) {
+        faqItems.add(FAQItem(com.goodwy.commons.R.string.faq_2_title_commons, com.goodwy.commons.R.string.faq_2_text_commons_g))
+        faqItems.add(FAQItem(com.goodwy.commons.R.string.faq_6_title_commons, com.goodwy.commons.R.string.faq_6_text_commons))
+        faqItems.add(FAQItem(com.goodwy.commons.R.string.faq_7_title_commons, com.goodwy.commons.R.string.faq_7_text_commons))
+        faqItems.add(FAQItem(com.goodwy.commons.R.string.faq_10_title_commons, com.goodwy.commons.R.string.faq_10_text_commons))
     }
 
     if (isRPlus() && !isExternalStorageManager()) {
@@ -124,7 +129,28 @@ fun SimpleActivity.launchAbout() {
         faqItems.removeIf { it.text == R.string.faq_8_text }
     }
 
-    startAboutActivity(R.string.app_name_g, licenses, BuildConfig.VERSION_NAME, faqItems, true, BuildConfig.GOOGLE_PLAY_LICENSING_KEY, BuildConfig.PRODUCT_ID_X1, BuildConfig.PRODUCT_ID_X2, BuildConfig.PRODUCT_ID_X3)
+    val productIdX1 = BuildConfig.PRODUCT_ID_X1
+    val productIdX2 = BuildConfig.PRODUCT_ID_X2
+    val productIdX3 = BuildConfig.PRODUCT_ID_X3
+    val productIdX4 = BuildConfig.PRODUCT_ID_X4
+    val subscriptionIdX1 = BuildConfig.SUBSCRIPTION_ID_X1
+    val subscriptionIdX2 = BuildConfig.SUBSCRIPTION_ID_X2
+    val subscriptionIdX3 = BuildConfig.SUBSCRIPTION_ID_X3
+
+    startAboutActivity(
+        appNameId = R.string.app_name_g,
+        licenseMask = licenses,
+        versionName = BuildConfig.VERSION_NAME,
+        faqItems = faqItems,
+        showFAQBeforeMail = true,
+        licensingKey = BuildConfig.GOOGLE_PLAY_LICENSING_KEY,
+        productIdList= arrayListOf(productIdX1, productIdX2, productIdX3),
+        productIdListRu = arrayListOf(productIdX1, productIdX2, productIdX4),
+        subscriptionIdList = arrayListOf(subscriptionIdX1, subscriptionIdX2, subscriptionIdX3),
+        subscriptionIdListRu = arrayListOf(subscriptionIdX1, subscriptionIdX2, subscriptionIdX3),
+        playStoreInstalled = isPlayStoreInstalled(),
+        ruStoreInstalled = isRuStoreInstalled()
+    )
 }
 
 fun BaseSimpleActivity.handleMediaManagementPrompt(callback: () -> Unit) {
@@ -134,7 +160,7 @@ fun BaseSimpleActivity.handleMediaManagementPrompt(callback: () -> Unit) {
         if (Environment.isExternalStorageManager()) {
             callback()
         } else {
-            var messagePrompt = getString(R.string.access_storage_prompt)
+            var messagePrompt = getString(com.goodwy.commons.R.string.access_storage_prompt)
             messagePrompt += if (isSPlus()) {
                 "\n\n${getString(R.string.media_management_alternative)}"
             } else {
@@ -210,7 +236,7 @@ fun BaseSimpleActivity.addNoMedia(path: String, callback: () -> Unit) {
                 addNoMediaIntoMediaStore(file.absolutePath)
                 callback()
             } else {
-                toast(R.string.unknown_error_occurred)
+                toast(com.goodwy.commons.R.string.unknown_error_occurred)
                 callback()
             }
         }
@@ -221,7 +247,7 @@ fun BaseSimpleActivity.addNoMedia(path: String, callback: () -> Unit) {
                     addNoMediaIntoMediaStore(file.absolutePath)
                 }
             } else {
-                toast(R.string.unknown_error_occurred)
+                toast(com.goodwy.commons.R.string.unknown_error_occurred)
             }
         } catch (e: Exception) {
             showErrorToast(e)
@@ -252,8 +278,15 @@ fun BaseSimpleActivity.removeNoMedia(path: String, callback: (() -> Unit)? = nul
 
     tryDeleteFileDirItem(file.toFileDirItem(applicationContext), false, false) {
         callback?.invoke()
-        deleteFromMediaStore(file.absolutePath)
-        rescanFolderMedia(path)
+        deleteFromMediaStore(file.absolutePath) { needsRescan ->
+            if (needsRescan) {
+                rescanAndDeletePath(path) {
+                    rescanFolderMedia(path)
+                }
+            } else {
+                rescanFolderMedia(path)
+            }
+        }
     }
 }
 
@@ -285,7 +318,7 @@ fun BaseSimpleActivity.toggleFileVisibility(oldPath: String, hide: Boolean, call
 
 fun BaseSimpleActivity.tryCopyMoveFilesTo(fileDirItems: ArrayList<FileDirItem>, isCopyOperation: Boolean, callback: (destinationPath: String) -> Unit) {
     if (fileDirItems.isEmpty()) {
-        toast(R.string.unknown_error_occurred)
+        toast(com.goodwy.commons.R.string.unknown_error_occurred)
         return
     }
 
@@ -466,10 +499,10 @@ fun BaseSimpleActivity.emptyTheRecycleBin(callback: (() -> Unit)? = null) {
             recycleBin.deleteRecursively()
             mediaDB.clearRecycleBin()
             directoryDB.deleteRecycleBin()
-            toast(R.string.recycle_bin_emptied)
+            toast(com.goodwy.commons.R.string.recycle_bin_emptied)
             callback?.invoke()
         } catch (e: Exception) {
-            toast(R.string.unknown_error_occurred)
+            toast(com.goodwy.commons.R.string.unknown_error_occurred)
         }
     }
 }
@@ -484,7 +517,13 @@ fun BaseSimpleActivity.emptyAndDisableTheRecycleBin(callback: () -> Unit) {
 }
 
 fun BaseSimpleActivity.showRecycleBinEmptyingDialog(callback: () -> Unit) {
-    ConfirmationDialog(this, "", R.string.empty_recycle_bin_confirmation, R.string.yes, R.string.no) {
+    ConfirmationDialog(
+        this,
+        "",
+        com.goodwy.commons.R.string.empty_recycle_bin_confirmation,
+        com.goodwy.commons.R.string.yes,
+        com.goodwy.commons.R.string.no
+    ) {
         callback()
     }
 }
@@ -600,7 +639,7 @@ fun AppCompatActivity.fixDateTaken(
 
                 runOnUiThread {
                     if (showToasts) {
-                        toast(if (didUpdateFile) R.string.dates_fixed_successfully else R.string.unknown_error_occurred)
+                        toast(if (didUpdateFile) R.string.dates_fixed_successfully else com.goodwy.commons.R.string.unknown_error_occurred)
                     }
 
                     callback?.invoke()
@@ -636,7 +675,7 @@ fun BaseSimpleActivity.saveRotatedImageToFile(oldPath: String, newPath: String, 
         getFileOutputStream(tmpFileDirItem) {
             if (it == null) {
                 if (showToasts) {
-                    toast(R.string.unknown_error_occurred)
+                    toast(com.goodwy.commons.R.string.unknown_error_occurred)
                 }
                 return@getFileOutputStream
             }
@@ -661,7 +700,7 @@ fun BaseSimpleActivity.saveRotatedImageToFile(oldPath: String, newPath: String, 
         }
     } catch (e: OutOfMemoryError) {
         if (showToasts) {
-            toast(R.string.out_of_memory_error)
+            toast(com.goodwy.commons.R.string.out_of_memory_error)
         }
     } catch (e: Exception) {
         if (showToasts) {
@@ -681,7 +720,7 @@ fun Activity.tryRotateByExif(path: String, degrees: Int, showToasts: Boolean, ca
             fileRotatedSuccessfully(path, oldLastModified)
             callback.invoke()
             if (showToasts) {
-                toast(R.string.file_saved)
+                toast(com.goodwy.commons.R.string.file_saved)
             }
             true
         } else {
@@ -726,6 +765,136 @@ fun BaseSimpleActivity.copyFile(source: String, destination: String) {
     }
 }
 
+fun BaseSimpleActivity.ensureWriteAccess(path: String, callback: () -> Unit) {
+    when {
+        isRestrictedSAFOnlyRoot(path) -> {
+            handleAndroidSAFDialog(path) {
+                if (!it) {
+                    return@handleAndroidSAFDialog
+                }
+                callback.invoke()
+            }
+        }
+
+        needsStupidWritePermissions(path) -> {
+            handleSAFDialog(path) {
+                if (!it) {
+                    return@handleSAFDialog
+                }
+                callback()
+            }
+        }
+
+        isAccessibleWithSAFSdk30(path) -> {
+            handleSAFDialogSdk30(path) {
+                if (!it) {
+                    return@handleSAFDialogSdk30
+                }
+                callback()
+            }
+        }
+
+        else -> {
+            callback()
+        }
+    }
+}
+
+fun BaseSimpleActivity.launchResizeMultipleImagesDialog(paths: List<String>, callback: (() -> Unit)? = null) {
+    ensureBackgroundThread {
+        val imagePaths = mutableListOf<String>()
+        val imageSizes = mutableListOf<Point>()
+        for (path in paths) {
+            val size = path.getImageResolution(this)
+            if (size != null) {
+                imagePaths.add(path)
+                imageSizes.add(size)
+            }
+        }
+
+        runOnUiThread {
+            ResizeMultipleImagesDialog(this, imagePaths, imageSizes) {
+                callback?.invoke()
+            }
+        }
+    }
+}
+
+fun BaseSimpleActivity.launchResizeImageDialog(path: String, callback: (() -> Unit)? = null) {
+    val originalSize = path.getImageResolution(this) ?: return
+    ResizeWithPathDialog(this, originalSize, path) { newSize, newPath ->
+        ensureBackgroundThread {
+            val file = File(newPath)
+            val pathLastModifiedMap = mapOf(file.absolutePath to file.lastModified())
+            try {
+                resizeImage(path, newPath, newSize) { success ->
+                    if (success) {
+                        toast(com.goodwy.commons.R.string.file_saved)
+
+                        val paths = arrayListOf(file.absolutePath)
+                        rescanPathsAndUpdateLastModified(paths, pathLastModifiedMap) {
+                            runOnUiThread {
+                                callback?.invoke()
+                            }
+                        }
+                    } else {
+                        toast(R.string.image_editing_failed)
+                    }
+                }
+            } catch (e: OutOfMemoryError) {
+                toast(com.goodwy.commons.R.string.out_of_memory_error)
+            } catch (e: Exception) {
+                showErrorToast(e)
+            }
+        }
+    }
+}
+
+fun BaseSimpleActivity.resizeImage(oldPath: String, newPath: String, size: Point, callback: (success: Boolean) -> Unit) {
+    var oldExif: ExifInterface? = null
+    if (isNougatPlus()) {
+        val inputStream = contentResolver.openInputStream(Uri.fromFile(File(oldPath)))
+        oldExif = ExifInterface(inputStream!!)
+    }
+
+    val newBitmap = Glide.with(applicationContext).asBitmap().load(oldPath).submit(size.x, size.y).get()
+
+    val newFile = File(newPath)
+    val newFileDirItem = FileDirItem(newPath, newPath.getFilenameFromPath())
+    getFileOutputStream(newFileDirItem, true) { out ->
+        if (out != null) {
+            out.use {
+                try {
+                    newBitmap.compress(newFile.absolutePath.getCompressionFormat(), 90, out)
+
+                    if (isNougatPlus()) {
+                        val newExif = ExifInterface(newFile.absolutePath)
+                        oldExif?.copyNonDimensionAttributesTo(newExif)
+                    }
+                } catch (ignored: Exception) {
+                }
+
+                callback(true)
+            }
+        } else {
+            callback(false)
+        }
+    }
+}
+
+fun BaseSimpleActivity.rescanPathsAndUpdateLastModified(paths: ArrayList<String>, pathLastModifiedMap: Map<String, Long>, callback: () -> Unit) {
+    fixDateTaken(paths, false)
+    for (path in paths) {
+        val file = File(path)
+        val lastModified = pathLastModifiedMap[path]
+        if (config.keepLastModified && lastModified != null && lastModified != 0L) {
+            File(file.absolutePath).setLastModified(lastModified)
+            updateLastModified(file.absolutePath, lastModified)
+        }
+    }
+    rescanPaths(paths, callback)
+}
+
 fun saveFile(path: String, bitmap: Bitmap, out: FileOutputStream, degrees: Int) {
     val matrix = Matrix()
     matrix.postRotate(degrees.toFloat())
@@ -741,7 +910,7 @@ fun Activity.getShortcutImage(tmb: String, drawable: Drawable, callback: () -> U
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .fitCenter()
 
-        val size = resources.getDimension(R.dimen.shortcut_size).toInt()
+        val size = resources.getDimension(com.goodwy.commons.R.dimen.shortcut_size).toInt()
         val builder = Glide.with(this)
             .asDrawable()
             .load(tmb)
@@ -790,5 +959,12 @@ fun Activity.handleExcludedFolderPasswordProtection(callback: () -> Unit) {
         }
     } else {
         callback()
+    }
+}
+
+fun Activity.openRecycleBin() {
+    Intent(this, MediaActivity::class.java).apply {
+        putExtra(DIRECTORY, RECYCLE_BIN)
+        startActivity(this)
     }
 }

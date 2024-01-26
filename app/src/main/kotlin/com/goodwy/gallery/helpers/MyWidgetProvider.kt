@@ -64,7 +64,7 @@ class MyWidgetProvider : AppWidgetProvider() {
                 val height = appWidgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
 
                 val widgetSize = (Math.max(width, height) * density).toInt()
-                val radius = context.resources.getDimensionPixelSize(R.dimen.dialog_corner_radius)
+                val radius = context.resources.getDimensionPixelSize(com.goodwy.commons.R.dimen.dialog_corner_radius)
                 try {
                     val image = Glide.with(context)
                         .asBitmap()

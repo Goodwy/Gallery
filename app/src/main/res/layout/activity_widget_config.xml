@@ -6,28 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/config_app_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/config_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/color_primary"
-            app:title="@string/app_launcher_name"
-            app:titleTextAppearance="@style/AppTheme.ActionBar.TitleTextStyle" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <RelativeLayout
         android:id="@+id/config_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_margin="@dimen/activity_margin"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_margin="@dimen/activity_margin">
 
         <RelativeLayout
             android:id="@+id/folder_picker_holder"
@@ -71,7 +55,7 @@
                     style="@style/SettingsTextValueStyle"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/settings_margin"
-                    android:background="@drawable/button_background"
+                    android:background="@drawable/button_background_stroke"
                     android:paddingTop="@dimen/smaller_margin"
                     android:paddingBottom="@dimen/smaller_margin"
                     android:paddingStart="@dimen/normal_margin"

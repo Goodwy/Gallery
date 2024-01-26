@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Galeria</string> <!--Not used-->
+    <string name="exclude_folder_description_g">Esta ação deixará de exibir as pastas selecionadas apenas dentro deste aplicativo. Você pode gerenciar as pastas ignoradas nas configurações do aplicativo.</string>
+    <string name="excluded_activity_placeholder_g">Ignorar uma pasta apenas deixa de exibi-la nesta galeria. Ela continuará visível para outros aplicativos.
+\n
+\nSe você quiser ocultar a pasta para todos os aplicativos, utilize a função Ocultar.</string>
+    <string name="simple_wallpaper_g">Right Wallpaper</string>
+    <string name="faq_1_title_g">Como posso fazer do Right Galeria a galeria padrão do dispositivo\?</string>
+    <string name="faq_1_text_g">Primeiro, você deve encontrar o aplicativo padrão atual nas configurações do seu dispositivo, procurar um botão que diga algo como Abrir por padrão, clicar nele e selecionar \"Limpar padrão\" Na próxima vez que você abrir uma imagem ou vídeo, você deverá ver um seletor do aplicativo, no qual você terá a oportunidade de selecionar a Right Galeria como o app padrão.</string>
+    <string name="faq_5_text_g">Ignorar deixa de exibir a pasta apenas no Right Galeria, enquanto Ocultar afeta todo o sistema e pode ocultar pastas de outras galerias também. A função ocultar funciona adicionando um arquivo vazio chamado \".nomedia\" na pasta em questão, arquivo este você também pode excluir com um gerenciador de arquivos, se quiser. Note que alguns dispositivos não permitem esconder algumas pastas como Camera, Screenshots e Downloads.</string>
+
+    <!-- Grouping at media thumbnails -->
+    <string name="years">Anos</string>
+    <string name="months">Meses</string>
+    <string name="days">Dias</string>
+    <string name="all_photos">Todas as fotos</string>
+    <string name="by_last_modified_yearly_g">Última modificação (anual)</string>
+    <string name="by_date_taken_yearly_g">Data da foto (anual)</string>
+
+    <string name="eraser">Apagador</string>
+    <string name="eyedropper">Conta-gotas</string>
+</resources>
