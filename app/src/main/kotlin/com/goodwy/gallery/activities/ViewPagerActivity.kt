@@ -16,7 +16,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Icon
 import android.media.AudioManager
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore.Images
@@ -115,7 +114,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         }
 
         initFavorites()
-        checkShowWarning()
+//        checkShowWarning()
     }
 
     override fun onResume() {
@@ -1011,7 +1010,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         }
 
         binding.bottomActions.bottomPlayPause.setOnClickListener {
-            (getCurrentFragment() as? VideoFragment)!!.togglePlayPause()
+            (getCurrentFragment() as? VideoFragment)?.togglePlayPause()
         }
 
         binding.bottomActions.bottomMute.setOnClickListener {
