@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Simple Galeria</string>
+    <string name="app_name">Galeria Simples</string>
     <string name="app_launcher_name">Galeria</string>
     <string name="edit">Editar</string>
     <string name="open_camera">Abrir câmera</string>
     <string name="hidden">(oculto)</string>
-    <string name="excluded">(excluído)</string>
+    <string name="excluded">(ignorado)</string>
     <string name="pin_folder">Fixar pasta</string>
     <string name="unpin_folder">Desafixar pasta</string>
     <string name="pin_to_the_top">Fixar no topo</string>
@@ -48,13 +48,13 @@
     <string name="hide_folder_description">Esta opção oculta a pasta ao adicionar um arquivo \".nomedia\" dentro dela, o que também ocultará todas as suas subpastas. Você poderá voltar a exibir estas pastas com a opção \"Exibir pastas ocultas\". Continuar\?</string>
     <string name="exclude_folder_description">Esta ação deixará de exibir as pastas selecionadas apenas dentro deste aplicativo. Você pode gerenciar as pastas ignoradas nas configurações do aplicativo.</string>
     <string name="exclude_folder_parent">Ignorar a pasta raiz ao invés desta\?</string>
-    <string name="excluded_activity_placeholder">Ignorar uma pasta apenas deixa de exibi-la nesta galeria. Ela continuará visível para outros aplicativos.
+    <string name="excluded_activity_placeholder">Ignorar uma pasta apenas deixa de exibí-la nesta galeria. Ela continuará visível para outros aplicativos.
 \n
-\nSe você quiser ocultar a pasta para todos os aplicativos, utilize a função Ocultar.</string>
+\nSe você quiser ocultar a pasta para todos os aplicativos, use a função Ocultar.</string>
     <string name="hidden_folders">Pastas ocultas</string>
     <string name="manage_hidden_folders">Gerenciar pastas ocultas</string>
     <string name="hidden_folders_placeholder">Parece que você não tem nenhuma pasta oculta por um arquivo \".nomedia\".</string>
-    <string name="hidden_all_files">Você deve dar para o aplicativo a permissão de acesso à todos os arquivos para acessar arquivos encondidos, do contrário não pode funcionar.</string>
+    <string name="hidden_all_files">Você deve dar ao aplicativo a permissão de acesso a todos os arquivos para acessar arquivos ocultos, do contrário não pode funcionar.</string>
     <string name="cant_unhide_folder">Se uma pasta ou uma de suas pastas pai tiver um ponto antes de seu nome, ela estará oculta e não poderá ser exibida dessa maneira. Você deve remover o ponto renomeando-a.</string>
     <!-- Include folders -->
     <string name="include_folders">Pastas inclusas</string>
@@ -365,10 +365,10 @@
     <string name="faq_8_text">Adicionar uma pasta à lista de Pastas Incluídas não remove outras pastas da exibição. O que você pode fazer é ir em Configurações -&gt; Gerenciar pastas ignoradas, excluir a pasta raiz \"/\", e finalmente incluir somente as pastas desejadas através de Configurações -&gt; Gerenciar pastas incluídas. Isso tornará apenas as pastas selecionadas visíveis, já que ignorar e incluir são funções recursivas e, se uma pasta for ignorada e incluída ao mesmo tempo, ela será exibida.</string>
     <string name="faq_10_title">Posso recortar imagens usando este app\?</string>
     <string name="faq_10_text">Sim, você pode recortar imagens no editor, arrastando os cantos da imagem. Você pode entrar no editor fazendo um toque longo na imagem e selecionando Editar, ou selecionando Editar a partir da visualização de tela cheia.</string>
-    <string name="faq_11_title">É possível exibir os meus arquivos de mídia em subgrupos ao invés de em uma única grande lista\?</string>
+    <string name="faq_11_title">É possível exibir os meus arquivos de mídia em subgrupos em vez de em uma única grande lista\?</string>
     <string name="faq_11_text">Você pode usar a opção \"Agrupar por\" para agrupar os seus arquivos de mídia por data, formato ou outros critérios. Se a opção \"Exibir conteúdo de todas as pastas\" estiver ativada, você também poderá agrupar por subpasta.</string>
     <string name="faq_12_title">A ordenação por Data da Foto não funciona corretamente. O que posso fazer\?</string>
-    <string name="faq_12_text">Isto pode ter ocorrer caso as suas fotos tenham sido copiadas de outro local. Para resolver o problema, você pode selecionar a função \"Corrigir data da foto\" no menu deste aplicativo.</string>
+    <string name="faq_12_text">Isto pode ocorrer caso as suas fotos tenham sido copiadas de outro local. Para resolver o problema, você pode selecionar a função \"Corrigir data da foto\" no menu deste aplicativo.</string>
     <string name="faq_13_title">Algumas imagens exibem artefatos de exibição, como bandas de cor. Como posso melhorar a qualidade da exibição\?</string>
     <string name="faq_13_text">O nosso método atual para a exibição de imagens funciona bem na grande maioria dos casos, mas caso você queira uma qualidade ainda melhor, ative a opção \"Exibir imagens na maior qualidade possível\" na seção \"Zoom aprofundado para imagens\" das configurações deste aplicativo.</string>
     <string name="faq_14_title">Eu ocultei um arquivo/pasta. Como posso desfazer isso\?</string>
@@ -377,7 +377,7 @@
     <string name="faq_15_text">O cache deste app, que garante que as imagens sejam carregadas mais rapidamente, pode ocupar até 250MB. Se o app estiver ocupando mais espaço que isso, pode ser por que você tem muitos arquivos na sua Lixeira. Arquivos na Lixeira são removidos permanentemente após 30 dias, mas se mesmo assim sua Lixeira estiver ocupando muito espaço, você pode esvaziá-la manualmente. Para fazer isso, você pode abrir a Lixeira e excluir os arquivos dentro dela, ou você pode fazer o mesmo na tela de Configurações deste app.</string>
     <string name="faq_16_title">O que aconteceu com o arquivo e a pasta escondidos e por que não posso mais ver arquivos escondidos\?</string>
     <string name="faq_16_text">A partir do Android 11, você não pode mais ocultar ou exibir arquivos ou pastas, também não pode ver os ocultos nos aplicativos da galeria devido a restrições do sistema. Você terá que usar algum gerenciador de arquivos para isso.</string>
-    <string name="faq_16_text_extra">Ou você também pode dar à essa galeria acesso a todos os arquivos por meio das configurações do dispositivo, isso irá possibilitar que aplicativo o mostre itens ocultos e execute operações com arquivos de forma mais confiável no geral.</string>
+    <string name="faq_16_text_extra">Ou você também pode dar a essa galeria acesso a todos os arquivos por meio das configurações do dispositivo, isso irá possibilitar que aplicativo o mostre itens ocultos e execute operações com arquivos de forma mais confiável no geral.</string>
     <string name="faq_17_title">Por que não posso incluir pastas ausentes\?</string>
     <string name="faq_17_text">Isso parou de funcionar devido a mudanças de sistema do Android 11, pois o aplicativo não pode mais gerenciar pastas verdadeiras, precisa utilizar algo chamado MediaStore para obter os dados.</string>
     <string name="faq_18_title">Por que estou vendo anúncios durante o playback do vídeo\?</string>
