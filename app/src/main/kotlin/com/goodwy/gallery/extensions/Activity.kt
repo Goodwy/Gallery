@@ -1,6 +1,5 @@
 package com.goodwy.gallery.extensions
 
-import android.annotation.TargetApi
 import android.app.Activity
 import android.content.ContentProviderOperation
 import android.content.ContentValues
@@ -12,7 +11,6 @@ import android.graphics.Point
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.MediaStore.Files
@@ -50,6 +48,7 @@ import com.squareup.picasso.Picasso
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.Locale
 
 fun Activity.sharePath(path: String) {
     sharePathIntent(path, BuildConfig.APPLICATION_ID)
@@ -92,7 +91,7 @@ fun SimpleActivity.launchSettings() {
 
 fun SimpleActivity.launchAbout() {
     val licenses = LICENSE_GLIDE or LICENSE_CROPPER or LICENSE_RTL or LICENSE_SUBSAMPLING or LICENSE_PATTERN or LICENSE_REPRINT or LICENSE_GIF_DRAWABLE or
-        LICENSE_PICASSO or LICENSE_EXOPLAYER or LICENSE_PANORAMA_VIEW or LICENSE_SANSELAN or LICENSE_FILTERS or LICENSE_GESTURE_VIEWS or LICENSE_APNG
+        LICENSE_PICASSO or LICENSE_EXOPLAYER or LICENSE_SANSELAN or LICENSE_FILTERS or LICENSE_GESTURE_VIEWS or LICENSE_APNG
 
     val faqItems = arrayListOf(
         FAQItem(R.string.faq_3_title, R.string.faq_3_text),
@@ -115,7 +114,7 @@ fun SimpleActivity.launchAbout() {
     )
 
     if (!resources.getBoolean(com.goodwy.commons.R.bool.hide_google_relations)) {
-        faqItems.add(FAQItem(com.goodwy.commons.R.string.faq_2_title_commons, com.goodwy.commons.R.string.faq_2_text_commons_g))
+        faqItems.add(FAQItem(com.goodwy.commons.R.string.faq_2_title_commons, com.goodwy.strings.R.string.faq_2_text_commons_g))
         faqItems.add(FAQItem(com.goodwy.commons.R.string.faq_6_title_commons, com.goodwy.commons.R.string.faq_6_text_commons))
         faqItems.add(FAQItem(com.goodwy.commons.R.string.faq_7_title_commons, com.goodwy.commons.R.string.faq_7_text_commons))
         faqItems.add(FAQItem(com.goodwy.commons.R.string.faq_10_title_commons, com.goodwy.commons.R.string.faq_10_text_commons))
@@ -146,7 +145,6 @@ fun SimpleActivity.launchAbout() {
         versionName = BuildConfig.VERSION_NAME,
         faqItems = faqItems,
         showFAQBeforeMail = true,
-        licensingKey = BuildConfig.GOOGLE_PLAY_LICENSING_KEY,
         productIdList= arrayListOf(productIdX1, productIdX2, productIdX3),
         productIdListRu = arrayListOf(productIdX1, productIdX2, productIdX4),
         subscriptionIdList = arrayListOf(subscriptionIdX1, subscriptionIdX2, subscriptionIdX3),
@@ -716,7 +714,6 @@ fun BaseSimpleActivity.saveRotatedImageToFile(oldPath: String, newPath: String, 
     }
 }
 
-@TargetApi(Build.VERSION_CODES.N)
 fun Activity.tryRotateByExif(path: String, degrees: Int, showToasts: Boolean, callback: () -> Unit): Boolean {
     return try {
         val file = File(path)
@@ -857,10 +854,8 @@ fun BaseSimpleActivity.launchResizeImageDialog(path: String, callback: (() -> Un
 
 fun BaseSimpleActivity.resizeImage(oldPath: String, newPath: String, size: Point, callback: (success: Boolean) -> Unit) {
     var oldExif: ExifInterface? = null
-    if (isNougatPlus()) {
-        val inputStream = contentResolver.openInputStream(Uri.fromFile(File(oldPath)))
-        oldExif = ExifInterface(inputStream!!)
-    }
+    val inputStream = contentResolver.openInputStream(Uri.fromFile(File(oldPath)))
+    oldExif = ExifInterface(inputStream!!)
 
     val newBitmap = Glide.with(applicationContext).asBitmap().load(oldPath).submit(size.x, size.y).get()
 
@@ -872,10 +867,8 @@ fun BaseSimpleActivity.resizeImage(oldPath: String, newPath: String, size: Point
                 try {
                     newBitmap.compress(newFile.absolutePath.getCompressionFormat(), 90, out)
 
-                    if (isNougatPlus()) {
-                        val newExif = ExifInterface(newFile.absolutePath)
-                        oldExif?.copyNonDimensionAttributesTo(newExif)
-                    }
+                    val newExif = ExifInterface(newFile.absolutePath)
+                    oldExif.copyNonDimensionAttributesTo(newExif)
                 } catch (ignored: Exception) {
                 }
 
@@ -934,10 +927,9 @@ fun Activity.getShortcutImage(tmb: String, drawable: Drawable, callback: () -> U
     }
 }
 
-@TargetApi(Build.VERSION_CODES.N)
 fun Activity.showFileOnMap(path: String) {
     val exif = try {
-        if (path.startsWith("content://") && isNougatPlus()) {
+        if (path.startsWith("content://")) {
             ExifInterface(contentResolver.openInputStream(Uri.parse(path))!!)
         } else {
             ExifInterface(path)

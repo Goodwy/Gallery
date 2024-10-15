@@ -6,7 +6,6 @@
     <string name="excluded_activity_placeholder_g">Ekskludering av mapper vil gjøre dem sammen med deres undermapper, skjulte bare i Right Gallery. De vil fortsatt være synlige i andre apper.
 \n
 \nHvis du vil skjule dem fra andre apper også, bruk Skjul-funksjonen.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">How can I make Right Gallery the default device gallery\?</string>
     <string name="faq_1_text_g">First you have to find the currently default gallery in the Apps section of your device settings, look for a button that says something like \"Open by default\", click on it, then select \"Clear defaults\". The next time you will try opening an image or video you should see an app picker, where you can select Right Gallery and make it the default app.</string>
     <string name="faq_5_text_g">Exclude prevents displaying the folder only in Right Gallery, while Hide works system-wise and it hides the folder from other galleries too. It works by creating an empty \".nomedia\" file in the given folder, which you can then remove with any file manager too. Note that some devices do not allow hiding folders like Camera, Screenshots and Downloads.</string>

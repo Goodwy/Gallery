@@ -13,7 +13,6 @@ import com.goodwy.commons.extensions.toast
 import com.goodwy.commons.extensions.viewBinding
 import com.goodwy.commons.helpers.NavigationIcon
 import com.goodwy.commons.helpers.ensureBackgroundThread
-import com.goodwy.commons.helpers.isNougatPlus
 import com.goodwy.commons.models.RadioItem
 import com.goodwy.gallery.R
 import com.goodwy.gallery.databinding.ActivitySetWallpaperBinding
@@ -127,18 +126,14 @@ class SetWallpaperActivity : SimpleActivity(), CropImageView.OnCropImageComplete
     }
 
     private fun confirmWallpaper() {
-        if (isNougatPlus()) {
-            val items = arrayListOf(
-                RadioItem(WallpaperManager.FLAG_SYSTEM, getString(R.string.home_screen)),
-                RadioItem(WallpaperManager.FLAG_LOCK, getString(R.string.lock_screen)),
-                RadioItem(WallpaperManager.FLAG_SYSTEM or WallpaperManager.FLAG_LOCK, getString(R.string.home_and_lock_screen))
-            )
+        val items = arrayListOf(
+            RadioItem(WallpaperManager.FLAG_SYSTEM, getString(R.string.home_screen)),
+            RadioItem(WallpaperManager.FLAG_LOCK, getString(R.string.lock_screen)),
+            RadioItem(WallpaperManager.FLAG_SYSTEM or WallpaperManager.FLAG_LOCK, getString(R.string.home_and_lock_screen))
+        )
 
-            RadioGroupDialog(this, items) {
-                wallpaperFlag = it as Int
-                binding.cropImageView.croppedImageAsync()
-            }
-        } else {
+        RadioGroupDialog(this, items) {
+            wallpaperFlag = it as Int
             binding.cropImageView.croppedImageAsync()
         }
     }
@@ -156,11 +151,7 @@ class SetWallpaperActivity : SimpleActivity(), CropImageView.OnCropImageComplete
                 val wantedWidth = (bitmap.width * ratio).toInt()
                 try {
                     val scaledBitmap = Bitmap.createScaledBitmap(bitmap, wantedWidth, wantedHeight, true)
-                    if (isNougatPlus()) {
-                        wallpaperManager.setBitmap(scaledBitmap, null, true, wallpaperFlag)
-                    } else {
-                        wallpaperManager.setBitmap(scaledBitmap)
-                    }
+                    wallpaperManager.setBitmap(scaledBitmap, null, true, wallpaperFlag)
                     setResult(Activity.RESULT_OK)
                 } catch (e: OutOfMemoryError) {
                     toast(com.goodwy.commons.R.string.out_of_memory_error)

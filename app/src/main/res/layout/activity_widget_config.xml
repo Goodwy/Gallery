@@ -27,20 +27,18 @@
                 android:layout_marginTop="@dimen/normal_margin"
                 android:background="@null">
 
-                <com.goodwy.commons.views.MySwitchCompat
+                <com.goodwy.commons.views.MyMaterialSwitch
                     android:id="@+id/folder_picker_show_folder_name"
                     style="@style/SettingsSwitchStyle"
                     android:text="@string/show_folder_name"
                     app:switchPadding="@dimen/activity_margin" />
-
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/folder_picker_value_holder"
                 style="@style/SettingsHolderSwitchStyle"
                 android:layout_below="@+id/folder_picker_show_folder_name_holder"
-                android:paddingTop="@dimen/smaller_margin"
-                android:paddingBottom="@dimen/smaller_margin">
+                android:paddingHorizontal="@dimen/smaller_margin">
 
                 <com.goodwy.commons.views.MyTextView
                     android:id="@+id/folder_picker_label"
@@ -56,12 +54,9 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/settings_margin"
                     android:background="@drawable/button_background_stroke"
-                    android:paddingTop="@dimen/smaller_margin"
-                    android:paddingBottom="@dimen/smaller_margin"
-                    android:paddingStart="@dimen/normal_margin"
-                    android:paddingEnd="@dimen/normal_margin"
+                    android:paddingVertical="@dimen/smaller_margin"
+                    android:paddingHorizontal="@dimen/normal_margin"
                     tools:text="@string/internal" />
-
             </RelativeLayout>
 
             <TextView
@@ -73,10 +68,8 @@
                 android:layout_below="@+id/folder_picker_value_holder"
                 android:layout_alignParentEnd="true"
                 android:background="@drawable/ripple_all_corners"
-                android:paddingTop="@dimen/smaller_margin"
-                android:paddingBottom="@dimen/smaller_margin"
-                android:paddingStart="@dimen/normal_margin"
-                android:paddingEnd="@dimen/normal_margin"
+                android:paddingVertical="@dimen/smaller_margin"
+                android:paddingHorizontal="@dimen/normal_margin"
                 android:text="@string/ok" />
         </RelativeLayout>
 
@@ -111,7 +104,6 @@
                 android:paddingBottom="@dimen/small_margin"
                 android:textSize="@dimen/bigger_text_size"
                 tools:text="@string/internal" />
-
         </RelativeLayout>
 
         <ImageView
@@ -123,6 +115,7 @@
             android:layout_marginTop="@dimen/tiny_margin"
             android:layout_marginEnd="@dimen/tiny_margin"
             android:layout_marginBottom="@dimen/tiny_margin"
+            android:contentDescription="@null"
             android:visibility="gone" />
 
         <RelativeLayout
@@ -143,7 +136,6 @@
                 android:layout_centerVertical="true"
                 android:paddingLeft="@dimen/activity_margin"
                 android:paddingRight="@dimen/activity_margin" />
-
         </RelativeLayout>
 
         <ImageView
@@ -152,6 +144,7 @@
             android:layout_height="@dimen/widget_colorpicker_size"
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/tiny_margin"
+            android:contentDescription="@null"
             android:visibility="gone" />
 
     </RelativeLayout>

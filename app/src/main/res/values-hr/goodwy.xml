@@ -6,7 +6,6 @@
     <string name="excluded_activity_placeholder_g">Isključivanjem mapa, one će se sakriti zajedno s podmapama samo u aplikaciji „Right Gallery”. I dalje će biti vidljive u drugim aplikacijama.
 \n
 \nAko ih želiš sakriti i u drugim aplikacijama, koristi funkciju „Sakrij”.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">Kako mogu postaviti Right Gallery kao zadanu galeriju uređaja\?</string>
     <string name="faq_1_text_g">Najprije moraš pronaći trenutačno standardnu galeriju u odjeljku „Aplikacije” u postavkama tog uređaja, potraži gumb koji kaže nešto poput opcije „Otvori prema standardnim postavkama”, pritisni tu opciju, a zatim odaberi „Izbriši standardne postavke”. Sljedeći put kad pokušaš otvoriti sliku ili video, trebao bi se pojaviti alat za biranje aplikacija, gdje možeš odabrati aplikaciju „Right Gallery” i postaviti je kao standardnu aplikaciju.</string>
     <string name="faq_5_text_g">Isključivanje sprečava prikaz mape samo u aplikaciji „Right Gallery”, a skrivanje radi na razini sustava i skriva mapu u drugim galerijama. Djeluje stvaranjem praznih „.nomedia” datoteka u zadanoj mapi, koju možeš ukloniti pomoću bilo kojeg upravljača datoteka. Imaj na umu da neki uređaji ne dopuštaju skrivanje mapa kao što su Kamera, Slike ekrana i Preuzimanja.</string>

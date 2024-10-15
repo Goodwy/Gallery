@@ -38,7 +38,11 @@ import com.goodwy.gallery.interfaces.DirectoryOperationsListener
 import com.goodwy.gallery.jobs.NewPhotoFetcher
 import com.goodwy.gallery.models.Directory
 import com.goodwy.gallery.models.Medium
-import java.io.*
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
+import java.io.InputStream
+import java.io.OutputStream
 
 class MainActivity : SimpleActivity(), DirectoryOperationsListener {
     companion object {
@@ -57,12 +61,9 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
     private var mIsThirdPartyIntent = false
     private var mIsGettingDirs = false
     private var mLoadedInitialPhotos = false
-    private var mIsPasswordProtectionPending = false
-    private var mWasProtectionHandled = false
     private var mShouldStopFetching = false
     private var mWasDefaultFolderChecked = false
     private var mWasMediaManagementPromptShown = false
-    private var mWasUpgradedFromFreeShown = false
     private var mLatestMediaId = 0L
     private var mLatestMediaDateId = 0L
     private var mCurrentPathPrefix = ""                 // used at "Group direct subfolders" for navigation
@@ -121,16 +122,15 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
         updateMaterialActivityViews(
             binding.directoriesCoordinator,
             binding.directoriesGrid,
-            useTransparentNavigation = !config.scrollHorizontally,
+            useTransparentNavigation = false, //!config.scrollHorizontally,
             useTopSearchMenu = true
         )
-        setupSearchMenuScrollListener(binding.directoriesGrid, binding.mainMenu)
+        if (config.changeColourTopBar) setupSearchMenuScrollListener(binding.directoriesGrid, binding.mainMenu)
 
         binding.directoriesRefreshLayout.setOnRefreshListener { getDirectories() }
         storeStateVariables()
-        //checkWhatsNewDialog()
+        checkWhatsNewDialog()
 
-        mIsPasswordProtectionPending = config.isAppPasswordProtectionOn
         setupLatestMediaId()
 
         if (!config.wereFavoritesPinned) {
@@ -164,10 +164,15 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
         }
 
         // just request the permission, tryLoadGallery will then trigger in onResume
-        handleMediaPermissions { success ->
-            if (!success) {
-                toast(com.goodwy.commons.R.string.no_storage_permissions)
-                finish()
+        handleMediaPermissions()
+    }
+
+    private fun handleMediaPermissions(callback: (() -> Unit)? = null) {
+        requestMediaPermissions(enableRationale = true) {
+            callback?.invoke()
+            if (isRPlus() && !mWasMediaManagementPromptShown) {
+                mWasMediaManagementPromptShown = true
+                handleMediaManagementPrompt { }
             }
         }
     }
@@ -189,23 +194,6 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
         }
     }
 
-    private fun handleMediaPermissions(callback: (granted: Boolean) -> Unit) {
-        handlePermission(getPermissionToRequest()) { granted ->
-            callback(granted)
-            if (granted && isRPlus()) {
-                handlePermission(PERMISSION_MEDIA_LOCATION) {}
-                if (isTiramisuPlus()) {
-                    handlePermission(PERMISSION_READ_MEDIA_VIDEO) {}
-                }
-
-                if (!mWasMediaManagementPromptShown) {
-                    mWasMediaManagementPromptShown = true
-                    handleMediaManagementPrompt { }
-                }
-            }
-        }
-    }
-
     override fun onStart() {
         super.onStart()
         mTempShowHiddenHandler.removeCallbacksAndMessages(null)
@@ -220,7 +208,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
 
         refreshMenuItems()
 
-        if (mStoredHideTopBarWhenScroll != config.hideTopBarWhenScroll) {
+        if (config.tabsChanged || mStoredHideTopBarWhenScroll != config.hideTopBarWhenScroll) {
             finish()
             startActivity(intent)
             return
@@ -272,19 +260,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
 
         if (!binding.mainMenu.isSearchOpen) {
             refreshMenuItems()
-            if (mIsPasswordProtectionPending && !mWasProtectionHandled) {
-                handleAppPasswordProtection {
-                    mWasProtectionHandled = it
-                    if (it) {
-                        mIsPasswordProtectionPending = false
-                        tryLoadGallery()
-                    } else {
-                        finish()
-                    }
-                }
-            } else {
-                tryLoadGallery()
-            }
+            tryLoadGallery()
         }
 
         if (config.searchAllFilesByDefault) {
@@ -347,6 +323,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
                 setupAdapter(mDirs)
             }
         } else {
+            appLockManager.lock()
             super.onBackPressed()
         }
     }
@@ -449,19 +426,18 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putBoolean(WAS_PROTECTION_HANDLED, mWasProtectionHandled)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        mWasProtectionHandled = savedInstanceState.getBoolean(WAS_PROTECTION_HANDLED, false)
-    }
-
     private fun updateMenuColors() {
         updateStatusbarColor(getProperBackgroundColor())
-        binding.mainMenu.updateColors(getRequiredStatusBarColor(), scrollingView?.computeVerticalScrollOffset() ?: 0)
+        binding.mainMenu.updateColors(getStartRequiredStatusBarColor(), scrollingView?.computeVerticalScrollOffset() ?: 0)
+    }
+
+    private fun getStartRequiredStatusBarColor(): Int {
+        val scrollingViewOffset = scrollingView?.computeVerticalScrollOffset() ?: 0
+        return if (scrollingViewOffset == 0) {
+            getProperBackgroundColor()
+        } else {
+            getColoredMaterialStatusBarColor()
+        }
     }
 
     private fun getRecyclerAdapter() = binding.directoriesGrid.adapter as? DirectoryAdapter
@@ -475,15 +451,14 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             mStoredScrollHorizontally = scrollHorizontally
             mStoredStyleString = "$folderStyle$showFolderMediaCount$limitFolderTitle"
             mStoredHideTopBarWhenScroll = hideTopBarWhenScroll
+            tabsChanged = false
         }
     }
 
     private fun startNewPhotoFetcher() {
-        if (isNougatPlus()) {
-            val photoFetcher = NewPhotoFetcher()
-            if (!photoFetcher.isScheduled(applicationContext)) {
-                photoFetcher.scheduleJob(applicationContext)
-            }
+        val photoFetcher = NewPhotoFetcher()
+        if (!photoFetcher.isScheduled(applicationContext)) {
+            photoFetcher.scheduleJob(applicationContext)
         }
     }
 
@@ -531,43 +506,27 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
 
     private fun tryLoadGallery() {
         // avoid calling anything right after granting the permission, it will be called from onResume()
-        val wasMissingPermission = config.appRunCount == 1 && !hasPermission(getPermissionToRequest())
-        handleMediaPermissions { success ->
-            if (success) {
-                if (wasMissingPermission) {
-                    return@handleMediaPermissions
-                }
-
-                if (!mWasDefaultFolderChecked) {
-                    openDefaultFolder()
-                    mWasDefaultFolderChecked = true
-                }
-
-//                if (isPackageInstalled("com.goodwy.gallery")) {
-//                    ConfirmationDialog(
-//                        this,
-//                        "",
-//                        com.goodwy.commons.R.string.upgraded_from_free_gallery,
-//                        com.goodwy.commons.R.string.ok,
-//                        0,
-//                        false
-//                    ) {}
-//                }
-
-                checkOTGPath()
-                checkDefaultSpamFolders()
-
-                if (config.showAll) {
-                    showAllMedia()
-                } else {
-                    getDirectories()
-                }
-
-                setupLayoutManager()
-            } else {
-                toast(com.goodwy.commons.R.string.no_storage_permissions)
-                finish()
+        val wasMissingPermission = config.appRunCount == 1 && !hasAllPermissions(getPermissionsToRequest())
+        handleMediaPermissions {
+            if (wasMissingPermission) {
+                return@handleMediaPermissions
             }
+
+            if (!mWasDefaultFolderChecked) {
+                openDefaultFolder()
+                mWasDefaultFolderChecked = true
+            }
+
+            checkOTGPath()
+            checkDefaultSpamFolders()
+
+            if (config.showAll) {
+                showAllMedia()
+            } else {
+                getDirectories()
+            }
+
+            setupLayoutManager()
         }
     }
 
@@ -1210,10 +1169,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
 
         // do not add excluded folders and their subfolders at everShownFolders
         dirs.filter { dir ->
-            if (excludedFolders.any { dir.path.startsWith(it) }) {
-                return@filter false
-            }
-            return@filter true
+            return@filter !excludedFolders.any { dir.path.startsWith(it) }
         }.mapTo(everShownFolders) { it.path }
 
         try {
@@ -1541,16 +1497,8 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
 
     private fun checkWhatsNewDialog() {
         arrayListOf<Release>().apply {
-            add(Release(213, R.string.release_213))
-            add(Release(217, R.string.release_217))
-            add(Release(220, R.string.release_220))
-            add(Release(221, R.string.release_221))
-            add(Release(225, R.string.release_225))
-            add(Release(258, R.string.release_258))
-            add(Release(277, R.string.release_277))
-            add(Release(295, R.string.release_295))
-            add(Release(327, R.string.release_327))
-            add(Release(369, R.string.release_369))
+            add(Release(504, R.string.release_504))
+            add(Release(550, R.string.release_550))
             checkWhatsNew(this, BuildConfig.VERSION_CODE)
         }
     }

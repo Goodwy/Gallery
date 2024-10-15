@@ -9,6 +9,7 @@ import com.goodwy.commons.helpers.*
 import com.goodwy.gallery.R
 import com.goodwy.gallery.models.AlbumCover
 import java.util.Arrays
+import java.util.Locale
 
 class Config(context: Context) : BaseConfig(context) {
     companion object {
@@ -23,12 +24,12 @@ class Config(context: Context) : BaseConfig(context) {
         if (path.isEmpty()) {
             groupBy = value
         } else {
-            prefs.edit().putInt(GROUP_FOLDER_PREFIX + path.toLowerCase(), value).apply()
+            prefs.edit().putInt(GROUP_FOLDER_PREFIX + path.lowercase(Locale.getDefault()), value).apply()
         }
     }
 
     fun getFolderGrouping(path: String): Int {
-        var groupBy = prefs.getInt(GROUP_FOLDER_PREFIX + path.toLowerCase(), groupBy)
+        var groupBy = prefs.getInt(GROUP_FOLDER_PREFIX + path.lowercase(Locale.getDefault()), groupBy)
         if (path != SHOW_ALL && groupBy and GROUP_BY_FOLDER != 0) {
             groupBy -= GROUP_BY_FOLDER + 1
         }
@@ -36,26 +37,26 @@ class Config(context: Context) : BaseConfig(context) {
     }
 
     fun removeFolderGrouping(path: String) {
-        prefs.edit().remove(GROUP_FOLDER_PREFIX + path.toLowerCase()).apply()
+        prefs.edit().remove(GROUP_FOLDER_PREFIX + path.lowercase(Locale.getDefault())).apply()
     }
 
-    fun hasCustomGrouping(path: String) = prefs.contains(GROUP_FOLDER_PREFIX + path.toLowerCase())
+    fun hasCustomGrouping(path: String) = prefs.contains(GROUP_FOLDER_PREFIX + path.lowercase(Locale.getDefault()))
 
     fun saveFolderViewType(path: String, value: Int) {
         if (path.isEmpty()) {
             viewTypeFiles = value
         } else {
-            prefs.edit().putInt(VIEW_TYPE_PREFIX + path.toLowerCase(), value).apply()
+            prefs.edit().putInt(VIEW_TYPE_PREFIX + path.lowercase(Locale.getDefault()), value).apply()
         }
     }
 
-    fun getFolderViewType(path: String) = prefs.getInt(VIEW_TYPE_PREFIX + path.toLowerCase(), viewTypeFiles)
+    fun getFolderViewType(path: String) = prefs.getInt(VIEW_TYPE_PREFIX + path.lowercase(Locale.getDefault()), viewTypeFiles)
 
     fun removeFolderViewType(path: String) {
-        prefs.edit().remove(VIEW_TYPE_PREFIX + path.toLowerCase()).apply()
+        prefs.edit().remove(VIEW_TYPE_PREFIX + path.lowercase(Locale.getDefault())).apply()
     }
 
-    fun hasCustomViewType(path: String) = prefs.contains(VIEW_TYPE_PREFIX + path.toLowerCase())
+    fun hasCustomViewType(path: String) = prefs.contains(VIEW_TYPE_PREFIX + path.lowercase(Locale.getDefault()))
 
     var wasHideFolderTooltipShown: Boolean
         get() = prefs.getBoolean(HIDE_FOLDER_TOOLTIP_SHOWN, false)
@@ -168,6 +169,14 @@ class Config(context: Context) : BaseConfig(context) {
         get() = prefs.getBoolean(MAX_BRIGHTNESS, false)
         set(maxBrightness) = prefs.edit().putBoolean(MAX_BRIGHTNESS, maxBrightness).apply()
 
+    var playbackSpeed: Float
+        get() = prefs.getFloat(PLAYBACK_SPEED, 1f)
+        set(playbackSpeed) = prefs.edit().putFloat(PLAYBACK_SPEED, playbackSpeed).apply()
+
+    var playbackSpeedProgress: Int
+        get() = prefs.getInt(PLAYBACK_SPEED_PROGRESS, -1)
+        set(playbackSpeedProgress) = prefs.edit().putInt(PLAYBACK_SPEED_PROGRESS, playbackSpeedProgress).apply()
+
     var cropThumbnails: Boolean
         get() = prefs.getBoolean(CROP_THUMBNAILS, true)
         set(cropThumbnails) = prefs.edit().putBoolean(CROP_THUMBNAILS, cropThumbnails).apply()
@@ -196,6 +205,10 @@ class Config(context: Context) : BaseConfig(context) {
         get() = prefs.getBoolean(LOOP_VIDEOS, false)
         set(loop) = prefs.edit().putBoolean(LOOP_VIDEOS, loop).apply()
 
+    var muteVideos: Boolean
+        get() = prefs.getBoolean(MUTE_VIDEOS, false)
+        set(muteVideos) = prefs.edit().putBoolean(MUTE_VIDEOS, muteVideos).apply()
+
     var openVideosOnSeparateScreen: Boolean
         get() = prefs.getBoolean(OPEN_VIDEOS_ON_SEPARATE_SCREEN, false)
         set(openVideosOnSeparateScreen) = prefs.edit().putBoolean(OPEN_VIDEOS_ON_SEPARATE_SCREEN, openVideosOnSeparateScreen).apply()
@@ -205,7 +218,7 @@ class Config(context: Context) : BaseConfig(context) {
         set(display) = prefs.edit().putBoolean(DISPLAY_FILE_NAMES, display).apply()
 
     var blackBackground: Boolean
-        get() = prefs.getBoolean(BLACK_BACKGROUND, false)
+        get() = prefs.getBoolean(BLACK_BACKGROUND, true)
         set(blackBackground) = prefs.edit().putBoolean(BLACK_BACKGROUND, blackBackground).apply()
 
     var filterMedia: Int
@@ -348,7 +361,7 @@ class Config(context: Context) : BaseConfig(context) {
         set(showExtendedDetails) = prefs.edit().putBoolean(SHOW_EXTENDED_DETAILS, showExtendedDetails).apply()
 
     var hideExtendedDetails: Boolean
-        get() = prefs.getBoolean(HIDE_EXTENDED_DETAILS, false)
+        get() = prefs.getBoolean(HIDE_EXTENDED_DETAILS, true)
         set(hideExtendedDetails) = prefs.edit().putBoolean(HIDE_EXTENDED_DETAILS, hideExtendedDetails).apply()
 
     var extendedDetails: Int
@@ -396,16 +409,16 @@ class Config(context: Context) : BaseConfig(context) {
         set(bottomActions) = prefs.edit().putBoolean(BOTTOM_ACTIONS, bottomActions).apply()
 
     fun removeLastVideoPosition(path: String) {
-        prefs.edit().remove("$LAST_VIDEO_POSITION_PREFIX${path.toLowerCase()}").apply()
+        prefs.edit().remove("$LAST_VIDEO_POSITION_PREFIX${path.lowercase(Locale.getDefault())}").apply()
     }
 
     fun saveLastVideoPosition(path: String, value: Int) {
         if (path.isNotEmpty()) {
-            prefs.edit().putInt("$LAST_VIDEO_POSITION_PREFIX${path.toLowerCase()}", value).apply()
+            prefs.edit().putInt("$LAST_VIDEO_POSITION_PREFIX${path.lowercase(Locale.getDefault())}", value).apply()
         }
     }
 
-    fun getLastVideoPosition(path: String) = prefs.getInt("$LAST_VIDEO_POSITION_PREFIX${path.toLowerCase()}", 0)
+    fun getLastVideoPosition(path: String) = prefs.getInt("$LAST_VIDEO_POSITION_PREFIX${path.lowercase(Locale.getDefault())}", 0)
 
     fun getAllLastVideoPositions() = prefs.all.filterKeys {
         it.startsWith(LAST_VIDEO_POSITION_PREFIX)
@@ -566,6 +579,10 @@ class Config(context: Context) : BaseConfig(context) {
     var lastExportedFavoritesFolder: String
         get() = prefs.getString(LAST_EXPORTED_FAVORITES_FOLDER, "")!!
         set(lastExportedFavoritesFolder) = prefs.edit().putString(LAST_EXPORTED_FAVORITES_FOLDER, lastExportedFavoritesFolder).apply()
+
+    var showPermissionRationale: Boolean
+        get() = prefs.getBoolean(SHOW_PERMISSION_RATIONALE, false)
+        set(showPermissionRationale) = prefs.edit().putBoolean(SHOW_PERMISSION_RATIONALE, showPermissionRationale).apply()
 
     //Goodwy
     var showWarning: Boolean

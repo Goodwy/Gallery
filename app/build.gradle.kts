@@ -2,13 +2,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.properties.Properties
 import java.io.FileInputStream
 
-val isProprietary = gradle.startParameter.taskNames.any { task -> task.contains("Proprietary") }
-
 plugins {
     alias(libs.plugins.android)
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.imgly).apply(false)
+    alias(libs.plugins.detekt)
 }
 
 val keystorePropertiesFile: File = rootProject.file("keystore.properties")
@@ -30,7 +28,6 @@ android {
         versionName = project.libs.versions.app.version.versionName.get()
         versionCode = project.libs.versions.app.version.versionCode.get().toInt()
         setProperty("archivesBaseName", "gallery-$versionCode")
-        buildConfigField("String", "GOOGLE_PLAY_LICENSING_KEY", "\"${properties["GOOGLE_PLAY_LICENSE_KEY"]}\"")
         buildConfigField("String", "PRODUCT_ID_X1", "\"${properties["PRODUCT_ID_X1"]}\"")
         buildConfigField("String", "PRODUCT_ID_X2", "\"${properties["PRODUCT_ID_X2"]}\"")
         buildConfigField("String", "PRODUCT_ID_X3", "\"${properties["PRODUCT_ID_X3"]}\"")
@@ -61,11 +58,11 @@ android {
 
     buildTypes {
         debug {
-            // we cannot change the original package name, else PhotoEditorSDK won't work
-            //applicationIdSuffix = ".debug"
+            applicationIdSuffix = ".debug"
         }
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -78,22 +75,22 @@ android {
 
     flavorDimensions.add("licensing")
     productFlavors {
-        register("proprietary")
         register("foss")
         register("prepaid")
     }
 
     sourceSets {
         getByName("main").java.srcDirs("src/main/kotlin")
-        if (isProprietary) {
-            getByName("main").java.srcDirs("src/proprietary/kotlin")
-        }
     }
 
     compileOptions {
         val currentJavaVersionFromLibs = JavaVersion.valueOf(libs.versions.app.build.javaVersion.get().toString())
         sourceCompatibility = currentJavaVersionFromLibs
         targetCompatibility = currentJavaVersionFromLibs
+    }
+
+    dependenciesInfo {
+        includeInApk = false
     }
 
     tasks.withType<KotlinCompile> {
@@ -104,33 +101,45 @@ android {
 
     lint {
         checkReleaseBuilds = false
-        abortOnError = false
+        abortOnError = true
+        warningsAsErrors = true
+        baseline = file("lint-baseline.xml")
     }
 
-    packagingOptions {
+    packaging {
         resources {
             excludes += "META-INF/library_release.kotlin_module"
         }
     }
+
+    bundle {
+        language {
+            @Suppress("UnstableApiUsage")
+            enableSplit = false
+        }
+    }
+}
+
+detekt {
+    baseline = file("detekt-baseline.xml")
 }
 
 dependencies {
-    //implementation(libs.simple.tools.commons)
     implementation(libs.android.image.cropper)
     implementation(libs.exif)
     implementation(libs.android.gif.drawable)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.media3.exoplayer)
-    implementation(libs.sdk.panowidget)
-    implementation(libs.sdk.videowidget)
     implementation(libs.sanselan)
-    implementation(libs.imagefilters)
+    implementation(libs.androidphotofilters)
     implementation(libs.androidsvg.aar)
     implementation(libs.gestureviews)
     implementation(libs.subsamplingscaleimageview)
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.awebp)
     implementation(libs.apng)
+    implementation(libs.avif.integration)
+    implementation(libs.jxl.integration)
     implementation(libs.okio)
     implementation(libs.picasso) {
         exclude(group = "com.squareup.okhttp3", module = "okhttp")
@@ -149,9 +158,4 @@ dependencies {
     implementation(libs.behavio.rule)
     implementation(libs.rx.animation)
     implementation(libs.bundles.lifecycle)
-}
-
-// Apply the PESDKPlugin
-if (isProprietary) {
-    apply(from = "../gradle/imglysdk.gradle")
 }

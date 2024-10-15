@@ -11,6 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/loading_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:hideAnimationBehavior="inward"
+        app:showAnimationBehavior="outward"
+        app:showDelay="500"
+        tools:visibility="visible" />
+
     <RelativeLayout
         android:id="@+id/media_holder"
         android:layout_width="match_parent"
@@ -69,7 +81,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/main_top_tabs_container"
+        android:id="@+id/mainTopTabsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

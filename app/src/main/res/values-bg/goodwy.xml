@@ -6,7 +6,6 @@
     <string name="excluded_activity_placeholder_g">Изключването на папките ще ги скрие, заедно с вътрешните им папки, само в Right Gallery; те ще бъдат видими в други приложения.
 \n
 \nАко искате да ги скриете също и от други приложения, използвайте функцията Скриване.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">Как мога да задам Right Gallery да бъде основната галерия на устройството\?</string>
     <string name="faq_1_text_g">First you have to find the currently default gallery in the Apps section of your device settings, look for a button that says something like \"Open by default\", click on it, then select \"Clear defaults\".
         The next time you will try opening an image or video you should see an app picker, where you can select Right Gallery and make it the default app.</string>

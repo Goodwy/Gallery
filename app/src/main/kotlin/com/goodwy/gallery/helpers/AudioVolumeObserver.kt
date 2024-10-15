@@ -4,10 +4,9 @@ import android.content.Context
 import android.media.AudioManager
 import android.os.Handler
 import android.provider.Settings
+import com.goodwy.gallery.extensions.audioManager
 
 class AudioVolumeObserver(private val context: Context) {
-  private val mAudioManager: AudioManager =
-    context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
   private var contentObserver: AudioVolumeContentObserver? = null
 
   fun register(audioStreamType: Int, listener: OnAudioVolumeChangedListener) {
@@ -18,7 +17,7 @@ class AudioVolumeObserver(private val context: Context) {
     // +info: https://stackoverflow.com/a/35261443/904907
     contentObserver = AudioVolumeContentObserver(
       handler,
-      mAudioManager,
+      context.audioManager,
       audioStreamType,
       listener
     )

@@ -19,7 +19,7 @@
         android:id="@+id/top_shadow"
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_status_action_height"
-        android:background="@color/crop_image_view_background"
+        android:background="@drawable/gradient_background_flipped"
         android:contentDescription="@null" />
 
     <com.google.android.material.appbar.AppBarLayout
@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:menu="@menu/menu_viewpager"
-            app:navigationIcon="@drawable/ic_arrow_left_vector"
+            app:navigationIcon="@drawable/ic_chevron_left_vector"
             app:titleMargin="@dimen/zero"
             app:titleTextAppearance="@style/TextAppearance.AppCompat.Medium"
             app:subtitleTextAppearance="@style/TextAppearance.AppCompat.Caption"

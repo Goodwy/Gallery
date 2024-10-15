@@ -6,7 +6,6 @@
     <string name="excluded_activity_placeholder_g">Ekskludering af mapper vil skjule dem og eventuelle undermapper for Right Gallery, de vil stadig være synlige for andre apps.
 \n
 \nHvis du også vil skjule dem for andre apps, skal du bruge funktionen Skjul.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">Hvordan kan jeg gøre Right Gallery til min enheds standardgalleri\?</string>
     <string name="faq_1_text_g">Først skal du finde det nuværende standardgalleri i Apps-sektionen af din enheds indstillinger. Kig efter en knap som hedder noget i stil med \"Åbn som standard\", klik på denne og vælg \"Ryd standarder\". Næste gang du forsøger at åbne et billede eller en video, bør du se en app-vælger, hvor du kan vælge Right Gallery og gøre den til standardapp.</string>
     <string name="faq_5_text_g">Ekskludering forhindrer kun visning af mappen i Right Gallery, mens Skjul virker på systemniveau og skjuler mappen fra andre gallerier også. Det fungerer ved at oprette en tom \".nomedia\"-fil i den givne mappe, som du kan slette med enhver filhåndterings-app. Bemærk, at det på nogle enheder ikke er muligt at skjule mapper som Kamera, Skærmbilleder og Downloads.</string>

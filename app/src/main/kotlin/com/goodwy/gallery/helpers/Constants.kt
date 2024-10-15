@@ -16,9 +16,12 @@ const val IS_THIRD_PARTY_INTENT = "is_third_party_intent"
 const val AUTOPLAY_VIDEOS = "autoplay_videos"
 const val REMEMBER_LAST_VIDEO_POSITION = "remember_last_video_position"
 const val LOOP_VIDEOS = "loop_videos"
+const val MUTE_VIDEOS = "mute_videos"
 const val OPEN_VIDEOS_ON_SEPARATE_SCREEN = "open_videos_on_separate_screen"
 const val ANIMATE_GIFS = "animate_gifs"
 const val MAX_BRIGHTNESS = "max_brightness"
+const val PLAYBACK_SPEED = "playback_speed"
+const val PLAYBACK_SPEED_PROGRESS = "playback_speed_progress"
 const val CROP_THUMBNAILS = "crop_thumbnails"
 const val SHOW_THUMBNAIL_VIDEO_DURATION = "show_thumbnail_video_duration"
 const val SCREEN_ROTATION = "screen_rotation"
@@ -98,6 +101,7 @@ const val CUSTOM_FOLDERS_ORDER = "custom_folders_order"
 const val AVOID_SHOWING_ALL_FILES_PROMPT = "avoid_showing_all_files_prompt"
 const val SEARCH_ALL_FILES_BY_DEFAULT = "search_all_files_by_default"
 const val LAST_EXPORTED_FAVORITES_FOLDER = "last_exported_favorites_folder"
+const val SHOW_PERMISSION_RATIONALE = "show_permission_rationale"
 const val SHOW_WARNING = "show_warning"
 
 // slideshow
@@ -137,6 +141,9 @@ const val MIN_SKIP_LENGTH = 2000
 const val HIDE_SYSTEM_UI_DELAY = 500L
 const val MAX_PRINT_SIDE_SIZE = 4096
 const val FAST_FORWARD_VIDEO_MS = 10000
+
+const val EXOPLAYER_MIN_BUFFER_MS = 2000
+const val EXOPLAYER_MAX_BUFFER_MS = 8000
 
 const val DIRECTORY = "directory"
 const val MEDIUM = "medium"
@@ -221,6 +228,8 @@ const val BOTTOM_ACTION_SET_AS = 2048
 const val BOTTOM_ACTION_COPY = 4096
 const val BOTTOM_ACTION_MOVE = 8192
 const val BOTTOM_ACTION_RESIZE = 16384
+const val BOTTOM_ACTION_PLAY_PAUSE = 32768
+const val BOTTOM_ACTION_MUTE = 65536
 
 const val DEFAULT_BOTTOM_ACTIONS = BOTTOM_ACTION_SHARE or BOTTOM_ACTION_TOGGLE_FAVORITE or BOTTOM_ACTION_PROPERTIES or BOTTOM_ACTION_DELETE
 
@@ -248,9 +257,10 @@ const val FOLDER_MEDIA_CNT_NONE = 3
 const val FOLDER_STYLE_SQUARE = 1
 const val FOLDER_STYLE_ROUNDED_CORNERS = 2
 
-fun getPermissionToRequest() = if (isTiramisuPlus()) PERMISSION_READ_MEDIA_IMAGES else PERMISSION_WRITE_STORAGE
+// animations
+const val THUMBNAIL_FADE_DURATION_MS = 150
 
-fun getRequiredPermission() = if (isUpsideDownCakePlus()) PERMISSION_READ_MEDIA_VISUAL_USER_SELECTED else getPermissionToRequest()
+fun getPermissionToRequest() = if (isTiramisuPlus()) PERMISSION_READ_MEDIA_IMAGES else PERMISSION_WRITE_STORAGE
 
 fun getPermissionsToRequest(): Collection<Int> {
     val permissions = mutableListOf(getPermissionToRequest())

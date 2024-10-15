@@ -15,6 +15,14 @@
         android:paddingRight="@dimen/activity_margin">
 
         <com.goodwy.commons.views.MyAppCompatCheckbox
+            android:id="@+id/manage_bottom_actions_share"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/activity_margin"
+            android:paddingBottom="@dimen/activity_margin"
+            android:text="@string/share"/>
+
+        <com.goodwy.commons.views.MyAppCompatCheckbox
             android:id="@+id/manage_bottom_actions_toggle_favorite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,20 +31,28 @@
             android:text="@string/toggle_favorite"/>
 
         <com.goodwy.commons.views.MyAppCompatCheckbox
-            android:id="@+id/manage_bottom_actions_edit"
+            android:id="@+id/manage_bottom_actions_play_pause"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/activity_margin"
             android:paddingBottom="@dimen/activity_margin"
-            android:text="@string/edit"/>
+            android:text="@string/playpause"/>
 
         <com.goodwy.commons.views.MyAppCompatCheckbox
-            android:id="@+id/manage_bottom_actions_share"
+            android:id="@+id/manage_bottom_actions_mute"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/activity_margin"
             android:paddingBottom="@dimen/activity_margin"
-            android:text="@string/share"/>
+            android:text="@string/mute"/>
+
+        <com.goodwy.commons.views.MyAppCompatCheckbox
+            android:id="@+id/manage_bottom_actions_properties"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/activity_margin"
+            android:paddingBottom="@dimen/activity_margin"
+            android:text="@string/properties"/>
 
         <com.goodwy.commons.views.MyAppCompatCheckbox
             android:id="@+id/manage_bottom_actions_delete"
@@ -47,20 +63,20 @@
             android:text="@string/delete"/>
 
         <com.goodwy.commons.views.MyAppCompatCheckbox
+            android:id="@+id/manage_bottom_actions_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/activity_margin"
+            android:paddingBottom="@dimen/activity_margin"
+            android:text="@string/edit"/>
+
+        <com.goodwy.commons.views.MyAppCompatCheckbox
             android:id="@+id/manage_bottom_actions_rotate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/activity_margin"
             android:paddingBottom="@dimen/activity_margin"
             android:text="@string/rotate"/>
-
-        <com.goodwy.commons.views.MyAppCompatCheckbox
-            android:id="@+id/manage_bottom_actions_properties"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/activity_margin"
-            android:paddingBottom="@dimen/activity_margin"
-            android:text="@string/properties"/>
 
         <com.goodwy.commons.views.MyAppCompatCheckbox
             android:id="@+id/manage_bottom_actions_change_orientation"

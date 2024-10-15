@@ -19,7 +19,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
-import com.goodwy.commons.dialogs.ConfirmationDialog
 import com.goodwy.commons.dialogs.CreateNewFolderDialog
 import com.goodwy.commons.dialogs.RadioGroupDialog
 import com.goodwy.commons.extensions.*
@@ -54,6 +53,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     private var mAllowPickingMultiple = false
     private var mShowAll = false
     private var mLoadedInitialPhotos = false
+    private var mShowLoadingIndicator = true
     private var mWasFullscreenViewOpen = false
     private var mLastSearchedText = ""
     private var mLatestMediaId = 0L
@@ -85,7 +85,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        //updateTransparentNavigationBar()
+        updateTransparentNavigationBar()
 
         intent.apply {
             mIsGetImageIntent = getBooleanExtra(GET_IMAGE_INTENT, false)
@@ -109,10 +109,10 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         updateMaterialActivityViews(
             binding.mediaCoordinator,
             binding.mediaGrid,
-            useTransparentNavigation = !config.scrollHorizontally,
+            useTransparentNavigation = false, //!config.scrollHorizontally,
             useTopSearchMenu = true
         )
-        setupSearchMenuScrollListener(binding.mediaGrid, binding.mediaMenu)
+        if (config.changeColourTopBar) setupSearchMenuScrollListener(binding.mediaGrid, binding.mediaMenu)
 
 
         if (mShowAll) {
@@ -132,9 +132,9 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         if (config.transparentNavigationBar) {
             setWindowTransparency(true) { _, bottomNavigationBarSize, leftNavigationBarSize, rightNavigationBarSize ->
                 binding.mediaCoordinator.setPadding(leftNavigationBarSize, 0, rightNavigationBarSize, 0)
-                binding.mainTopTabsContainer.setPadding(0, 0, 0, bottomNavigationBarSize)
                 if (horizontally) {
                     binding.mediaFastscroller.setPadding(0, 0, 0, bottomNavigationBarSize)
+                    binding.mainTopTabsContainer.setPadding(0, 0, 0, bottomNavigationBarSize)
                 } else {
                     binding.mediaGrid.setPadding(0, 0, 0, bottomNavigationBarSize) // needed clipToPadding="false"
                 }
@@ -153,7 +153,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         updateMenuColors()
         setupTabsColor()
 
-        if (mStoredHideTopBarWhenScroll != config.hideTopBarWhenScroll) {
+        if (config.tabsChanged || mStoredHideTopBarWhenScroll != config.hideTopBarWhenScroll) {
             finish()
             startActivity(intent)
             return
@@ -168,9 +168,12 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         }
 
         if (mStoredScrollHorizontally != config.scrollHorizontally) {
-            mLoadedInitialPhotos = false
-            binding.mediaGrid.adapter = null
-            getMedia()
+//            mLoadedInitialPhotos = false
+//            binding.mediaGrid.adapter = null
+//            getMedia()
+            finish()
+            startActivity(intent)
+            return
         }
 
         if (mStoredShowFileTypes != config.showThumbnailFileTypes) {
@@ -204,6 +207,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
             timeFormat = getTimeFormat()
         }
 
+        binding.loadingIndicator.setIndicatorColor(getProperPrimaryColor())
         binding.mediaEmptyTextPlaceholder.setTextColor(getProperTextColor())
         binding.mediaEmptyTextPlaceholder2.setTextColor(getProperPrimaryColor())
         binding.mediaEmptyTextPlaceholder2.bringToFront()
@@ -370,7 +374,16 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 
     private fun updateMenuColors() {
         updateStatusbarColor(getProperBackgroundColor())
-        binding.mediaMenu.updateColors(getRequiredStatusBarColor(), scrollingView?.computeVerticalScrollOffset() ?: 0)
+        binding.mediaMenu.updateColors(getStartRequiredStatusBarColor(), scrollingView?.computeVerticalScrollOffset() ?: 0)
+    }
+
+    private fun getStartRequiredStatusBarColor(): Int {
+        val scrollingViewOffset = scrollingView?.computeVerticalScrollOffset() ?: 0
+        return if (scrollingViewOffset == 0) {
+            getProperBackgroundColor()
+        } else {
+            getColoredMaterialStatusBarColor()
+        }
     }
 
     private fun storeStateVariables() {
@@ -386,6 +399,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
             mStoredRoundedCorners = fileRoundedCorners
             mShowAll = showAll && mPath != RECYCLE_BIN
             mStoredHideTopBarWhenScroll = hideTopBarWhenScroll
+            tabsChanged = false
         }
     }
 
@@ -414,36 +428,36 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     }
 
     private fun tryLoadGallery() {
-        handlePermission(getPermissionToRequest()) {
-            if (it) {
-                val dirName = when {
-                    mPath == FAVORITES -> getString(com.goodwy.commons.R.string.favorites)
-                    mPath == RECYCLE_BIN -> getString(com.goodwy.commons.R.string.recycle_bin)
-                    mPath == config.OTGPath -> getString(com.goodwy.commons.R.string.usb)
-                    else -> getHumanizedFilename(mPath)
-                }
-
-                val searchHint = if (mShowAll) {
-                    getString(com.goodwy.commons.R.string.search_files)
-                } else {
-                    getString(com.goodwy.commons.R.string.search_in_placeholder, dirName)
-                }
-
-                binding.mediaMenu.updateHintText(searchHint)
-//                if (!mShowAll) {
-//                    binding.mediaMenu.toggleForceArrowBackIcon(true)
-//                    binding.mediaMenu.onNavigateBackClickListener = {
-//                        onBackPressed()
-//                    }
-//                }
-
-                binding.mediaMenu.updateTitle(if (mShowAll) resources.getString(com.goodwy.commons.R.string.library) else dirName)
-                getMedia()
-                setupLayoutManager()
-            } else {
-                toast(com.goodwy.commons.R.string.no_storage_permissions)
-                finish()
+        requestMediaPermissions {
+            val dirName = when (mPath) {
+                FAVORITES -> getString(com.goodwy.commons.R.string.favorites)
+                RECYCLE_BIN -> getString(com.goodwy.commons.R.string.recycle_bin)
+                config.OTGPath -> getString(com.goodwy.commons.R.string.usb)
+                else -> getHumanizedFilename(mPath)
             }
+
+            val searchHint = if (mShowAll) {
+                getString(com.goodwy.commons.R.string.search_files)
+            } else {
+                getString(com.goodwy.commons.R.string.search_in_placeholder, dirName)
+            }
+
+            binding.mediaMenu.updateHintText(searchHint)
+//            if (!mShowAll) {
+//                binding.mediaMenu.toggleForceArrowBackIcon(true)
+//                binding.mediaMenu.onNavigateBackClickListener = {
+//                    onBackPressed()
+//                }
+//            }
+
+            if (mShowLoadingIndicator) {
+                binding.loadingIndicator.show()
+                mShowLoadingIndicator = false
+            }
+
+            binding.mediaMenu.updateTitle(if (mShowAll) resources.getString(com.goodwy.strings.R.string.library) else dirName)
+            getMedia()
+            setupLayoutManager()
         }
     }
 
@@ -459,7 +473,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
             initZoomListener()
             MediaAdapter(
                 this, mMedia.clone() as ArrayList<ThumbnailItem>, this, mIsGetImageIntent || mIsGetVideoIntent || mIsGetAnyIntent,
-                mAllowPickingMultiple, mPath, binding.mediaGrid
+                mAllowPickingMultiple, mPath, binding.mediaGrid, binding.mediaRefreshLayout
             ) {
                 if (it is Medium && !isFinishing) {
                     itemClicked(it.path)
@@ -759,7 +773,8 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         val viewType = config.getFolderViewType(if (mShowAll) SHOW_ALL else mPath)
         if (viewType == VIEW_TYPE_GRID) {
             val spanCount = config.mediaColumnCnt
-            val spacing = config.thumbnailSpacing
+            val limit = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 8 else 12
+            val spacing = if (spanCount > limit) 0 else config.thumbnailSpacing
             val useGridPosition = media.firstOrNull() is ThumbnailSection
 
             var currentGridDecoration: GridSpacingItemDecoration? = null
@@ -907,6 +922,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         mMedia = media
 
         runOnUiThread {
+            binding.loadingIndicator.hide()
             binding.mediaRefreshLayout.isRefreshing = false
             binding.mediaEmptyTextPlaceholder.beVisibleIf(media.isEmpty() && !isFromCache)
             binding.mediaEmptyTextPlaceholder2.beVisibleIf(media.isEmpty() && !isFromCache)
@@ -1022,36 +1038,17 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     }
 
     private fun setupTabsColor() {
-//        val white = 0xFFFFFFFF.toInt()
-//        val gray = 0xFFEBEBEB.toInt()
-//        val dark = 0xFF1E2225.toInt()
         val black = 0xFF000000.toInt()
         val tabBackground = when (getProperBackgroundColor()) {
             black -> resources.getColor(R.color.tab_background_black)
             else -> getBottomNavigationBackgroundColor()
         }
-//        val tabIndicator = when (getProperBackgroundColor()) {
-//            white -> resources.getColor(R.color.tab_indicator_light)
-//            gray -> resources.getColor(R.color.tab_indicator_gray)
-//            dark -> resources.getColor(R.color.tab_indicator_dark)
-//            else -> resources.getColor(R.color.tab_indicator_black)
-//        }
-//        val tabText = when (getProperBackgroundColor()) {
-//            white -> resources.getColor(R.color.tab_indicator_dark)
-//            gray -> resources.getColor(R.color.tab_indicator_dark)
-//            dark -> resources.getColor(R.color.tab_indicator_gray)
-//            else -> resources.getColor(R.color.tab_indicator_gray)
-//        }
-//        binding.mainTopTabsBackground.backgroundTintList = ColorStateList.valueOf(tabBackground)
-//        binding.mainTopTabsHolder.setSelectedTabIndicatorColor(tabIndicator)
-//        binding.mainTopTabsHolder.setTabTextColors(tabText, white)
         binding.mainTopTabsBackground.backgroundTintList = ColorStateList.valueOf(tabBackground)
         binding.mainTopTabsHolder.setSelectedTabIndicatorColor(getProperBackgroundColor())
         binding.mainTopTabsHolder.setTabTextColors(getProperTextColor(), getProperPrimaryColor())
     }
 
     private fun setupTabs() {
-        // top tab bar
         binding.mainTopTabsHolder.removeAllTabs()
         val pathToUse = mPath.ifEmpty { SHOW_ALL }
         val currGrouping = config.getFolderGrouping(pathToUse)

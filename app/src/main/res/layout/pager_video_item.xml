@@ -9,7 +9,8 @@
     <ImageView
         android:id="@+id/video_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:contentDescription="@null" />
 
     <com.alexvasilkov.gestures.GestureFrameLayout
         android:id="@+id/video_surface_frame"
@@ -36,13 +37,18 @@
         android:layout_height="match_parent" />
 
     <ImageView
-        android:id="@+id/video_play_outline"
+        android:id="@+id/videoPlayOutline"
         android:layout_width="@dimen/play_outline_size_big"
         android:layout_height="@dimen/play_outline_size_big"
         android:layout_centerInParent="true"
         android:padding="20dp"
         android:src="@drawable/ic_play_outline_vector"
+        android:contentDescription="@null"
         android:visibility="gone" />
+
+    <include
+        android:id="@+id/error_message_holder"
+        layout="@layout/layout_media_load_error" />
 
     <ImageView
         android:id="@+id/panorama_outline"
@@ -51,6 +57,7 @@
         android:layout_centerInParent="true"
         android:padding="20dp"
         android:src="@drawable/ic_panorama"
+        android:contentDescription="@null"
         android:visibility="gone"
         tools:visibility="visible" />
 
@@ -59,15 +66,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="@dimen/smaller_margin"
-        android:layout_marginRight="@dimen/smaller_margin"
+        android:layout_marginHorizontal="@dimen/small_margin"
         android:background="@drawable/extended_details_background"
         android:paddingVertical="@dimen/small_margin"
         android:paddingHorizontal="@dimen/smaller_margin"
         android:textColor="@color/theme_dark_text_color"
         android:textSize="@dimen/smaller_text_size"
         android:visibility="gone"
-        tools:text="My video\nAnother line" />
+        tools:text="Big buck bunny.mp4\n948.52 MB\n1920 x 1080 (2.1MP)\n10 April 2008, 08:30 AM"
+        tools:visibility="visible" />
 
     <include
         android:id="@+id/bottom_video_time_holder"
@@ -77,9 +84,9 @@
         android:id="@+id/slide_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@id/bottom_video_time_holder"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="120dp"
+        android:layout_marginBottom="@dimen/big_margin"
         android:alpha="0"
         android:background="@drawable/black_rounded_background"
         android:gravity="center"

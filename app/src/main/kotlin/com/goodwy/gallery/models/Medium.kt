@@ -54,7 +54,7 @@ data class Medium(
 
     fun isHidden() = name.startsWith('.')
 
-    fun isHeic() = name.toLowerCase().endsWith(".heic") || name.toLowerCase().endsWith(".heif")
+    fun isHeic() = name.lowercase(Locale.getDefault()).endsWith(".heic") || name.lowercase(Locale.getDefault()).endsWith(".heif")
 
     fun getBubbleText(sorting: Int, context: Context, dateFormat: String, timeFormat: String) = when {
         sorting and SORT_BY_NAME != 0 -> name
@@ -74,7 +74,7 @@ data class Medium(
             groupBy and GROUP_BY_DATE_TAKEN_MONTHLY != 0 -> getDayStartTS(taken, true)
             groupBy and GROUP_BY_DATE_TAKEN_YEARLY != 0 -> getDayStartTS(taken, false, true)
             groupBy and GROUP_BY_FILE_TYPE != 0 -> type.toString()
-            groupBy and GROUP_BY_EXTENSION != 0 -> name.getFilenameExtension().toLowerCase()
+            groupBy and GROUP_BY_EXTENSION != 0 -> name.getFilenameExtension().lowercase(Locale.getDefault())
             groupBy and GROUP_BY_FOLDER != 0 -> parentPath
             else -> ""
         }

@@ -13,12 +13,14 @@ class ManageBottomActionsDialog(val activity: BaseSimpleActivity, val callback: 
     init {
         val actions = activity.config.visibleBottomActions
         binding.apply {
-            manageBottomActionsToggleFavorite.isChecked = actions and BOTTOM_ACTION_TOGGLE_FAVORITE != 0
-            manageBottomActionsEdit.isChecked = actions and BOTTOM_ACTION_EDIT != 0
             manageBottomActionsShare.isChecked = actions and BOTTOM_ACTION_SHARE != 0
-            manageBottomActionsDelete.isChecked = actions and BOTTOM_ACTION_DELETE != 0
-            manageBottomActionsRotate.isChecked = actions and BOTTOM_ACTION_ROTATE != 0
+            manageBottomActionsToggleFavorite.isChecked = actions and BOTTOM_ACTION_TOGGLE_FAVORITE != 0
+            manageBottomActionsPlayPause.isChecked = actions and BOTTOM_ACTION_PLAY_PAUSE != 0
+            manageBottomActionsMute.isChecked = actions and BOTTOM_ACTION_MUTE != 0
             manageBottomActionsProperties.isChecked = actions and BOTTOM_ACTION_PROPERTIES != 0
+            manageBottomActionsDelete.isChecked = actions and BOTTOM_ACTION_DELETE != 0
+            manageBottomActionsEdit.isChecked = actions and BOTTOM_ACTION_EDIT != 0
+            manageBottomActionsRotate.isChecked = actions and BOTTOM_ACTION_ROTATE != 0
             manageBottomActionsChangeOrientation.isChecked = actions and BOTTOM_ACTION_CHANGE_ORIENTATION != 0
             manageBottomActionsSlideshow.isChecked = actions and BOTTOM_ACTION_SLIDESHOW != 0
             manageBottomActionsShowOnMap.isChecked = actions and BOTTOM_ACTION_SHOW_ON_MAP != 0
@@ -71,6 +73,10 @@ class ManageBottomActionsDialog(val activity: BaseSimpleActivity, val callback: 
                 result += BOTTOM_ACTION_MOVE
             if (manageBottomActionsResize.isChecked)
                 result += BOTTOM_ACTION_RESIZE
+            if (manageBottomActionsPlayPause.isChecked)
+                result += BOTTOM_ACTION_PLAY_PAUSE
+            if (manageBottomActionsMute.isChecked)
+                result += BOTTOM_ACTION_MUTE
         }
 
         activity.config.visibleBottomActions = result

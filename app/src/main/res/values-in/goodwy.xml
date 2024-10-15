@@ -6,7 +6,6 @@
     <string name="excluded_activity_placeholder_g">Mengecualikan folder akan menyembunyikan folder tersebut dan seluruh subfoldernya hanya di Right Gallery, namun masih bisa dilihat di aplikasi lain.
 \n
 \nJika anda ingin menyembunyikannya dari aplikasi lain juga, gunakan fitur Sembunyikan.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">Bagaimana cara menjadikan Right Gallery sebagai aplikasi galeri default\?</string>
     <string name="faq_1_text_g">Pertama anda harus menemukan galeri default saat ini di bagian Aplikasi di Pengaturan perangkat, cari tombol dengan label seperti \"Buka secara default\", klik, lalu pilih \"Hapus default\". Lain kali anda mencoba membuka gambar atau video, anda akan diminta memilih aplikasi, dan anda bisa memilih Right Gallery dan menjadikannya default.</string>
     <string name="faq_5_text_g">Mengecualikan tidak akan menampilkan folder di Right Gallery saja, sedangkan Sembunyikan bekerja sesuai aturan sistem dan akan menyembunyikan folder dari aplikasi galeri yang lain. Cara kerjanya dengan membuat berkas \".nomedia\" kosong pada folder yang diinginkan, yang bisa anda hapus juga dengan aplikasi pengelola berkas. Note that some devices do not allow hiding folders like Camera, Screenshots and Downloads.</string>

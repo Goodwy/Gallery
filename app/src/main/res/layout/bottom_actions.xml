@@ -5,9 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/bottom_actions_height"
     android:layout_alignParentBottom="true"
-    android:background="@color/crop_image_view_background"
+    android:background="@drawable/gradient_background"
     android:paddingTop="@dimen/normal_margin">
-    <!--android:background="@drawable/gradient_background"-->
 
     <ImageView
         android:id="@+id/bottom_share"
@@ -61,7 +60,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/volume"
         android:padding="@dimen/medium_margin"
-        android:src="@drawable/ic_volume_mute"
+        android:src="@drawable/ic_vector_speaker_off"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/bottomProperties"
         app:layout_constraintHorizontal_bias="0.5"

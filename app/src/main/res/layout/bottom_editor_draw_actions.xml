@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/bottom_draw_color"
+            android:layout_toEndOf="@+id/bottom_draw_color"
             android:layout_marginEnd="6dp"
             android:padding="@dimen/normal_margin"
             android:max="100"
@@ -116,14 +116,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:background="@drawable/rainbow_ring" />
+            android:background="@drawable/rainbow_ring"
+            android:contentDescription="@null" />
 
         <ImageView
             android:id="@+id/bottom_draw_color_icon"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_gravity="center"
-            android:background="@drawable/circle_background" />
+            android:background="@drawable/circle_background"
+            android:contentDescription="@null" />
 
     </FrameLayout>
 

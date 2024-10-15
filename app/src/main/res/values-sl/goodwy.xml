@@ -6,7 +6,6 @@
     <string name="excluded_activity_placeholder_g">Izključevanje map jih bo skupaj s podmapami skrilo zgolj v tej Galeriji, v ostalih aplikacijah bodo normalno vidne.
 \n
 \nČe jih želite skriti tudi v drugih aplikacijah, uporabite funkcijo Skrij.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">Kako naredim Right galerijo za privzeto aplikacijo na napravi\?</string>
     <string name="faq_1_text_g">Najprej morate najti trenutno privzeto aplikacijo za prikaz slik med aplikacijami v nastavitvah naprave, kjer poiščete gumb v smislu \"Odpri kot privzeto\", kliknite nanj in izberite \"Izbriši privzeto\". Ko boste naslednjič želeli odpreti fotografijo ali videoposnetek, bi se moral pokazati izbirnik, v katerem lahko izberete Right galerijo in jo določite kot privzeto aplikacijo.</string>
     <string name="faq_5_text_g">Izključevanje mape jo skrije le v Right galeriji, medtem ko jo skrivanje skrije tudi v ostalih aplikacijah oz. galerijah. Deluje tako, da kreira prazno \".nomedia\" datoteko v izbrani mapi, katero lahko odstranite tudi s katerimkoli urejevalnikom datotek. Note that some devices do not allow hiding folders like Camera, Screenshots and Downloads.</string>

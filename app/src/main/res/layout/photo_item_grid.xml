@@ -10,7 +10,8 @@
     <com.goodwy.commons.views.MySquareImageView
         android:id="@+id/medium_thumbnail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/file_type"
@@ -35,9 +36,9 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/small_margin"
-        android:padding="@dimen/small_margin"
-        android:gravity="end"
         android:background="@drawable/circle_black_background"
+        android:gravity="end"
+        android:padding="@dimen/small_margin"
         android:src="@drawable/ic_star_vector"
         android:visibility="gone"
         tools:visibility="visible" />
@@ -52,9 +53,9 @@
         android:layout_margin="@dimen/small_margin"
         android:background="@drawable/circle_background"
         android:contentDescription="@null"
-        android:padding="@dimen/tiny_margin"
-        android:src="@drawable/ic_check_vector"
-        android:visibility="gone" />
+        android:src="@drawable/ic_check_outline"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/medium_name"

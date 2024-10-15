@@ -1,7 +1,6 @@
 package com.goodwy.gallery.activities
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -12,7 +11,6 @@ import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
@@ -355,7 +353,6 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.N)
     private fun saveImage() {
         setOldExif()
 
@@ -398,15 +395,12 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.N)
     private fun setOldExif() {
         var inputStream: InputStream? = null
         try {
-            if (isNougatPlus()) {
-                inputStream = contentResolver.openInputStream(uri!!)
-                oldExif = ExifInterface(inputStream!!)
-            }
-        } catch (e: Exception) {
+            inputStream = contentResolver.openInputStream(uri!!)
+            oldExif = ExifInterface(inputStream!!)
+       } catch (e: Exception) {
         } finally {
             inputStream?.close()
         }
@@ -848,8 +842,13 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
 
     private fun shouldCropSquare(): Boolean {
         val extras = intent.extras
-        return if (extras != null && extras.containsKey(ASPECT_X) && extras.containsKey(ASPECT_Y)) {
-            extras.getInt(ASPECT_X) == extras.getInt(ASPECT_Y)
+        return if (extras != null && extras.containsKey(ASPECT_X) && extras.containsKey(
+                ASPECT_Y
+            )
+        ) {
+            extras.getInt(ASPECT_X) == extras.getInt(
+                ASPECT_Y
+            )
         } else {
             false
         }
@@ -983,7 +982,6 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.N)
     private fun saveBitmap(file: File, bitmap: Bitmap, out: OutputStream, showSavingToast: Boolean) {
         if (showSavingToast) {
             toast(com.goodwy.commons.R.string.saving)
@@ -997,10 +995,8 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
         }
 
         try {
-            if (isNougatPlus()) {
-                val newExif = ExifInterface(file.absolutePath)
-                oldExif?.copyNonDimensionAttributesTo(newExif)
-            }
+            val newExif = ExifInterface(file.absolutePath)
+            oldExif?.copyNonDimensionAttributesTo(newExif)
         } catch (e: Exception) {
         }
 

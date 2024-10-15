@@ -6,7 +6,6 @@
     <string name="excluded_activity_placeholder_g">Excloure les carpetes les ocultarà junt amb les seves subcarpetes, però només a la Right Gallery. Seguiran sent visibles en altres aplicacions.
 \n
 \nSi voleu ocultar-les d\'altres aplicacions, feu servir la funció Oculta.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">Com puc fer que Right Gallery sigui la galeria predeterminada del dispositiu\?</string>
     <string name="faq_1_text_g">Primer heu de trobar la galeria actualment predeterminada a la secció Aplicacions de la configuració del dispositiu, cerqueu un botó que digui alguna cosa semblant a «Obre per defecte», feu-hi clic i seleccioneu «Neteja els valors predeterminats». La pròxima vegada que proveu d\'obrir una imatge o un vídeo, haureu de veure un selector d\'aplicació, on podeu seleccionar Right Gallery i convertir-la en l\'aplicació predeterminada.</string>
     <string name="faq_5_text_g">Excloure impedeix mostrar la carpeta només a Right Gallery, mentre que ocultar també amaga la carpeta a altres galeries. Funciona creant un fitxer «.nomedia» buit a la carpeta indicada, que podeu eliminar amb qualsevol gestor de fitxers. Tingueu en compte que alguns dispositius no permeten amagar carpetes com Càmera, Captures de pantalla o Descàrregues.</string>

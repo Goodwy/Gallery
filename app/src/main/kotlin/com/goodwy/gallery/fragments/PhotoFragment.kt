@@ -1,6 +1,5 @@
 package com.goodwy.gallery.fragments
 
-import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -43,7 +42,6 @@ import com.goodwy.commons.extensions.*
 import com.goodwy.commons.helpers.ensureBackgroundThread
 import com.goodwy.commons.helpers.isRPlus
 import com.goodwy.gallery.R
-import com.goodwy.gallery.activities.PanoramaPhotoActivity
 import com.goodwy.gallery.activities.PhotoActivity
 import com.goodwy.gallery.activities.PhotoVideoActivity
 import com.goodwy.gallery.activities.ViewPagerActivity
@@ -63,6 +61,7 @@ import org.apache.sanselan.formats.jpeg.JpegImageParser
 import pl.droidsonroids.gif.InputSource
 import java.io.File
 import java.io.FileOutputStream
+import java.util.Locale
 import kotlin.math.ceil
 
 class PhotoFragment : ViewPagerFragment() {
@@ -211,9 +210,10 @@ class PhotoFragment : ViewPagerFragment() {
         mWasInit = true
         updateInstantSwitchWidths()
 
-        ensureBackgroundThread {
-            checkIfPanorama()
-        }
+        // TODO: Implement panorama using a FOSS library
+        // ensureBackgroundThread {
+        //      checkIfPanorama()
+        // }
 
         return mView
     }
@@ -516,7 +516,13 @@ class PhotoFragment : ViewPagerFragment() {
                     if (mMedium.path != mOriginalPath) {
                         mMedium.path = mOriginalPath
                         loadImage()
-                        checkIfPanorama()
+                        // TODO: Implement panorama using a FOSS library
+                        // checkIfPanorama()
+                    } else {
+                        binding.errorMessageHolder.errorMessage.apply {
+                            setTextColor(if (context.config.blackBackground) Color.WHITE else context.getProperTextColor())
+                            fadeIn()
+                        }
                     }
                 }
             })
@@ -641,10 +647,7 @@ class PhotoFragment : ViewPagerFragment() {
     private fun getFilePathToShow() = if (mMedium.isPortrait()) mCurrentPortraitPhotoPath else getPathToLoad(mMedium)
 
     private fun openPanorama() {
-        Intent(context, PanoramaPhotoActivity::class.java).apply {
-            putExtra(PATH, mMedium.path)
-            startActivity(this)
-        }
+        TODO("Panorama is not yet implemented.")
     }
 
     private fun scheduleZoomableView() {
@@ -734,7 +737,7 @@ class PhotoFragment : ViewPagerFragment() {
     private fun getMinTileDpi(): Int {
         val metrics = resources.displayMetrics
         val averageDpi = (metrics.xdpi + metrics.ydpi) / 2
-        val device = "${Build.BRAND} ${Build.MODEL}".toLowerCase()
+        val device = "${Build.BRAND} ${Build.MODEL}".lowercase(Locale.getDefault())
         return when {
             WEIRD_DEVICES.contains(device) -> WEIRD_TILE_DPI
             averageDpi > 400 -> HIGH_TILE_DPI
@@ -744,7 +747,7 @@ class PhotoFragment : ViewPagerFragment() {
     }
 
     private fun checkIfPanorama() {
-        mIsPanorama = try  {
+        mIsPanorama = try {
             if (mMedium.path.startsWith("content:/")) {
                 requireContext().contentResolver.openInputStream(Uri.parse(mMedium.path))
             } else {

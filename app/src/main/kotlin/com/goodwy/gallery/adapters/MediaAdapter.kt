@@ -5,13 +5,14 @@ import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
 import android.graphics.Color
 import android.graphics.drawable.Icon
-import android.os.Handler
-import android.os.Looper
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.allViews
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller
 import com.goodwy.commons.activities.BaseSimpleActivity
@@ -21,6 +22,7 @@ import com.goodwy.commons.dialogs.RenameDialog
 import com.goodwy.commons.dialogs.RenameItemDialog
 import com.goodwy.commons.extensions.*
 import com.goodwy.commons.helpers.*
+import com.goodwy.commons.interfaces.ItemTouchHelperContract
 import com.goodwy.commons.models.FileDirItem
 import com.goodwy.commons.views.MyRecyclerView
 import com.goodwy.gallery.R
@@ -33,15 +35,21 @@ import com.goodwy.gallery.interfaces.MediaOperationsListener
 import com.goodwy.gallery.models.Medium
 import com.goodwy.gallery.models.ThumbnailItem
 import com.goodwy.gallery.models.ThumbnailSection
+import java.util.Collections
 
 class MediaAdapter(
-    activity: BaseSimpleActivity, var media: ArrayList<ThumbnailItem>, val listener: MediaOperationsListener?, val isAGetIntent: Boolean,
-    val allowMultiplePicks: Boolean, val path: String, recyclerView: MyRecyclerView, itemClick: (Any) -> Unit
-) :
-    MyRecyclerViewAdapter(activity, recyclerView, itemClick), RecyclerViewFastScroller.OnPopupTextUpdate {
+    activity: BaseSimpleActivity,
+    var media: ArrayList<ThumbnailItem>,
+    val listener: MediaOperationsListener?,
+    val isAGetIntent: Boolean,
+    val allowMultiplePicks: Boolean,
+    val path: String,
+    recyclerView: MyRecyclerView,
+    val swipeRefreshLayout: SwipeRefreshLayout? = null,
+    itemClick: (Any) -> Unit
+) : MyRecyclerViewAdapter(activity, recyclerView, itemClick), ItemTouchHelperContract,
+    RecyclerViewFastScroller.OnPopupTextUpdate {
 
-    private val INSTANT_LOAD_DURATION = 2000L
-    private val IMAGE_LOAD_DELAY = 100L
     private val ITEM_SECTION = 0
     private val ITEM_MEDIUM_VIDEO_PORTRAIT = 1
     private val ITEM_MEDIUM_PHOTO = 2
@@ -49,10 +57,7 @@ class MediaAdapter(
     private val config = activity.config
     private val viewType = config.getFolderViewType(if (config.showAll) SHOW_ALL else path)
     private val isListViewType = viewType == VIEW_TYPE_LIST
-    private var visibleItemPaths = ArrayList<String>()
     private var rotatedImagePaths = ArrayList<String>()
-    private var loadImageInstantly = false
-    private var delayHandler = Handler(Looper.getMainLooper())
     private var currentMediaHash = media.hashCode()
     private val hasOTGConnected = activity.hasOTGConnected()
 
@@ -69,7 +74,6 @@ class MediaAdapter(
 
     init {
         setupDragListener(true)
-        enableInstantLoad()
     }
 
     override fun getActionMenuId() = R.menu.cab_media
@@ -97,10 +101,6 @@ class MediaAdapter(
 
     override fun onBindViewHolder(holder: MyRecyclerViewAdapter.ViewHolder, position: Int) {
         val tmbItem = media.getOrNull(position) ?: return
-        if (tmbItem is Medium) {
-            visibleItemPaths.add(tmbItem.path)
-        }
-
         val allowLongPress = (!isAGetIntent || allowMultiplePicks) && tmbItem is Medium
         holder.bindView(tmbItem, tmbItem is Medium, allowLongPress) { itemView, adapterPosition ->
             if (tmbItem is Medium) {
@@ -143,7 +143,7 @@ class MediaAdapter(
             findItem(R.id.cab_resize).isVisible = canResize(selectedItems)
             findItem(R.id.cab_confirm_selection).isVisible = isAGetIntent && allowMultiplePicks && selectedKeys.isNotEmpty()
             findItem(R.id.cab_restore_recycle_bin_files).isVisible = selectedPaths.all { it.startsWith(activity.recycleBinPath) }
-            findItem(R.id.cab_create_shortcut).isVisible = isOreoPlus() && isOneItemSelected
+            findItem(R.id.cab_create_shortcut).isVisible = isOneItemSelected
 
             checkHideBtnVisibility(this, selectedItems)
             checkFavoriteBtnVisibility(this, selectedItems)
@@ -189,15 +189,19 @@ class MediaAdapter(
 
     override fun getItemKeyPosition(key: Int) = media.indexOfFirst { (it as? Medium)?.path?.hashCode() == key }
 
-    override fun onActionModeCreated() {}
+    override fun onActionModeCreated() {
+        swipeRefreshLayout?.isRefreshing = false
+        swipeRefreshLayout?.isEnabled = false
+    }
 
-    override fun onActionModeDestroyed() {}
+    override fun onActionModeDestroyed() {
+        swipeRefreshLayout?.isEnabled = activity.config.enablePullToRefresh
+    }
 
     override fun onViewRecycled(holder: ViewHolder) {
         super.onViewRecycled(holder)
         if (!activity.isDestroyed) {
             val itemView = holder.itemView
-            visibleItemPaths.remove(itemView.allViews.firstOrNull { it.id == R.id.medium_name }?.tag)
             val tmb = itemView.allViews.firstOrNull { it.id == R.id.medium_thumbnail }
             if (tmb != null) {
                 Glide.with(activity).clear(tmb)
@@ -254,7 +258,6 @@ class MediaAdapter(
                     activity.updateDBMediaPath(firstPath, it)
 
                     activity.runOnUiThread {
-                        enableInstantLoad()
                         listener?.refreshItems()
                         finishActMode()
                     }
@@ -262,7 +265,6 @@ class MediaAdapter(
             }
         } else {
             RenameDialog(activity, getSelectedPaths(), true) {
-                enableInstantLoad()
                 listener?.refreshItems()
                 finishActMode()
             }
@@ -433,10 +435,6 @@ class MediaAdapter(
     }
 
     private fun createShortcut() {
-        if (!isOreoPlus()) {
-            return
-        }
-
         val manager = activity.getSystemService(ShortcutManager::class.java)
         if (manager.isRequestPinShortcutSupported) {
             val path = getSelectedPaths().first()
@@ -572,7 +570,6 @@ class MediaAdapter(
         if (thumbnailItems.hashCode() != currentMediaHash) {
             currentMediaHash = thumbnailItems.hashCode()
             media = thumbnailItems
-            enableInstantLoad()
             notifyDataSetChanged()
             finishActMode()
         }
@@ -580,7 +577,6 @@ class MediaAdapter(
 
     fun updateDisplayFilenames(displayFilenames: Boolean) {
         this.displayFilenames = displayFilenames
-        enableInstantLoad()
         notifyDataSetChanged()
     }
 
@@ -599,13 +595,6 @@ class MediaAdapter(
         notifyDataSetChanged()
     }
 
-    private fun enableInstantLoad() {
-        loadImageInstantly = true
-        delayHandler.postDelayed({
-            loadImageInstantly = false
-        }, INSTANT_LOAD_DURATION)
-    }
-
     private fun setupThumbnail(view: View, medium: Medium) {
         val isSelected = selectedKeys.contains(medium.path.hashCode())
         bindItem(view, medium).apply {
@@ -622,7 +611,13 @@ class MediaAdapter(
 
             playPortraitOutline?.beVisibleIf(medium.isVideo() || medium.isPortrait())
             if (medium.isVideo()) {
-                playPortraitOutline?.setImageResource(com.goodwy.commons.R.drawable.ic_play_outline_vector)
+                playPortraitOutline?.setImageResource(
+                    if (isListViewType) {
+                        com.goodwy.commons.R.drawable.ic_play_outline_vector
+                    } else {
+                        com.goodwy.commons.R.drawable.ic_play_vector
+                    }
+                )
                 playPortraitOutline?.beVisible()
             } else if (medium.isPortrait()) {
                 playPortraitOutline?.setImageResource(R.drawable.ic_portrait_photo_vector)
@@ -652,6 +647,9 @@ class MediaAdapter(
                 if (isListViewType) videoDuration?.setTextColor(textColor)
             }
             videoDuration?.beVisibleIf(showVideoDuration)
+            if (isListViewType) {
+                videoDuration?.setTextColor(textColor)
+            }
 
             mediumCheck.beVisibleIf(isSelected)
             if (isSelected) {
@@ -674,23 +672,29 @@ class MediaAdapter(
                 else -> ROUNDED_CORNERS_NONE
             }
 
-            if (loadImageInstantly) {
-                activity.loadImage(
-                    medium.type, path, mediumThumbnail, scrollHorizontally, animateGifs, cropThumbnails, roundedCorners, medium.getKey(), rotatedImagePaths
-                )
-            } else {
-                mediumThumbnail.setImageDrawable(null)
-                mediumThumbnail.isHorizontalScrolling = scrollHorizontally
-                delayHandler.postDelayed({
-                    val isVisible = visibleItemPaths.contains(medium.path)
-                    if (isVisible) {
-                        activity.loadImage(
-                            medium.type, path, mediumThumbnail, scrollHorizontally, animateGifs, cropThumbnails, roundedCorners,
-                            medium.getKey(), rotatedImagePaths
-                        )
-                    }
-                }, IMAGE_LOAD_DELAY)
-            }
+            mediumThumbnail.setBackgroundResource(
+                when (roundedCorners) {
+                    ROUNDED_CORNERS_SMALL -> R.drawable.placeholder_rounded_small
+                    ROUNDED_CORNERS_BIG -> R.drawable.placeholder_rounded_big
+                    else -> R.drawable.placeholder_square
+                }
+            )
+
+            activity.loadImage(
+                type = medium.type,
+                path = path,
+                target = mediumThumbnail,
+                horizontalScroll = scrollHorizontally,
+                animateGifs = animateGifs,
+                cropThumbnails = cropThumbnails,
+                roundCorners = roundedCorners,
+                signature = medium.getKey(),
+                skipMemoryCacheAtPaths = rotatedImagePaths,
+                onError = {
+                    mediumThumbnail.scaleType = ImageView.ScaleType.CENTER
+                    mediumThumbnail.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_vector_warning_colored))
+                }
+            )
 
             if (isListViewType) {
                 mediumName.setTextColor(textColor)
@@ -717,6 +721,16 @@ class MediaAdapter(
                 }
             }
         }
+    }
+
+    override fun onRowMoved(fromPosition: Int, toPosition: Int) {}
+
+    override fun onRowSelected(myViewHolder: ViewHolder?) {
+        swipeRefreshLayout?.isEnabled = false
+    }
+
+    override fun onRowClear(myViewHolder: ViewHolder?) {
+        swipeRefreshLayout?.isEnabled = activity.config.enablePullToRefresh
     }
 
     override fun onChange(position: Int): String {

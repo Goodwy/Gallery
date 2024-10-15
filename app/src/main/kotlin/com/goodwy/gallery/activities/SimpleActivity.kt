@@ -5,20 +5,24 @@ import android.net.Uri
 import android.provider.MediaStore.Images
 import android.provider.MediaStore.Video
 import android.view.WindowManager
+import androidx.appcompat.app.AlertDialog
 import com.goodwy.commons.activities.BaseSimpleActivity
 import com.goodwy.commons.dialogs.FilePickerDialog
-import com.goodwy.commons.extensions.getParentPath
-import com.goodwy.commons.extensions.getRealPathFromURI
-import com.goodwy.commons.extensions.scanPathRecursively
+import com.goodwy.commons.extensions.*
 import com.goodwy.commons.helpers.ensureBackgroundThread
 import com.goodwy.commons.helpers.isPiePlus
 import com.goodwy.gallery.R
+import com.goodwy.gallery.dialogs.StoragePermissionRequiredDialog
 import com.goodwy.gallery.extensions.addPathToDB
 import com.goodwy.gallery.extensions.config
 import com.goodwy.gallery.extensions.updateDirectoryPath
+import com.goodwy.gallery.helpers.getPermissionsToRequest
 
 open class SimpleActivity : BaseSimpleActivity() {
-    val observer = object : ContentObserver(null) {
+
+    private var dialog: AlertDialog? = null
+
+    private val observer = object : ContentObserver(null) {
         override fun onChange(selfChange: Boolean, uri: Uri?) {
             super.onChange(selfChange, uri)
             if (uri != null) {
@@ -32,25 +36,18 @@ open class SimpleActivity : BaseSimpleActivity() {
     }
 
     override fun getAppIconIDs() = arrayListOf(
-        R.mipmap.ic_launcher_red,
-        R.mipmap.ic_launcher_pink,
-        R.mipmap.ic_launcher_purple,
-        R.mipmap.ic_launcher_deep_purple,
-        R.mipmap.ic_launcher_indigo,
-        R.mipmap.ic_launcher_blue,
-        R.mipmap.ic_launcher_light_blue,
-        R.mipmap.ic_launcher_cyan,
-        R.mipmap.ic_launcher_teal,
-        R.mipmap.ic_launcher_green,
-        R.mipmap.ic_launcher_light_green,
-        R.mipmap.ic_launcher_lime,
-        R.mipmap.ic_launcher_yellow,
-        R.mipmap.ic_launcher_amber,
         R.mipmap.ic_launcher,
-        R.mipmap.ic_launcher_deep_orange,
-        R.mipmap.ic_launcher_brown,
-        R.mipmap.ic_launcher_blue_grey,
-        R.mipmap.ic_launcher_grey_black
+        R.mipmap.ic_launcher_one,
+        R.mipmap.ic_launcher_two,
+        R.mipmap.ic_launcher_three,
+        R.mipmap.ic_launcher_four,
+        R.mipmap.ic_launcher_five,
+        R.mipmap.ic_launcher_six,
+        R.mipmap.ic_launcher_seven,
+        R.mipmap.ic_launcher_eight,
+        R.mipmap.ic_launcher_nine,
+        R.mipmap.ic_launcher_ten,
+        R.mipmap.ic_launcher_eleven
     )
 
     override fun getAppLauncherName() = getString(R.string.app_launcher_name)
@@ -93,5 +90,45 @@ open class SimpleActivity : BaseSimpleActivity() {
                 scanPathRecursively(it)
             }
         }
+    }
+
+    protected fun requestMediaPermissions(enableRationale: Boolean = false, onGranted: () -> Unit) {
+        when {
+            hasAllPermissions(getPermissionsToRequest()) -> onGranted()
+            config.showPermissionRationale -> {
+                if (enableRationale) {
+                    showPermissionRationale()
+                } else {
+                    onPermissionDenied()
+                }
+            }
+
+            else -> {
+                handlePartialMediaPermissions(getPermissionsToRequest(), force = true) { granted ->
+                    if (granted) {
+                        onGranted()
+                    } else {
+                        config.showPermissionRationale = true
+                        showPermissionRationale()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showPermissionRationale() {
+        dialog?.dismiss()
+        StoragePermissionRequiredDialog(
+            activity = this,
+            onOkay = ::openDeviceSettings,
+            onCancel = ::onPermissionDenied
+        ) { dialog ->
+            this.dialog = dialog
+        }
+    }
+
+    private fun onPermissionDenied() {
+        toast(com.goodwy.commons.R.string.no_storage_permissions)
+        finish()
     }
 }

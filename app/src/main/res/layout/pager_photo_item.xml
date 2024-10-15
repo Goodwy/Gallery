@@ -31,6 +31,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <include
+        android:id="@+id/error_message_holder"
+        layout="@layout/layout_media_load_error" />
+
     <ImageView
         android:id="@+id/panorama_outline"
         android:layout_width="@dimen/play_outline_size_big"
@@ -47,8 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="@dimen/smaller_margin"
-        android:layout_marginRight="@dimen/smaller_margin"
+        android:layout_marginHorizontal="@dimen/medium_margin"
         android:background="@drawable/extended_details_background"
         android:paddingVertical="@dimen/small_margin"
         android:paddingHorizontal="@dimen/smaller_margin"

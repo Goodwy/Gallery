@@ -28,7 +28,6 @@
         android:id="@+id/change_view_type"
         android:showAsAction="never"
         android:title="@string/change_view_type"
-        android:visible="false"
         app:showAsAction="never" />
     <item
         android:id="@+id/column_count"

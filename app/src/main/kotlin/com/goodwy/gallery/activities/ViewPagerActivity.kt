@@ -10,7 +10,6 @@ import android.content.pm.ActivityInfo
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
 import android.content.res.Configuration
-import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -18,7 +17,6 @@ import android.graphics.drawable.Icon
 import android.media.AudioManager
 import android.os.Bundle
 import android.os.Handler
-import android.provider.MediaStore.Images
 import android.text.format.DateUtils
 import android.view.MenuItem
 import android.view.View
@@ -26,6 +24,7 @@ import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.exifinterface.media.ExifInterface
 import androidx.media3.common.util.UnstableApi
 import androidx.print.PrintHelper
@@ -64,8 +63,11 @@ import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.minutes
 
 @Suppress("UNCHECKED_CAST")
-class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, ViewPagerFragment.FragmentListener, OnAudioVolumeChangedListener {
-    private val REQUEST_VIEW_VIDEO = 1
+class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, ViewPagerFragment.FragmentListener {
+    companion object {
+        private const val REQUEST_VIEW_VIDEO = 1
+        private const val SAVED_PATH = "current_path"
+    }
 
     private var mPath = ""
     private var mDirectory = ""
@@ -88,7 +90,8 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
     private var mFavoritePaths = ArrayList<String>()
     private var mIgnoredPaths = ArrayList<String>()
 
-    private var audioVolumeObserver: AudioVolumeObserver? = null
+    private var mVolumeController: VolumeController? = null
+    private var mMuteInit: Boolean = false
 
     private val binding by viewBinding(ActivityMediumBinding::inflate)
 
@@ -104,17 +107,20 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         checkNotchSupport()
         (MediaActivity.mMedia.clone() as ArrayList<ThumbnailItem>).filterIsInstanceTo(mMediaFiles, Medium::class.java)
 
-        handlePermission(getPermissionToRequest()) {
-            if (it) {
-                initViewPager()
-            } else {
-                toast(com.goodwy.commons.R.string.no_storage_permissions)
-                finish()
-            }
+        requestMediaPermissions {
+            initViewPager(
+                savedPath = savedInstanceState?.getString(SAVED_PATH).orEmpty()
+            )
         }
 
         initFavorites()
-//        checkShowWarning()
+
+        mVolumeController = VolumeController(this) { isMuted ->
+            if (mMuteInit) {
+                config.muteVideos = isMuted
+                updatePlayerMuteState()
+            }
+        }
     }
 
     override fun onResume() {
@@ -135,9 +141,8 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
 //            updateNavigationBarColor(Color.BLACK)
 //        }
 
-        val getBottomNavigationBackgroundColor = getBottomNavigationBackgroundColor()
-        updateStatusbarContents(getBottomNavigationBackgroundColor)
-        updateNavigationBarButtons(getBottomNavigationBackgroundColor)
+        window.updateStatusBarForegroundColor(Color.BLACK)
+        window.updateNavigationBarForegroundColor(Color.BLACK)
 
         initBottomActions()
 
@@ -158,16 +163,6 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
 
         val isPlaying = (getCurrentFragment() as? VideoFragment)?.mIsPlaying == true
         updatePlayPause(!isPlaying)
-
-        if (audioVolumeObserver == null) {
-            audioVolumeObserver = AudioVolumeObserver(this)
-        }
-        audioVolumeObserver?.register(AudioManager.STREAM_MUSIC, this)
-
-        val audioManager = audioManager
-        if (audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) == 0) {
-            updateMute()
-        }
     }
 
     override fun onPause() {
@@ -189,9 +184,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
             }
         }
 
-        if (audioVolumeObserver != null) {
-            audioVolumeObserver!!.unregister()
-        }
+        mVolumeController?.destroy()
     }
 
     fun refreshMenuItems() {
@@ -229,7 +222,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
                     currentMedium.isFavorite && visibleBottomActions and BOTTOM_ACTION_TOGGLE_FAVORITE == 0 && !currentMedium.getIsInRecycleBin()
 
                 findItem(R.id.menu_restore_file).isVisible = currentMedium.path.startsWith(recycleBinPath)
-                findItem(R.id.menu_create_shortcut).isVisible = isOreoPlus()
+                findItem(R.id.menu_create_shortcut).isVisible = true
                 findItem(R.id.menu_change_orientation).isVisible = rotationDegrees == 0 && visibleBottomActions and BOTTOM_ACTION_CHANGE_ORIENTATION == 0
                 findItem(R.id.menu_change_orientation).icon = resources.getDrawable(getChangeOrientationIcon())
                 findItem(R.id.menu_rotate).setShowAsAction(
@@ -251,9 +244,9 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         (binding.mediumViewerAppbar.layoutParams as RelativeLayout.LayoutParams).topMargin = statusBarHeight
 
         val primaryColor = getProperPrimaryColor()
-        val contrastColor = getBottomNavigationBackgroundColor().getContrastColor()
-        val iconColor = if (baseConfig.topAppBarColorIcon) primaryColor else contrastColor
-        val titleColor = if (baseConfig.topAppBarColorTitle) primaryColor else contrastColor
+        val white = Color.WHITE
+        val iconColor = if (baseConfig.topAppBarColorIcon) primaryColor else white
+        val titleColor = if (baseConfig.topAppBarColorTitle) primaryColor else white
         binding.mediumViewerToolbar.apply {
             setTitleTextColor(titleColor)
             setSubtitleTextColor(titleColor.adjustAlpha(HIGHER_ALPHA))
@@ -330,22 +323,18 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         (binding.mediumViewerAppbar.layoutParams as RelativeLayout.LayoutParams).topMargin = statusBarHeight
     }
 
-    private fun initViewPager() {
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(SAVED_PATH, getCurrentPath())
+    }
+
+    private fun initViewPager(savedPath: String) {
         val uri = intent.data
         if (uri != null) {
-            var cursor: Cursor? = null
-            try {
-                val proj = arrayOf(Images.Media.DATA)
-                cursor = contentResolver.query(uri, proj, null, null, null)
-                if (cursor?.moveToFirst() == true) {
-                    mPath = cursor.getStringValue(Images.Media.DATA)
-                }
-            } finally {
-                cursor?.close()
-            }
+            mPath = savedPath.ifEmpty { getDataColumn(uri).orEmpty() }
         } else {
             try {
-                mPath = intent.getStringExtra(PATH) ?: ""
+                mPath = savedPath.ifEmpty { intent.getStringExtra(PATH).orEmpty() }
 
                 // make sure "Open Recycle Bin" works well with "Show all folders content"
                 mShowAll = config.showAll && (mPath.isNotEmpty() && !mPath.startsWith(recycleBinPath))
@@ -356,7 +345,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
             }
         }
 
-        if (intent.extras?.containsKey(REAL_FILE_PATH) == true) {
+        if (savedPath.isEmpty() && intent.extras?.containsKey(REAL_FILE_PATH) == true) {
             mPath = intent.extras!!.getString(REAL_FILE_PATH)!!
         }
 
@@ -454,7 +443,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         window.decorView.setOnSystemUiVisibilityChangeListener { visibility ->
             mIsFullScreen = if (isUpsideDownCakePlus()) {
                 visibility and View.SYSTEM_UI_FLAG_LOW_PROFILE != 0
-            } else if (isNougatPlus() && isInMultiWindowMode) {
+            } else if (isInMultiWindowMode) {
                 visibility and View.SYSTEM_UI_FLAG_LOW_PROFILE != 0
             } else if (visibility and View.SYSTEM_UI_FLAG_LOW_PROFILE == 0) {
                 false
@@ -608,7 +597,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         animator.addUpdateListener(object : ValueAnimator.AnimatorUpdateListener {
             var oldDragPosition = 0
             override fun onAnimationUpdate(animation: ValueAnimator) {
-                if (binding.viewPager?.isFakeDragging == true) {
+                if (binding.viewPager.isFakeDragging == true) {
                     val dragPosition = animation.animatedValue as Int
                     val dragOffset = dragPosition - oldDragPosition
                     oldDragPosition = dragPosition
@@ -809,10 +798,6 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
     }
 
     private fun createShortcut() {
-        if (!isOreoPlus()) {
-            return
-        }
-
         val manager = getSystemService(ShortcutManager::class.java)
         if (manager.isRequestPinShortcutSupported) {
             val medium = getCurrentMedium() ?: return
@@ -889,8 +874,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
 
     @androidx.annotation.OptIn(UnstableApi::class)
     private fun initBottomActionButtons() {
-        val getBottomNavigationBackgroundColor = getBottomNavigationBackgroundColor()
-        val iconColor = if (baseConfig.topAppBarColorIcon) getProperPrimaryColor() else getBottomNavigationBackgroundColor.getContrastColor()
+        val iconColor = if (baseConfig.topAppBarColorIcon) getProperPrimaryColor() else Color.WHITE
         arrayListOf(
             binding.bottomActions.bottomShare, binding.bottomActions.bottomFavorite, binding.bottomActions.bottomPlayPause,
             binding.bottomActions.bottomMute, binding.bottomActions.bottomProperties, binding.bottomActions.bottomDelete,
@@ -901,8 +885,8 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         ).forEach {
             it.applyColorFilter(iconColor)
         }
-        binding.bottomActions.bottomActionsWrapper.background.applyColorFilter(getBottomNavigationBackgroundColor)
-        binding.topShadow.background.applyColorFilter(getBottomNavigationBackgroundColor)
+        //binding.bottomActions.bottomActionsWrapper.background.applyColorFilter(getBottomNavigationBackgroundColor)
+        //binding.topShadow.background.applyColorFilter(getBottomNavigationBackgroundColor)
 
         val currentMedium = getCurrentMedium()
         val visibleBottomActions = if (config.bottomActions) config.visibleBottomActions else 0
@@ -1014,31 +998,16 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         }
 
         binding.bottomActions.bottomMute.setOnClickListener {
-            toggleMute()
+            config.muteVideos = !config.muteVideos
+            updatePlayerMuteState()
         }
     }
 
-    private fun isMute() =
-        audioManager.isStreamMute(AudioManager.STREAM_MUSIC) || audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) == 0
-
-    private fun toggleMute() {
-        if (isMute()) {
-            audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false)
-            binding.bottomActions.bottomMute.setImageResource(R.drawable.ic_volume_up_vector)
-        }
-        else {
-            audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true)
-            binding.bottomActions.bottomMute.setImageResource(R.drawable.ic_volume_mute)
-        }
-    }
-
-    private fun updateMute() {
-        if (isMute()) {
-            binding.bottomActions.bottomMute.setImageResource(R.drawable.ic_volume_mute)
-        }
-        else {
-            binding.bottomActions.bottomMute.setImageResource(R.drawable.ic_volume_up_vector)
-        }
+    private fun updatePlayerMuteState() {
+        val isMuted = config.muteVideos
+        val drawableId = if (isMuted) R.drawable.ic_vector_speaker_off else R.drawable.ic_vector_speaker_on
+        binding.bottomActions.bottomMute.setImageResource(drawableId)
+        mMuteInit = true
     }
 
     private fun updateBottomActionIcons(medium: Medium?) {
@@ -1057,10 +1026,11 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         binding.bottomActions.bottomRotate.beVisibleIf(config.visibleBottomActions and BOTTOM_ACTION_ROTATE != 0 && getCurrentMedium()?.isImage() == true)
         binding.bottomActions.bottomChangeOrientation.setImageResource(getChangeOrientationIcon())
 
-        binding.bottomActions.bottomPlayPause.beVisibleIf(getCurrentMedium()?.isVideo() == true || getCurrentMedium()?.isGIF() == true)
-        binding.bottomActions.bottomMute.beVisibleIf(getCurrentMedium()?.isVideo() == true || getCurrentMedium()?.isGIF() == true)
+        val isVideo = getCurrentMedium()?.isVideo() == true || getCurrentMedium()?.isGIF() == true
+        binding.bottomActions.bottomPlayPause.beVisibleIf(isVideo && config.visibleBottomActions and BOTTOM_ACTION_PLAY_PAUSE != 0)
+        binding.bottomActions.bottomMute.beVisibleIf(isVideo && config.visibleBottomActions and BOTTOM_ACTION_MUTE != 0)
         binding.bottomActions.bottomResize.beVisibleIf(config.visibleBottomActions and BOTTOM_ACTION_RESIZE != 0 && getCurrentMedium()?.isImage() == true)
-        updateMute()
+        updatePlayerMuteState()
     }
 
     private fun toggleFavorite() {
@@ -1126,7 +1096,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
                         model: Any,
                         target: Target<Bitmap>,
                         dataSource: DataSource,
-                        isFirstResource: Boolean
+                        isFirstResource: Boolean,
                     ): Boolean {
                         printHelper.printBitmap(path.getFilenameFromPath(), bitmap)
                         return false
@@ -1462,9 +1432,8 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         } else {
             stopSlideshow()
             showSystemUI(true)
-            val getBottomNavigationBackgroundColor = getBottomNavigationBackgroundColor()
-            updateStatusbarContents(getBottomNavigationBackgroundColor)
-            updateNavigationBarButtons(getBottomNavigationBackgroundColor)
+            window.updateStatusBarForegroundColor(Color.BLACK)
+            window.updateNavigationBarForegroundColor(Color.BLACK)
         }
     }
 
@@ -1542,19 +1511,6 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
             binding.bottomActions.bottomPlayPause.setImageResource(com.goodwy.commons.R.drawable.ic_play_vector)
         } else {
             binding.bottomActions.bottomPlayPause.setImageResource(com.goodwy.commons.R.drawable.ic_pause_vector)
-        }
-    }
-
-    override fun onAudioVolumeChanged(currentVolume: Int, maxVolume: Int) {
-        updateMute()
-        //  return
-    }
-
-    private fun checkShowWarning() {
-        if (config.showWarning) {
-            ConfirmationAdvancedDialog(this, messageId = R.string.show_warning_g, positive = com.goodwy.commons.R.string.ok, negative = 0, fromHtml = true) {
-                config.showWarning = false
-            }
         }
     }
 }

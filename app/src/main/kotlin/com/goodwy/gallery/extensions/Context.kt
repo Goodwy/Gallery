@@ -1,5 +1,6 @@
 package com.goodwy.gallery.extensions
 
+import android.annotation.SuppressLint
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
@@ -27,7 +28,6 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
@@ -47,6 +47,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
+import java.util.Locale
 import kotlin.collections.set
 import kotlin.math.max
 
@@ -130,37 +131,44 @@ fun Context.getSortedDirectories(source: ArrayList<Directory>): ArrayList<Direct
         var result = when {
             sorting and SORT_BY_NAME != 0 -> {
                 if (o1.sortValue.isEmpty()) {
-                    o1.sortValue = o1.name.toLowerCase()
+                    o1.sortValue = o1.name.lowercase(Locale.getDefault())
                 }
 
                 if (o2.sortValue.isEmpty()) {
-                    o2.sortValue = o2.name.toLowerCase()
+                    o2.sortValue = o2.name.lowercase(Locale.getDefault())
                 }
 
                 if (sorting and SORT_USE_NUMERIC_VALUE != 0) {
-                    AlphanumericComparator().compare(o1.sortValue.normalizeString().toLowerCase(), o2.sortValue.normalizeString().toLowerCase())
+                    AlphanumericComparator().compare(
+                        o1.sortValue.normalizeString().lowercase(Locale.getDefault()),
+                        o2.sortValue.normalizeString().lowercase(Locale.getDefault())
+                    )
                 } else {
-                    o1.sortValue.normalizeString().toLowerCase().compareTo(o2.sortValue.normalizeString().toLowerCase())
+                    o1.sortValue.normalizeString().lowercase(Locale.getDefault()).compareTo(o2.sortValue.normalizeString().lowercase(Locale.getDefault()))
                 }
             }
 
             sorting and SORT_BY_PATH != 0 -> {
                 if (o1.sortValue.isEmpty()) {
-                    o1.sortValue = o1.path.toLowerCase()
+                    o1.sortValue = o1.path.lowercase(Locale.getDefault())
                 }
 
                 if (o2.sortValue.isEmpty()) {
-                    o2.sortValue = o2.path.toLowerCase()
+                    o2.sortValue = o2.path.lowercase(Locale.getDefault())
                 }
 
                 if (sorting and SORT_USE_NUMERIC_VALUE != 0) {
-                    AlphanumericComparator().compare(o1.sortValue.toLowerCase(), o2.sortValue.toLowerCase())
+                    AlphanumericComparator().compare(o1.sortValue.lowercase(Locale.getDefault()), o2.sortValue.lowercase(Locale.getDefault()))
                 } else {
-                    o1.sortValue.toLowerCase().compareTo(o2.sortValue.toLowerCase())
+                    o1.sortValue.lowercase(Locale.getDefault()).compareTo(o2.sortValue.lowercase(Locale.getDefault()))
                 }
             }
 
-            sorting and SORT_BY_PATH != 0 -> AlphanumericComparator().compare(o1.sortValue.toLowerCase(), o2.sortValue.toLowerCase())
+            sorting and SORT_BY_PATH != 0 -> AlphanumericComparator().compare(
+                o1.sortValue.lowercase(Locale.getDefault()),
+                o2.sortValue.lowercase(Locale.getDefault())
+            )
+
             sorting and SORT_BY_SIZE != 0 -> (o1.sortValue.toLongOrNull() ?: 0).compareTo(o2.sortValue.toLongOrNull() ?: 0)
             sorting and SORT_BY_DATE_MODIFIED != 0 -> (o1.sortValue.toLongOrNull() ?: 0).compareTo(o2.sortValue.toLongOrNull() ?: 0)
             else -> (o1.sortValue.toLongOrNull() ?: 0).compareTo(o2.sortValue.toLongOrNull() ?: 0)
@@ -230,7 +238,7 @@ private fun Context.addParentWithoutMediaFiles(into: ArrayList<Directory>, path:
             path,
             subDirs.first().tmb,
             getFolderNameFromPath(path),
-            subDirs.sumBy { it.mediaCnt },
+            subDirs.sumOf { it.mediaCnt },
             lastModified,
             dateTaken,
             subDirs.sumByLong { it.size },
@@ -464,15 +472,38 @@ fun Context.getFolderNameFromPath(path: String): String {
 }
 
 fun Context.loadImage(
-    type: Int, path: String, target: MySquareImageView, horizontalScroll: Boolean, animateGifs: Boolean, cropThumbnails: Boolean,
-    roundCorners: Int, signature: ObjectKey, skipMemoryCacheAtPaths: ArrayList<String>? = null
+    type: Int,
+    path: String,
+    target: MySquareImageView,
+    horizontalScroll: Boolean,
+    animateGifs: Boolean,
+    cropThumbnails: Boolean,
+    roundCorners: Int,
+    signature: ObjectKey,
+    skipMemoryCacheAtPaths: ArrayList<String>? = null,
+    onError: (() -> Unit)? = null
 ) {
     target.isHorizontalScrolling = horizontalScroll
     if (type == TYPE_SVGS) {
-        loadSVG(path, target, cropThumbnails, roundCorners, signature)
+        loadSVG(
+            path = path,
+            target = target,
+            cropThumbnails = cropThumbnails,
+            roundCorners = roundCorners,
+            signature = signature
+        )
     } else {
-        val tryLoadingWithPicasso = type == TYPE_IMAGES && path.isPng()
-        loadImageBase(path, target, cropThumbnails, roundCorners, signature, skipMemoryCacheAtPaths, animateGifs, tryLoadingWithPicasso)
+        loadImageBase(
+            path = path,
+            target = target,
+            cropThumbnails = cropThumbnails,
+            roundCorners = roundCorners,
+            signature = signature,
+            skipMemoryCacheAtPaths = skipMemoryCacheAtPaths,
+            animate = animateGifs,
+            tryLoadingWithPicasso = type == TYPE_IMAGES && path.isPng(),
+            onError = onError
+        )
     }
 }
 
@@ -497,6 +528,7 @@ fun Context.getPathLocation(path: String): Int {
     }
 }
 
+@SuppressLint("CheckResult")
 fun Context.loadImageBase(
     path: String,
     target: MySquareImageView,
@@ -506,7 +538,8 @@ fun Context.loadImageBase(
     skipMemoryCacheAtPaths: ArrayList<String>? = null,
     animate: Boolean = false,
     tryLoadingWithPicasso: Boolean = false,
-    crossFadeDuration: Int = 300
+    crossFadeDuration: Int = THUMBNAIL_FADE_DURATION_MS,
+    onError: (() -> Unit)? = null
 ) {
     val options = RequestOptions()
         .signature(signature)
@@ -523,8 +556,9 @@ fun Context.loadImageBase(
         options.optionalTransform(WebpDrawable::class.java, WebpDrawableTransformation(FitCenter()))
     }
 
-    // animation is only supported without rounded corners
-    if (animate && roundCorners == ROUNDED_CORNERS_NONE) {
+    // animation is only supported without rounded corners and the file must be a GIF or WEBP.
+    // Glide doesn't support animated AVIF: https://bumptech.github.io/glide/int/avif.html
+    if (animate && roundCorners == ROUNDED_CORNERS_NONE && (path.isGif() || path.isWebP())) {
         // this is required to make glide cache aware of changes
         options.decode(Drawable::class.java)
     } else {
@@ -534,11 +568,15 @@ fun Context.loadImageBase(
     }
 
     if (roundCorners != ROUNDED_CORNERS_NONE) {
-        val cornerSize = if (roundCorners == ROUNDED_CORNERS_SMALL) com.goodwy.commons.R.dimen.rounded_corner_radius_big else com.goodwy.commons.R.dimen.dialog_corner_radius
+        val cornerSize =
+            if (roundCorners == ROUNDED_CORNERS_SMALL) com.goodwy.commons.R.dimen.rounded_corner_radius_big else com.goodwy.commons.R.dimen.dialog_corner_radius
         val cornerRadius = resources.getDimension(cornerSize).toInt()
         val roundedCornersTransform = RoundedCorners(cornerRadius)
         options.optionalTransform(MultiTransformation(CenterCrop(), roundedCornersTransform))
-        options.optionalTransform(WebpDrawable::class.java, MultiTransformation(WebpDrawableTransformation(CenterCrop()), WebpDrawableTransformation(roundedCornersTransform)))
+        options.optionalTransform(
+            WebpDrawable::class.java,
+            MultiTransformation(WebpDrawableTransformation(CenterCrop()), WebpDrawableTransformation(roundedCornersTransform))
+        )
     }
 
     WebpBitmapFactory.sUseSystemDecoder = false // CVE-2023-4863
@@ -546,31 +584,39 @@ fun Context.loadImageBase(
         .load(path)
         .apply(options)
         .set(WebpDownsampler.USE_SYSTEM_DECODER, false) // CVE-2023-4863
-        .transition(DrawableTransitionOptions.withCrossFade(crossFadeDuration))
+        .transition(getOptionalCrossFadeTransition(crossFadeDuration))
 
-    if (tryLoadingWithPicasso) {
-        builder = builder.listener(object : RequestListener<Drawable> {
-            override fun onLoadFailed(e: GlideException?, model: Any?, targetBitmap: Target<Drawable>, isFirstResource: Boolean): Boolean {
+    builder = builder.listener(object : RequestListener<Drawable> {
+        override fun onLoadFailed(e: GlideException?, model: Any?, targetBitmap: Target<Drawable>, isFirstResource: Boolean): Boolean {
+            if (tryLoadingWithPicasso) {
                 tryLoadingWithPicasso(path, target, cropThumbnails, roundCorners, signature)
-                return true
+            } else {
+                onError?.invoke()
             }
 
-            override fun onResourceReady(
-                resource: Drawable,
-                model: Any,
-                targetBitmap: Target<Drawable>,
-                dataSource: DataSource,
-                isFirstResource: Boolean
-            ): Boolean {
-                return false
-            }
-        })
-    }
+            return true
+        }
+
+        override fun onResourceReady(
+            resource: Drawable,
+            model: Any,
+            targetBitmap: Target<Drawable>,
+            dataSource: DataSource,
+            isFirstResource: Boolean,
+        ) = false
+    })
 
     builder.into(target)
 }
 
-fun Context.loadSVG(path: String, target: MySquareImageView, cropThumbnails: Boolean, roundCorners: Int, signature: ObjectKey) {
+fun Context.loadSVG(
+    path: String,
+    target: MySquareImageView,
+    cropThumbnails: Boolean,
+    roundCorners: Int,
+    signature: ObjectKey,
+    crossFadeDuration: Int = THUMBNAIL_FADE_DURATION_MS,
+) {
     target.scaleType = if (cropThumbnails) ImageView.ScaleType.CENTER_CROP else ImageView.ScaleType.FIT_CENTER
 
     val options = RequestOptions().signature(signature)
@@ -579,11 +625,14 @@ fun Context.loadSVG(path: String, target: MySquareImageView, cropThumbnails: Boo
         .listener(SvgSoftwareLayerSetter())
         .load(path)
         .apply(options)
-        .transition(DrawableTransitionOptions.withCrossFade())
+        .transition(getOptionalCrossFadeTransition(crossFadeDuration))
 
     if (roundCorners != ROUNDED_CORNERS_NONE) {
-        val cornerSize =
-            if (roundCorners == ROUNDED_CORNERS_SMALL) com.goodwy.commons.R.dimen.rounded_corner_radius_small else com.goodwy.commons.R.dimen.rounded_corner_radius_big
+        val cornerSize = when (roundCorners) {
+            ROUNDED_CORNERS_SMALL -> com.goodwy.commons.R.dimen.rounded_corner_radius_small
+            else -> com.goodwy.commons.R.dimen.rounded_corner_radius_big
+        }
+
         val cornerRadius = resources.getDimension(cornerSize).toInt()
         builder = builder.transform(CenterCrop(), RoundedCorners(cornerRadius))
     }
@@ -624,7 +673,7 @@ fun Context.getCachedDirectories(
     getImagesOnly: Boolean = false,
     forceShowHidden: Boolean = false,
     forceShowExcluded: Boolean = false,
-    callback: (ArrayList<Directory>) -> Unit
+    callback: (ArrayList<Directory>) -> Unit,
 ) {
     ensureBackgroundThread {
         try {
@@ -929,7 +978,7 @@ fun Context.parseFileChannel(path: String, fc: FileChannel, level: Int, start: L
                     }
                 }
 
-                val xmlString = sb.toString().toLowerCase()
+                val xmlString = sb.toString().lowercase(Locale.getDefault())
                 if (xmlString.contains("gspherical:projectiontype>equirectangular") || xmlString.contains("gspherical:projectiontype=\"equirectangular\"")) {
                     callback.invoke()
                 }
@@ -976,8 +1025,13 @@ fun Context.addPathToDB(path: String) {
 }
 
 fun Context.createDirectoryFromMedia(
-    path: String, curMedia: ArrayList<Medium>, albumCovers: ArrayList<AlbumCover>, hiddenString: String,
-    includedFolders: MutableSet<String>, getProperFileSize: Boolean, noMediaFolders: ArrayList<String>
+    path: String,
+    curMedia: ArrayList<Medium>,
+    albumCovers: ArrayList<AlbumCover>,
+    hiddenString: String,
+    includedFolders: MutableSet<String>,
+    getProperFileSize: Boolean,
+    noMediaFolders: ArrayList<String>,
 ): Directory {
     val OTGPath = config.OTGPath
     val grouped = MediaFetcher(this).groupMedia(curMedia, path)

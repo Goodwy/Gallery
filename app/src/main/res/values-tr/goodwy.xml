@@ -6,7 +6,6 @@
     <string name="excluded_activity_placeholder_g">Klasörleri hariç tutmak, onları yalnızca Right Gallery gizlenen alt klasörleriyle bir araya getirecek, diğer uygulamalarda görünmeye devam edecektir.
 \n
 \nBunları diğer uygulamalardan gizlemek istiyorsanız, Gizle işlevini kullanın.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">Right Gallery nasıl öntanımlı aygıt galerisi yapabilirim\?</string>
     <string name="faq_1_text_g">Önce aygıt ayarlarınızın Uygulamalar bölümünde öntanımlı galeriyi bulmanız, \"Öntanımlı olarak aç\" gibi bir şey söyleyen bir düğme aramanız, üzerine tıklamanız ve ardından \"Öntanımlıları Temizle\" seçeneğini seçmeniz gerekir. Gelecek sefer video veya resim açmayı denediğinizde, Right Gallery seçip öntanımlı uygulama haline getirebileceğiniz bir uygulama seçicisini görmelisiniz.</string>
     <string name="faq_5_text_g">Hariç tut, klasörü yalnızca Right Gallery görüntülemeyi engellerken, Gizle sistem genelinde çalışır ve klasörü diğer galerilerden de gizler. Verilen klasörde boş bir \".nomedia\" dosyası oluşturarak çalışır, daha sonra herhangi bir dosya yöneticisi ile kaldırabilirsiniz. Bazı aygıtların Kamera, Ekran Görüntüleri ve İndirilenler gibi klasörlerin gizlenmesine izin vermediğini unutmayın.</string>

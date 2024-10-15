@@ -6,7 +6,6 @@
     <string name="excluded_activity_placeholder_g">Exclure des dossiers les cachera ainsi que leurs sous-dossiers uniquement dans Right Gallery, ils seront toujours visibles depuis d\'autres applications.
 \n
 \nSi vous voulez aussi les cacher ailleurs, utilisez la fonction Cacher.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">Comment faire de Right Gallery ma galerie par défaut \?</string>
     <string name="faq_1_text_g">Il faut dans un premier temps, trouver l\'application Galerie par défaut dans la section Applications des paramètres de l\'appareil, puis appuyer sur « Ouvrir par défaut », et enfin sélectionner « Réinitialiser les paramètres par défaut ». La prochaine fois que vous ouvrirez une image ou une vidéo, il vous sera proposé de choisir une application, choisissez Right Gallery puis « Toujours ».</string>
     <string name="faq_5_text_g">Exclure un dossier permet de ne pas l\'afficher uniquement dans Right Gallery, alors que cacher un dossier rend le dossier invisible sur l\'ensemble de l\'appareil, y compris pour les autres applications de galerie. Dans le dernier cas, un fichier .nomedia est créé dans le dossier caché, et peut être supprimé avec n\'importe quel explorateur de fichiers. Notez que certains appareils ne permettent pas de masquer certains dossiers tels qu\'Appareil photo, Captures d\'écran et Téléchargements.</string>

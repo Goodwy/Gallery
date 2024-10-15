@@ -6,7 +6,6 @@
     <string name="excluded_activity_placeholder_g">Vylúčené priečinky budú spolu s podpriečinkami ukryté iba pred Right Gallery, ostatné aplikácie ich budú stále vidieť.
 \n
 \nAk ich chcete ukryť aj pred ostatnými aplikáciami, použite funkciu Skryť.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">Ako viem spraviť Right Gallery predvolenou galériou zariadenia\?</string>
     <string name="faq_1_text_g">Najprv musíte nájsť v nastaveniach zariadenia,sekcii Aplikácie, súčasnú predvolenú galériu, zvoliť tlačidlo s textom v zmysle \"Nastavenie predvoleného otvárania\" a následne \"Vymazať predvolené nastavenia\". Ak potom skúsite otvoriť obrázok alebo video, zobrazí sa zoznam aplikácií, kde viete zvoliť Right Gallery a nastaviť ju ako predvolenú.</string>
     <string name="faq_5_text_g">Kým vylúčenie predíde zobrazeniu priečinka iba vrámci Right Gallery, skrytie ho ukryje vrámci celého systému, teda to ovplyvní aj ostatné galérie. Skrytie funguje pomocou vytvorenia prázdneho \".nomedia\" súboru v danom priečinku, ktorý viete vymazať aj nejakým správcom súborov. Vedzte ale, že na niektorých zariadeniach nie je možné ukryť priečinky ako Kamera, Screenshoty a Stiahnuté.</string>

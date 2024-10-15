@@ -6,7 +6,6 @@
     <string name="excluded_activity_placeholder_g">A mappák kizárásával az almappákkal együtt elrejti a Right Gallery alkalmazásban, de továbbra is láthatóak maradnak más alkalmazásokban.
 \n
 \nHa el szeretné rejteni őket más alkalmazásokban is, használja az Elrejtés funkciót.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">Hogyan tudom beállítani a Right Gallery-t alapértelmezett galériának\?</string>
     <string name="faq_1_text_g">Először meg kell találnia az alapértelmezett galériát az eszköz beállításainak Alkalmazások részében. Keressen egy olyan gombot, amely valami olyasmit, mint az \"Legyen alapértelmezett\", kattintson rá, majd válassza a \"Alapértelmezések törlése\" pontot. A következő alkalommal, amikor megpróbál megnyitni egy képet vagy videót, megjelenik egy alkalmazásválasztó, ahol kiválaszthatja a Right Gallery lehetőséget, és beállíthatja alapértelmezett alkalmazásnak.</string>
     <string name="faq_5_text_g">A Kizárás megakadályozza, hogy a mappát a Right Gallery megjelenítse, az Elrejtés pedig rendszer szinten működik, és elrejti a mappát más galériákból is. Úgy működik, hogy létrehoz egy üres \". nomedia\" nevű fájlt az adott mappában, amelyet bármikor eltávolíthat bármilyen fájlkezelővel is. Note that some devices do not allow hiding folders like Camera, Screenshots and Downloads.</string>

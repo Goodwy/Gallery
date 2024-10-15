@@ -4,7 +4,6 @@
     <string name="app_launcher_name_g">Galerija</string> <!--Not used-->
     <string name="exclude_folder_description_g">Tai pašalins pasirinkimą su jo aplankais tik iš Right Gallery. Galite valdyti išskirtus aplankus skiltyje Nustatymai.</string>
     <string name="excluded_activity_placeholder_g">"Išskyrus aplankus, jie bus sujungti su jų aplankais paslėpti tik Right Gallery, jie vis tiek bus matomi kitose programose.  N  nJei norite paslėpti juos ir iš kitų programų, naudokite funkciją Slėpti."</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">Kaip galiu padaryti Right Gallery kaip numatytąją įrenginio galeriją\?</string>
     <string name="faq_1_text_g">Pirmiausia turite rasti numatytąją galeriją savo prietaiso nustatymų skyriuje Programėlės, ieškoti mygtuko panašaus į  Atidaryti pagal numatytuosius \", spustelėkite jį, tada pasirinkite  Išvalyti numatytuosius \". Kitą kartą, kai bandysite atidaryti atvaizdą ar vaizdo įrašą, turėtumėte pamatyti programos parinkiklį, kuriame galite pasirinkti Right Gallery ir padaryti ją numatytaja."</string>
     <string name="faq_5_text_g">"Išskyrimas neleidžia rodyti aplanko tik Right Gallery, tuo tarpu slėpimas slepia aplanką iš kitų galerijų. Tai veikia, sukuriant tuščią  . Nomedia \" bylą tam tikrame aplanke, kurį vėliau galite pašalinti bet kuria bylų tvarkykle. Note that some devices do not allow hiding folders like Camera, Screenshots and Downloads."</string>

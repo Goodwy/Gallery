@@ -4,7 +4,6 @@
     <string name="app_launcher_name_g">Galeria</string> <!--Not used-->
     <string name="exclude_folder_description_g">Esta ação deixará de exibir as pastas selecionadas só neste aplicativo. Você pode gerenciar as pastas ignoradas nas configurações do aplicativo.</string>
     <string name="excluded_activity_placeholder_g">Ignorar uma pasta só deixa de exibí-la nesta galeria. Ela continuará visível para outros aplicativos.\n\nSe você quiser ocultar a pasta para todos os aplicativos, utilize a função Ocultar.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">Como posso fazer do Right Gallery a galeria padrão do dispositivo\?</string>
     <string name="faq_1_text_g">Primeiro, você deve encontrar o aplicativo padrão atual nas configurações do seu dispositivo, procurar um botão que diga algo como Abrir por padrão, apertar nele e selecionar \"Limpar padrão\".
         Na próxima vez que você abrir uma imagem ou vídeo, você deverá ver um seletor do aplicativo, no qual você terá a oportunidade de selecionar a Right Gallery como o aplicativo padrão.</string>

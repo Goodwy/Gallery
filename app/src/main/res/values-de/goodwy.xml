@@ -6,7 +6,6 @@
     <string name="excluded_activity_placeholder_g">„Ordner ausschließen“ wird die gewählten Ordner und deren Unterordner nur in dieser App ausblenden. Andere Apps werden sie weiterhin anzeigen.
 \n
 \nWenn du Ordner auch für andere Apps verstecken willst, verwende die Funktion „Ordner verstecken“.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">Wie kann ich Right Gallery als Standardanwendung auswählen\?</string>
     <string name="faq_1_text_g">Zunächst muss man unter „Apps“ in den Geräteeinstellungen die aktuelle Standardgalerie finden, dort nach einer Bedienfläche wie „Standardmäßig öffnen“ suchen, diese betätigen und „Standardeinstellungen löschen“ wählen. Beim nächsten Öffnen eines Bildes oder eines Videos, sollte ein Auswahlfenster erscheinen, in dem man Right Gallery als Standard-Anwendung auswählen kann.</string>
     <string name="faq_5_text_g">„Ausschließen“ verhindert, dass der Ordner nur in der Right Gallery angezeigt wird, während „Verstecken“ systemweit funktioniert und den Ordner auch vor anderen Galerien verbirgt. Dabei wird eine leere .nomedia-Datei im angegebenen Ordner erstellt, die man mit einem beliebigen Dateimanager auch wieder entfernen kann. Zu beachten ist, dass einige Geräte das Verstecken von Ordnern wie Kamera, Bildschirmfotos und Heruntergeladene nicht zulassen.</string>

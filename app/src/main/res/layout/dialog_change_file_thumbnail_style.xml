@@ -42,7 +42,7 @@
             style="@style/SettingsHolderSwitchStyle"
             android:visibility="gone">
 
-            <com.goodwy.commons.views.MySwitchCompat
+            <com.goodwy.commons.views.MyMaterialSwitch
                 android:id="@+id/dialog_file_style_rounded_corners"
                 style="@style/SettingsSwitchStyle"
                 android:text="@string/rounded_corners"
@@ -54,7 +54,7 @@
             android:id="@+id/dialog_file_style_show_thumbnail_video_duration_holder"
             style="@style/SettingsHolderSwitchStyle">
 
-            <com.goodwy.commons.views.MySwitchCompat
+            <com.goodwy.commons.views.MyMaterialSwitch
                 android:id="@+id/dialog_file_style_show_thumbnail_video_duration"
                 style="@style/SettingsSwitchStyle"
                 android:text="@string/show_thumbnail_video_duration"
@@ -66,7 +66,7 @@
             android:id="@+id/dialog_file_style_show_thumbnail_file_types_holder"
             style="@style/SettingsHolderSwitchStyle">
 
-            <com.goodwy.commons.views.MySwitchCompat
+            <com.goodwy.commons.views.MyMaterialSwitch
                 android:id="@+id/dialog_file_style_show_thumbnail_file_types"
                 style="@style/SettingsSwitchStyle"
                 android:text="@string/show_image_file_types"
@@ -78,7 +78,7 @@
             android:id="@+id/dialog_file_style_mark_favorite_items_holder"
             style="@style/SettingsHolderSwitchStyle">
 
-            <com.goodwy.commons.views.MySwitchCompat
+            <com.goodwy.commons.views.MyMaterialSwitch
                 android:id="@+id/dialog_file_style_mark_favorite_items"
                 style="@style/SettingsSwitchStyle"
                 android:text="@string/mark_favorite_items"

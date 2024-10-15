@@ -1,5 +1,6 @@
 package com.goodwy.gallery.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -8,6 +9,7 @@ import android.text.TextUtils
 import android.widget.Toast
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.behaviorule.arturdumchev.library.pixels
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.goodwy.commons.dialogs.*
@@ -171,6 +173,7 @@ class SettingsActivity : SimpleActivity() {
         setupScrollHorizontally()
         setupEnablePullToRefresh()
         setupHideTopBarWhenScroll()
+        setupChangeColourTopBar()
 
         setupDarkBackground()
         setupScreenRotation()
@@ -253,7 +256,7 @@ class SettingsActivity : SimpleActivity() {
             binding.settingsBackupsHolder,
             binding.settingsOtherHolder
         ).forEach {
-            it.background.applyColorFilter(getBottomNavigationBackgroundColor())
+            it.setCardBackgroundColor(getBottomNavigationBackgroundColor())
         }
 
         arrayOf(
@@ -307,16 +310,10 @@ class SettingsActivity : SimpleActivity() {
     }
 
     private fun setupCustomizeColors() = binding.apply {
-//        settingsCustomizeColorsLabel.text = if (isPro() || isCollection()) {
-//            getString(com.goodwy.commons.R.string.customize_colors)
-//        } else {
-//            getString(com.goodwy.commons.R.string.customize_colors_locked)
-//        }
         settingsCustomizeColorsHolder.setOnClickListener {
             startCustomizationActivity(
                 showAccentColor = false,
                 isCollection = isCollection(),
-                licensingKey = BuildConfig.GOOGLE_PLAY_LICENSING_KEY,
                 productIdList= arrayListOf(productIdX1, productIdX2, productIdX3),
                 productIdListRu = arrayListOf(productIdX1, productIdX2, productIdX4),
                 subscriptionIdList = arrayListOf(subscriptionIdX1, subscriptionIdX2, subscriptionIdX3),
@@ -324,7 +321,8 @@ class SettingsActivity : SimpleActivity() {
                 subscriptionYearIdList = arrayListOf(subscriptionYearIdX1, subscriptionYearIdX2, subscriptionYearIdX3),
                 subscriptionYearIdListRu = arrayListOf(subscriptionYearIdX1, subscriptionYearIdX2, subscriptionYearIdX3),
                 playStoreInstalled = isPlayStoreInstalled(),
-                ruStoreInstalled = isRuStoreInstalled()
+                ruStoreInstalled = isRuStoreInstalled(),
+                showAppIconColor = true
             )
         }
     }
@@ -333,8 +331,26 @@ class SettingsActivity : SimpleActivity() {
         settingsOverflowIcon.applyColorFilter(getProperTextColor())
         settingsOverflowIcon.setImageResource(getOverflowIcon(baseConfig.overflowIcon))
         settingsOverflowIconHolder.setOnClickListener {
-            OverflowIconDialog(this@SettingsActivity) {
-                settingsOverflowIcon.setImageResource(getOverflowIcon(baseConfig.overflowIcon))
+            val items = arrayListOf(
+                com.goodwy.commons.R.drawable.ic_more_horiz,
+                com.goodwy.commons.R.drawable.ic_three_dots_vector,
+                com.goodwy.commons.R.drawable.ic_more_horiz_round
+            )
+
+            IconListDialog(
+                activity = this@SettingsActivity,
+                items = items,
+                checkedItemId = baseConfig.overflowIcon + 1,
+                defaultItemId = OVERFLOW_ICON_HORIZONTAL + 1,
+                titleId = com.goodwy.strings.R.string.overflow_icon,
+                size = pixels(com.goodwy.commons.R.dimen.normal_icon_size).toInt()
+            ) { wasPositivePressed, newValue ->
+                if (wasPositivePressed) {
+                    if (baseConfig.overflowIcon != newValue - 1) {
+                        baseConfig.overflowIcon = newValue - 1
+                        settingsOverflowIcon.setImageResource(getOverflowIcon(baseConfig.overflowIcon))
+                    }
+                }
             }
         }
     }
@@ -399,6 +415,7 @@ class SettingsActivity : SimpleActivity() {
         }
     )
 
+    @SuppressLint("SetTextI18n")
     private fun setupManageIncludedFolders() {
         if (isRPlus() && !isExternalStorageManager()) {
             binding.settingsManageIncludedFolders.text =
@@ -440,6 +457,7 @@ class SettingsActivity : SimpleActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setupShowHiddenItems() {
         if (isRPlus() && !isExternalStorageManager()) {
             binding.settingsShowHiddenItems.text =
@@ -559,6 +577,17 @@ class SettingsActivity : SimpleActivity() {
         settingsHideBarWhenScrollHolder.setOnClickListener {
             settingsHideBarWhenScroll.toggle()
             config.hideTopBarWhenScroll = settingsHideBarWhenScroll.isChecked
+        }
+    }
+
+    private fun setupChangeColourTopBar() {
+        binding.apply {
+            settingsChangeColourTopBar.isChecked = config.changeColourTopBar
+            settingsChangeColourTopBarHolder.setOnClickListener {
+                settingsChangeColourTopBar.toggle()
+                config.changeColourTopBar = settingsChangeColourTopBar.isChecked
+                config.tabsChanged = true
+            }
         }
     }
 
@@ -1075,7 +1104,6 @@ class SettingsActivity : SimpleActivity() {
     private fun setupExportSettings() {
         binding.settingsExportHolder.setOnClickListener {
             val configItems = LinkedHashMap<String, Any>().apply {
-                put(IS_USING_SHARED_THEME, config.isUsingSharedTheme)
                 put(TEXT_COLOR, config.textColor)
                 put(BACKGROUND_COLOR, config.backgroundColor)
                 put(PRIMARY_COLOR, config.primaryColor)
@@ -1213,7 +1241,6 @@ class SettingsActivity : SimpleActivity() {
 
         for ((key, value) in configValues) {
             when (key) {
-                IS_USING_SHARED_THEME -> config.isUsingSharedTheme = value.toBoolean()
                 TEXT_COLOR -> config.textColor = value.toInt()
                 BACKGROUND_COLOR -> config.backgroundColor = value.toInt()
                 PRIMARY_COLOR -> config.primaryColor = value.toInt()
@@ -1335,6 +1362,7 @@ class SettingsActivity : SimpleActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setupAbout() = binding.apply {
         settingsAboutVersion.text = "Version: " + BuildConfig.VERSION_NAME
         settingsAboutHolder.setOnClickListener {
@@ -1345,7 +1373,6 @@ class SettingsActivity : SimpleActivity() {
     private fun launchPurchase() {
         startPurchaseActivity(
             R.string.app_name_g,
-            BuildConfig.GOOGLE_PLAY_LICENSING_KEY,
             productIdList = arrayListOf(productIdX1, productIdX2, productIdX3),
             productIdListRu = arrayListOf(productIdX1, productIdX2, productIdX4),
             subscriptionIdList = arrayListOf(subscriptionIdX1, subscriptionIdX2, subscriptionIdX3),
@@ -1360,17 +1387,15 @@ class SettingsActivity : SimpleActivity() {
     private fun updatePro(isPro: Boolean = isPro() || isCollection()) {
         binding.apply {
             settingsPurchaseThankYouHolder.beGoneIf(isPro)
-//            settingsCustomizeColorsLabel.text = if (isPro) {
-//                getString(com.goodwy.commons.R.string.customize_colors)
-//            } else {
-//                getString(com.goodwy.commons.R.string.customize_colors_locked)
-//            }
             settingsTipJarHolder.beVisibleIf(isPro)
         }
     }
 
     private fun updateProducts() {
-        val productList: ArrayList<String> = arrayListOf(productIdX1, productIdX2, productIdX4, subscriptionIdX1, subscriptionIdX2, subscriptionIdX3, subscriptionYearIdX1, subscriptionYearIdX2, subscriptionYearIdX3)
+        val productList: ArrayList<String> =
+            arrayListOf(productIdX1, productIdX2, productIdX4,
+                subscriptionIdX1, subscriptionIdX2, subscriptionIdX3,
+                subscriptionYearIdX1, subscriptionYearIdX2, subscriptionYearIdX3)
         ruStoreHelper.getProducts(productList)
     }
 

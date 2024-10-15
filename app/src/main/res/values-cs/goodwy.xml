@@ -6,7 +6,6 @@
     <string name="excluded_activity_placeholder_g">Vyloučené složky budou spolu s podsložkami vyloučeny jen z Right Gallery, ostatní aplikace je nadále uvidí.
 \n
 \nPokud je chcete skrýt i před ostatními aplikacemi, použijte funkci Skrýt.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">Jak nastavím Right Gallery jako výchozí galerii\?</string>
     <string name="faq_1_text_g">Nejdříve musíte najít v nastavení zařízení, v sekci Aplikace, současnou výchozí galerii, zvolit tlačítko s textem ve smyslu \"Nastavení výchozího otevírání\" a následně \"Vymazat výchozí nastavení\". Pokud poté zkusíte otevřít obrázek nebo video, zobrazí se seznam aplikací, kde můžete zvolit Right Gallery a nastavit ji jako výchozí.</string>
     <string name="faq_5_text_g">Zatímco vyloučení zamezí zobrazení složky pouze vrámci Right Gallery, skrytí ji ukryje v celém systému, tedy to ovlivní i ostatní galerie. Skrytí funguje pomocí vytvoření prázdného souboru \".nomedia\" v daném adresáři, který můžete vymazat i libovolným správcem souborů. Note that some devices do not allow hiding folders like Camera, Screenshots and Downloads.</string>

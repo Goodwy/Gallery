@@ -4,7 +4,6 @@
     <string name="app_launcher_name_g">Gallery</string> <!--Not used-->
     <string name="exclude_folder_description_g">This will exclude the selection together with its subfolders from Right Gallery only. You can manage excluded folders in Settings.</string>
     <string name="excluded_activity_placeholder_g">Excluding folders will make them together with their subfolders hidden just in Right Gallery, they will still be visible in other applications.\n\nIf you want to hide them from other apps too, use the Hide function.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">How can I make Right Gallery the default device gallery?</string>
     <string name="faq_1_text_g">First you have to find the current default gallery in the Apps section of your device settings, look for a button that says something like \"Open by default\", click on it, then select \"Clear defaults\".
         The next time you will try opening an image or video you should see an app picker, where you can select Right Gallery and make it the default app.</string>

@@ -6,7 +6,6 @@
     <string name="excluded_activity_placeholder_g">אי הכללת תיקיות תגרום לכך שהן יחד עם תיקיות המשנה שלהן יהיו מוסתרות רק Right Gallery, הן עדיין יהיו גלויות ביישומים אחרים.
 \n
 \nאם אתה רוצה להסתיר אותם גם מאפליקציות אחרות, השתמש בפונקציה הסתר.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">How can I make Right Gallery the default device gallery?</string>
     <string name="faq_1_text_g">First you have to find the currently default gallery in the Apps section of your device settings, look for a button that says something like \"Open by default\", click on it, then select \"Clear defaults\".
         The next time you will try opening an image or video you should see an app picker, where you can select Right Gallery and make it the default app.</string>

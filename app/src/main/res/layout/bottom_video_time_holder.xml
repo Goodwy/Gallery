@@ -1,89 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/video_time_holder"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:paddingStart="@dimen/normal_margin"
     android:paddingEnd="@dimen/normal_margin">
 
-    <ImageView
-        android:id="@+id/video_prev_file"
-        android:layout_width="@dimen/video_player_play_pause_size"
-        android:layout_height="@dimen/video_player_play_pause_size"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="@dimen/small_margin"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/videoPlaybackHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_margin"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="@dimen/normal_margin"
-        android:src="@drawable/ic_prev_outline_vector"
-        android:visibility="invisible"
-        tools:visibility="visible" />
+        android:paddingHorizontal="@dimen/medium_margin"
+        app:layout_constraintBottom_toTopOf="@+id/video_seekbar"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/video_toggle_play_pause"
-        android:layout_width="@dimen/video_player_play_pause_size"
-        android:layout_height="@dimen/video_player_play_pause_size"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/activity_margin"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="@dimen/small_margin"
-        android:src="@drawable/ic_pause_outline_vector"
-        android:visibility="invisible"
-        tools:visibility="visible" />
+        <ImageView
+            android:id="@+id/videoPrevFile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ripple_all_corners_56dp"
+            android:contentDescription="@string/previous"
+            android:padding="@dimen/medium_margin"
+            android:src="@drawable/ic_previous_vector"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
-    <ImageView
-        android:id="@+id/video_next_file"
-        android:layout_width="@dimen/video_player_play_pause_size"
-        android:layout_height="@dimen/video_player_play_pause_size"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="@dimen/activity_margin"
-        android:layout_marginEnd="@dimen/small_margin"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="@dimen/normal_margin"
-        android:src="@drawable/ic_next_outline_vector"
-        android:visibility="invisible"
-        tools:visibility="visible" />
+        <ImageView
+            android:id="@+id/videoTogglePlayPause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ripple_all_corners_56dp"
+            android:contentDescription="@string/playpause"
+            android:padding="@dimen/medium_margin"
+            android:src="@drawable/ic_play_vector"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/videoPrevFile"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/videoNextFile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ripple_all_corners_56dp"
+            android:contentDescription="@string/next"
+            android:padding="@dimen/medium_margin"
+            android:src="@drawable/ic_next_vector"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/videoTogglePlayPause"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/videoPlaybackSpeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/smaller_margin"
+            android:background="@drawable/ripple_all_corners_56dp"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/ten_dpi"
+            android:paddingTop="@dimen/smaller_margin"
+            android:paddingBottom="@dimen/ten_dpi"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/big_text_size"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:layout_constraintEnd_toStartOf="@+id/videoToggleMute"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1x"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/videoToggleMute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ripple_all_corners_56dp"
+            android:contentDescription="@string/mute"
+            android:gravity="center"
+            android:padding="@dimen/medium_margin"
+            android:src="@drawable/ic_vector_speaker_on"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/video_curr_time"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/video_toggle_play_pause"
-        android:layout_alignTop="@+id/video_seekbar"
-        android:layout_alignBottom="@+id/video_seekbar"
-        android:layout_alignParentStart="true"
+        android:layout_height="58dp"
         android:gravity="bottom"
-        android:paddingLeft="@dimen/activity_margin"
-        android:paddingRight="@dimen/activity_margin"
+        android:paddingHorizontal="@dimen/activity_margin"
         android:shadowColor="@color/default_background_color"
         android:shadowRadius="2"
         android:textColor="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/video_seekbar"
         tools:text="00:00" />
 
     <com.goodwy.commons.views.MySeekBar
         android:id="@+id/video_seekbar"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/video_toggle_play_pause"
         android:paddingTop="@dimen/activity_margin"
-        android:paddingBottom="@dimen/activity_margin" />
+        android:paddingBottom="@dimen/activity_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/videoPlaybackHolder" />
 
     <TextView
         android:id="@+id/video_duration"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/video_toggle_play_pause"
-        android:layout_alignTop="@+id/video_seekbar"
-        android:layout_alignBottom="@+id/video_seekbar"
-        android:layout_alignParentEnd="true"
+        android:layout_height="58dp"
         android:gravity="bottom"
-        android:paddingLeft="@dimen/activity_margin"
-        android:paddingRight="@dimen/activity_margin"
+        android:paddingHorizontal="@dimen/activity_margin"
         android:shadowColor="@color/default_background_color"
         android:shadowRadius="2"
         android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/video_seekbar"
         tools:text="00:00" />
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

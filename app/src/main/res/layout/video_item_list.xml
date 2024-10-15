@@ -4,6 +4,7 @@
     android:id="@+id/media_item_holder"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/tiny_margin"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
@@ -15,7 +16,8 @@
     <com.goodwy.commons.views.MySquareImageView
         android:id="@+id/medium_thumbnail"
         android:layout_width="@dimen/list_view_folder_thumbnail_size"
-        android:layout_height="@dimen/list_view_folder_thumbnail_size" />
+        android:layout_height="@dimen/list_view_folder_thumbnail_size"
+        tools:src="@mipmap/ic_launcher" />
 
     <ImageView
         android:id="@+id/favorite"
@@ -24,11 +26,13 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/smaller_margin"
-        android:padding="@dimen/tiny_margin"
-        android:gravity="end"
         android:background="@drawable/circle_black_background"
+        android:contentDescription="@null"
+        android:gravity="end"
+        android:padding="@dimen/tiny_margin"
         android:src="@drawable/ic_star_vector"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/medium_check"
@@ -37,12 +41,13 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="@dimen/small_margin"
-        android:layout_marginEnd="@dimen/small_margin"
+        android:layout_marginEnd="@dimen/medium_margin"
         android:background="@drawable/circle_background"
         android:contentDescription="@null"
         android:padding="@dimen/tiny_margin"
         android:src="@drawable/ic_check_vector"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/medium_name"
@@ -67,7 +72,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="@dimen/small_margin"
-        android:paddingBottom="6dp"
+        android:paddingBottom="3dp"
+        android:contentDescription="@null"
         android:src="@drawable/ic_play_outline_vector"
         android:visibility="gone"
         tools:visibility="visible" />
@@ -81,7 +87,7 @@
         android:layout_toStartOf="@+id/play_portrait_outline"
         android:paddingLeft="@dimen/small_margin"
         android:paddingRight="@dimen/small_margin"
-        android:paddingBottom="6dp"
+        android:paddingBottom="@dimen/small_margin"
         android:textColor="@android:color/white"
         android:textSize="@dimen/smaller_text_size"
         tools:text="00:05" />

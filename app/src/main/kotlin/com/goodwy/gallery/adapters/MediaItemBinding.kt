@@ -53,7 +53,7 @@ class VideoListMediaItemBinding(val binding: VideoItemListBinding) : MediaItemBi
     override val root: ViewGroup = binding.root
     override val mediaItemHolder: ViewGroup = binding.mediaItemHolder
     override val favorite: ImageView = binding.favorite
-    override val playPortraitOutline: ImageView? = binding.playPortraitOutline
+    override val playPortraitOutline: ImageView = binding.playPortraitOutline
     override val fileType: TextView? = null
     override val mediumName: TextView = binding.mediumName
     override val videoDuration: TextView = binding.videoDuration

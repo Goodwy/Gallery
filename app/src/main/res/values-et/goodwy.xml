@@ -6,7 +6,6 @@
     <string name="excluded_activity_placeholder_g">Kaustade välistamine peidab kaustad koos nende alamkaustadega vaid Right Gallery ning nad jäävad nähtavaks muudele rakendustele.
 \n
 \nKui sa tahad neid varjata ka muude rakenduste eest, siis kasuta peitmise funktsionaalsust.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">Kuidas teha Right Gallery seadme vaikimisi galeriiks\?</string>
     <string name="faq_1_text_g">Kõigepealt tuleb leida seadme seadete rakenduste sektsioonist praegune vaikimisi galerii, otsida nuppu, millel on midagi sellist nagu \"Ava vaikimisi\", klõpsata sellel ja valida \"Tühista vaikimisi\". Järgmine kord, kui proovite pilti või videot avada, peaksite nägema rakenduste valijat, kus saate valida Right Gallery ja teha selle vaikimisi rakenduseks.</string>
     <string name="faq_5_text_g">Exclude takistab kausta kuvamist ainult Right Gallery\'s, samas kui Hide töötab süsteemipõhiselt ja peidab kausta ka teistest galeriidest. See töötab, luues antud kausta tühja \".nomedia\" faili, mille saate seejärel eemaldada ka mis tahes failihalduriga. Pange tähele, et mõned seadmed ei võimalda kaustade, nagu Camera, Screenshots ja Downloads, peitmist.</string>

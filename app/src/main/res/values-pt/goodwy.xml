@@ -6,7 +6,6 @@
     <string name="excluded_activity_placeholder_g">Excluir pastas – e implicitamente, as suas subpastas também – faz com que deixem de ser apresentadas apenas e só na Right Gallery. Continuarão visíveis noutras aplicações.
 \n
 \nSe as quiser ocultar também noutras aplicações, utilize a função Ocultar.</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">Como tornar a Right Gallery a minha galeria por padrão\?</string>
     <string name="faq_1_text_g">Primeiro identifique a galeria pré-definida pelo sistema do seu dispositivo em Definições -&gt; Gerir aplicações. Na Informação da aplicação dessa mesma galeria, seleccione Limpar pré-definições. Da próxima vez que tentar abrir um ficheiro de imagem ou de video, irá deparar-se com diversas alternativas. Escolha então a Right Gallery e escolha-a para abrir sempre por padrão.</string>
     <string name="faq_5_text_g">Excluir impede que a pasta seja apresentada unicamente na Right Gallery, enquanto Ocultar é adoptado por todo o sistema e esconde a pasta noutras galerias também. Funciona criando um ficheiro \".nomedia\" vazio dentro de uma pasta, que pode ser simplesmente removido através de um gestor de ficheiros. Tenha em atenção que alguns dispositivos não permitem Ocultar pastas tais como a da Câmera, a da Captura de ecrã e a das Transferências.</string>

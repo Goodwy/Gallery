@@ -6,7 +6,6 @@
     <string name="excluded_activity_placeholder_g">[排除資料夾]只會將選擇的資料夾與子資料夾一起從Right Gallery中隱藏，他們仍會出現在其他應用程式中。
 \n
 \n如果您要在其他應用程式中也隱藏，請使用[隱藏]功能。</string>
-    <string name="simple_wallpaper_g">Right Wallpaper</string>
     <string name="faq_1_title_g">我如何將Right Gallery設為預設相簿\?</string>
     <string name="faq_1_text_g">首先你必須先在裝置設定中應用程式部分尋找目前預設相簿，找到一個像是\"預設開啟(Open by default)\"的按鈕，點下去，然後選擇\"清除預設(Clear defaults)\"。 下次你要開啟圖片或影片時應該會看到程式選擇器，你可以在那裡選擇Right Gallery並設為預設程式。</string>
     <string name="faq_5_text_g">[排除]只在Right Gallery中避免顯示出來；而[隱藏]則作用於整個系統，資料夾也會被其他相簿隱藏。這是藉由在指定資料夾內建立一個\".nomedia\"空白檔案來進行隱藏，你之後也能用任何檔案管理器移除。 Note that some devices do not allow hiding folders like Camera, Screenshots and Downloads.</string>

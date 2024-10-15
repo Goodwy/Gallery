@@ -13,17 +13,6 @@
         android:layout_height="match_parent" />
 
     <ImageView
-        android:id="@+id/play_portrait_outline"
-        android:layout_width="@dimen/selection_check_size"
-        android:layout_height="@dimen/selection_check_size"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="@dimen/small_margin"
-        android:src="@drawable/ic_play_outline_vector"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
-    <ImageView
         android:id="@+id/favorite"
         android:layout_width="@dimen/selection_check_size"
         android:layout_height="@dimen/selection_check_size"
@@ -37,26 +26,47 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
-    <TextView
-        android:id="@+id/video_duration"
+    <RelativeLayout
+        android:id="@+id/play_icon_holder"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/play_portrait_outline"
-        android:layout_alignBottom="@+id/play_portrait_outline"
-        android:layout_toEndOf="@id/play_portrait_outline"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:maxLines="1"
-        android:shadowColor="@color/md_grey_black_dark"
-        android:shadowRadius="6"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/smaller_text_size"
-        android:visibility="gone"
-        tools:text="02:34"
-        tools:visibility="visible" />
+        android:layout_height="@dimen/selection_check_size"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="@dimen/small_margin"
+        android:layout_marginTop="@dimen/small_margin">
+
+        <ImageView
+            android:id="@+id/play_portrait_outline"
+            android:layout_width="@dimen/play_outline_icon_size"
+            android:layout_height="@dimen/play_outline_icon_size"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="0dp"
+            android:padding="@dimen/small_margin"
+            android:contentDescription="@string/videos"
+            android:visibility="gone"
+            tools:src="@drawable/ic_play_vector"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/video_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@id/play_portrait_outline"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/smaller_text_size"
+            android:visibility="gone"
+            tools:text="02:34"
+            tools:visibility="visible" />
+
+    </RelativeLayout>
 
     <ImageView
-        android:id="@+id/medium_check"
+        android:id="@+id/mediumCheck"
         android:layout_width="@dimen/selection_check_size"
         android:layout_height="@dimen/selection_check_size"
         android:layout_alignEnd="@+id/medium_name"
@@ -65,9 +75,9 @@
         android:layout_margin="@dimen/small_margin"
         android:background="@drawable/circle_background"
         android:contentDescription="@null"
-        android:padding="@dimen/tiny_margin"
-        android:src="@drawable/ic_check_vector"
-        android:visibility="gone" />
+        android:src="@drawable/ic_check_outline"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/medium_name"

@@ -5,14 +5,14 @@ import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Icon
-import android.os.Build
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.RelativeLayout
-import androidx.annotation.RequiresApi
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -43,13 +43,19 @@ import com.goodwy.gallery.interfaces.DirectoryOperationsListener
 import com.goodwy.gallery.models.AlbumCover
 import com.goodwy.gallery.models.Directory
 import java.io.File
-import java.util.*
+import java.util.Collections
 
 class DirectoryAdapter(
-    activity: BaseSimpleActivity, var dirs: ArrayList<Directory>, val listener: DirectoryOperationsListener?, recyclerView: MyRecyclerView,
-    val isPickIntent: Boolean, val swipeRefreshLayout: SwipeRefreshLayout? = null, itemClick: (Any) -> Unit
+    activity: BaseSimpleActivity,
+    var dirs: ArrayList<Directory>,
+    val listener: DirectoryOperationsListener?,
+    recyclerView: MyRecyclerView,
+    val isPickIntent: Boolean,
+    val swipeRefreshLayout: SwipeRefreshLayout? = null,
+    itemClick: (Any) -> Unit
 ) :
-    MyRecyclerViewAdapter(activity, recyclerView, itemClick), ItemTouchHelperContract, RecyclerViewFastScroller.OnPopupTextUpdate {
+    MyRecyclerViewAdapter(activity, recyclerView, itemClick), ItemTouchHelperContract,
+    RecyclerViewFastScroller.OnPopupTextUpdate {
 
     private val config = activity.config
     private val isListViewType = config.viewTypeFolders == VIEW_TYPE_LIST
@@ -117,7 +123,7 @@ class DirectoryAdapter(
             findItem(R.id.cab_empty_recycle_bin).isVisible = isOneItemSelected && selectedPaths.first() == RECYCLE_BIN
             findItem(R.id.cab_empty_disable_recycle_bin).isVisible = isOneItemSelected && selectedPaths.first() == RECYCLE_BIN
 
-            findItem(R.id.cab_create_shortcut).isVisible = isOreoPlus() && isOneItemSelected
+            findItem(R.id.cab_create_shortcut).isVisible = isOneItemSelected
 
             checkHideBtnVisibility(this, selectedPaths)
             checkPinBtnVisibility(this, selectedPaths)
@@ -162,7 +168,10 @@ class DirectoryAdapter(
 
     override fun getItemKeyPosition(key: Int) = dirs.indexOfFirst { it.path.hashCode() == key }
 
-    override fun onActionModeCreated() {}
+    override fun onActionModeCreated() {
+        swipeRefreshLayout?.isRefreshing = false
+        swipeRefreshLayout?.isEnabled = false
+    }
 
     override fun onActionModeDestroyed() {
         if (isDragAndDropping) {
@@ -174,6 +183,7 @@ class DirectoryAdapter(
         }
 
         isDragAndDropping = false
+        swipeRefreshLayout?.isEnabled = activity.config.enablePullToRefresh
     }
 
     override fun onViewRecycled(holder: ViewHolder) {
@@ -547,10 +557,6 @@ class DirectoryAdapter(
     }
 
     private fun tryCreateShortcut() {
-        if (!isOreoPlus()) {
-            return
-        }
-
         activity.handleLockedFolderOpening(getFirstSelectedItemPath() ?: "") { success ->
             if (success) {
                 createShortcut()
@@ -558,7 +564,6 @@ class DirectoryAdapter(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun createShortcut() {
         val manager = activity.getSystemService(ShortcutManager::class.java)
         if (manager.isRequestPinShortcutSupported) {
@@ -819,15 +824,27 @@ class DirectoryAdapter(
                     else -> ROUNDED_CORNERS_SMALL //ROUNDED_CORNERS_BIG
                 }
 
+                dirThumbnail.setBackgroundResource(
+                    when (roundedCorners) {
+                        ROUNDED_CORNERS_SMALL -> R.drawable.placeholder_rounded_small
+                        ROUNDED_CORNERS_BIG -> R.drawable.placeholder_rounded_big
+                        else -> R.drawable.placeholder_square
+                    }
+                )
+
                 activity.loadImage(
-                    thumbnailType,
-                    directory.tmb,
-                    dirThumbnail,
-                    scrollHorizontally,
-                    animateGifs,
-                    cropThumbnails,
-                    roundedCorners,
-                    directory.getKey()
+                    type = thumbnailType,
+                    path = directory.tmb,
+                    target = dirThumbnail,
+                    horizontalScroll = scrollHorizontally,
+                    animateGifs = animateGifs,
+                    cropThumbnails = cropThumbnails,
+                    roundCorners = roundedCorners,
+                    signature = directory.getKey(),
+                    onError = {
+                        dirThumbnail.scaleType = ImageView.ScaleType.CENTER
+                        dirThumbnail.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_vector_warning_colored))
+                    }
                 )
             }
 

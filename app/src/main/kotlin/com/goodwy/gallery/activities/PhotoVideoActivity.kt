@@ -4,12 +4,14 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Html
 import android.view.View
 import android.widget.RelativeLayout
+import androidx.media3.common.util.UnstableApi
 import com.goodwy.commons.dialogs.PropertiesDialog
 import com.goodwy.commons.extensions.*
 import com.goodwy.commons.helpers.*
@@ -23,7 +25,6 @@ import com.goodwy.gallery.fragments.ViewPagerFragment
 import com.goodwy.gallery.helpers.*
 import com.goodwy.gallery.models.Medium
 import java.io.File
-import java.io.FileInputStream
 
 open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentListener {
     private var mMedium: Medium? = null
@@ -34,9 +35,13 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
 
     var mIsVideo = false
 
+    private var mVolumeController: VolumeController? = null
+    private var mMuteInit: Boolean = false
+
     private val binding by viewBinding(FragmentHolderBinding::inflate)
 
     public override fun onCreate(savedInstanceState: Bundle?) {
+        showTransparentTop = true
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         if (checkAppSideloading()) {
@@ -44,36 +49,46 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
         }
 
         setupOptionsMenu()
-        refreshMenuItems()
-        handlePermission(getPermissionToRequest()) {
-            if (it) {
-                checkIntent(savedInstanceState)
-            } else {
-                toast(com.goodwy.commons.R.string.no_storage_permissions)
-                finish()
+        requestMediaPermissions {
+            checkIntent(savedInstanceState)
+        }
+
+        mVolumeController = VolumeController(this) { isMuted ->
+            if (mMuteInit) {
+                config.muteVideos = isMuted
+                updatePlayerMuteState()
             }
         }
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//
-//        if (config.bottomActions) {
-//            window.navigationBarColor = Color.TRANSPARENT
-//        } else {
-//            setTranslucentNavigation()
-//        }
+    override fun onResume() {
+        super.onResume()
+
+        if (config.bottomActions) {
+            window.navigationBarColor = Color.TRANSPARENT
+        } else {
+            setTranslucentNavigation()
+        }
 //
 //        if (config.blackBackground) {
 //            updateStatusbarColor(Color.BLACK)
 //        }
-//    }
+
+        window.updateStatusBarForegroundColor(Color.BLACK)
+        window.updateNavigationBarForegroundColor(Color.BLACK)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mVolumeController?.destroy()
+    }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         initBottomActionsLayout()
 
         binding.topShadow.layoutParams.height = statusBarHeight + actionBarHeight
+        binding.fragmentViewerToolbar.layoutParams.height = actionBarHeight
         (binding.fragmentViewerAppbar.layoutParams as RelativeLayout.LayoutParams).topMargin = statusBarHeight
         if (!portrait && navigationBarOnSide && navigationBarWidth > 0) {
             binding.fragmentViewerToolbar.setPadding(0, 0, navigationBarWidth, 0)
@@ -92,17 +107,26 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
             findItem(R.id.menu_share).isVisible = visibleBottomActions and BOTTOM_ACTION_SHARE == 0
             findItem(R.id.menu_show_on_map).isVisible = visibleBottomActions and BOTTOM_ACTION_SHOW_ON_MAP == 0
         }
+
+        if (visibleBottomActions != 0) {
+            updateBottomActionIcons()
+        }
     }
 
     private fun setupOptionsMenu() {
         (binding.fragmentViewerAppbar.layoutParams as RelativeLayout.LayoutParams).topMargin = statusBarHeight
+
+        val primaryColor = getProperPrimaryColor()
+        val white = Color.WHITE
+        val iconColor = if (baseConfig.topAppBarColorIcon) primaryColor else white
+        val titleColor = if (baseConfig.topAppBarColorTitle) primaryColor else white
         binding.fragmentViewerToolbar.apply {
-            setTitleTextColor(Color.WHITE)
-            overflowIcon = resources.getColoredDrawableWithColor(com.goodwy.commons.R.drawable.ic_three_dots_vector, Color.WHITE)
-            navigationIcon = resources.getColoredDrawableWithColor(com.goodwy.commons.R.drawable.ic_chevron_left_vector, Color.WHITE)
+            setTitleTextColor(titleColor)
+            overflowIcon = resources.getColoredDrawableWithColor(com.goodwy.commons.R.drawable.ic_three_dots_vector, iconColor)
+            navigationIcon = resources.getColoredDrawableWithColor(com.goodwy.commons.R.drawable.ic_chevron_left_vector, iconColor)
         }
 
-        updateMenuItemColors(binding.fragmentViewerToolbar.menu, forceWhiteIcons = true)
+        updateMenuItemColors(binding.fragmentViewerToolbar.menu, baseColor = iconColor, noContrastColor = true)
         binding.fragmentViewerToolbar.setOnMenuItemClickListener { menuItem ->
             if (mMedium == null || mUri == null) {
                 return@setOnMenuItemClickListener true
@@ -199,6 +223,7 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
         }
 
         binding.topShadow.layoutParams.height = statusBarHeight + actionBarHeight
+        binding.fragmentViewerToolbar.layoutParams.height = actionBarHeight
         if (!portrait && navigationBarOnSide && navigationBarWidth > 0) {
             binding.fragmentViewerToolbar.setPadding(0, 0, navigationBarWidth, 0)
         } else {
@@ -221,7 +246,10 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
 
         mIsVideo = type == TYPE_VIDEOS
         mMedium = Medium(null, filename, mUri.toString(), mUri!!.path!!.getParentPath(), 0, 0, file.length(), type, 0, false, 0L, 0)
-        binding.fragmentViewerToolbar.title = Html.fromHtml("<font color='${Color.WHITE.toHex()}'>${mMedium!!.name}</font>")
+        val primaryColor = getProperPrimaryColor()
+        val contrastColor = getBottomNavigationBackgroundColor().getContrastColor()
+        val titleColor = if (baseConfig.topAppBarColorTitle) primaryColor else contrastColor
+        binding.fragmentViewerToolbar.title = Html.fromHtml("<font color='${titleColor.toHex()}'>${mMedium!!.name}</font>")
         bundle.putSerializable(MEDIUM, mMedium)
 
         if (savedInstanceState == null) {
@@ -230,6 +258,8 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
             mFragment!!.arguments = bundle
             supportFragmentManager.beginTransaction().replace(R.id.fragment_placeholder, mFragment!!).commit()
         }
+        val isPlaying = (mFragment as? VideoFragment)?.mIsPlaying == true
+        updatePlayPause(!isPlaying)
 
         if (config.blackBackground) {
             binding.fragmentHolder.background = ColorDrawable(Color.BLACK)
@@ -246,6 +276,7 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
             mFragment?.fullscreenToggled(isFullscreen)
         }
 
+        refreshMenuItems()
         initBottomActions()
     }
 
@@ -256,36 +287,16 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
             return
         }
 
-        var isPanorama = false
-        val realPath = intent?.extras?.getString(REAL_FILE_PATH) ?: ""
-        try {
-            if (realPath.isNotEmpty()) {
-                val fis = FileInputStream(File(realPath))
-                parseFileChannel(realPath, fis.channel, 0, 0, 0) {
-                    isPanorama = true
-                }
-            }
-        } catch (ignored: Exception) {
-        } catch (ignored: OutOfMemoryError) {
-        }
-
         hideKeyboard()
-        if (isPanorama) {
-            Intent(applicationContext, PanoramaVideoActivity::class.java).apply {
-                putExtra(PATH, realPath)
-                startActivity(this)
+        val mimeType = getUriMimeType(mUri.toString(), newUri)
+        Intent(applicationContext, VideoPlayerActivity::class.java).apply {
+            setDataAndType(newUri, mimeType)
+            addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT)
+            if (intent.extras != null) {
+                putExtras(intent.extras!!)
             }
-        } else {
-            val mimeType = getUriMimeType(mUri.toString(), newUri)
-            Intent(applicationContext, VideoPlayerActivity::class.java).apply {
-                setDataAndType(newUri, mimeType)
-                addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT)
-                if (intent.extras != null) {
-                    putExtras(intent.extras!!)
-                }
 
-                startActivity(this)
-            }
+            startActivity(this)
         }
         finish()
     }
@@ -363,6 +374,7 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
         }
     }
 
+    @androidx.annotation.OptIn(UnstableApi::class)
     private fun initBottomActionButtons() {
         arrayListOf(
             binding.bottomActions.bottomFavorite,
@@ -380,6 +392,18 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
         ).forEach {
             it.beGone()
         }
+
+        val getBottomNavigationBackgroundColor = getBottomNavigationBackgroundColor()
+        val iconColor = if (baseConfig.topAppBarColorIcon) getProperPrimaryColor() else Color.WHITE
+        arrayListOf(
+            binding.bottomActions.bottomShare, binding.bottomActions.bottomPlayPause,
+            binding.bottomActions.bottomMute, binding.bottomActions.bottomEdit,
+            binding.bottomActions.bottomSetAs,
+        ).forEach {
+            it.applyColorFilter(iconColor)
+        }
+        //binding.bottomActions.bottomActionsWrapper.background.applyColorFilter(getBottomNavigationBackgroundColor)
+        binding.topShadow.background.applyColorFilter(getBottomNavigationBackgroundColor)
 
         val visibleBottomActions = if (config.bottomActions) config.visibleBottomActions else 0
         binding.bottomActions.bottomEdit.beVisibleIf(visibleBottomActions and BOTTOM_ACTION_EDIT != 0 && mMedium?.isImage() == true)
@@ -404,6 +428,15 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
         binding.bottomActions.bottomShowOnMap.beVisibleIf(visibleBottomActions and BOTTOM_ACTION_SHOW_ON_MAP != 0)
         binding.bottomActions.bottomShowOnMap.setOnClickListener {
             showFileOnMap(mUri!!.toString())
+        }
+
+        binding.bottomActions.bottomPlayPause.setOnClickListener {
+            (mFragment as? VideoFragment)?.togglePlayPause()
+        }
+
+        binding.bottomActions.bottomMute.setOnClickListener {
+            config.muteVideos = !config.muteVideos
+            updatePlayerMuteState()
         }
     }
 
@@ -438,5 +471,30 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
 
     override fun isSlideShowActive() = false
 
-    override fun updatePlayPause(play: Boolean) {}
+    override fun updatePlayPause(play: Boolean) {
+        if (play) {
+            binding.bottomActions.bottomPlayPause.setImageResource(com.goodwy.commons.R.drawable.ic_play_vector)
+        } else {
+            binding.bottomActions.bottomPlayPause.setImageResource(com.goodwy.commons.R.drawable.ic_pause_vector)
+        }
+    }
+
+    private fun updatePlayerMuteState() {
+        val isMuted = config.muteVideos
+        val drawableId = if (isMuted) R.drawable.ic_vector_speaker_off else R.drawable.ic_vector_speaker_on
+        binding.bottomActions.bottomMute.setImageResource(drawableId)
+        mMuteInit = true
+    }
+
+    private fun updateBottomActionIcons() {
+        if (mMedium == null) {
+            return
+        }
+
+        val isVideo = mMedium?.isVideo() == true || mMedium?.isGIF() == true
+        binding.bottomActions.bottomPlayPause.beVisibleIf(isVideo && config.visibleBottomActions and BOTTOM_ACTION_PLAY_PAUSE != 0)
+        binding.bottomActions.bottomMute.beVisibleIf(isVideo && config.visibleBottomActions and BOTTOM_ACTION_MUTE != 0)
+        binding.bottomActions.bottomResize.beVisibleIf(config.visibleBottomActions and BOTTOM_ACTION_RESIZE != 0 && mMedium?.isImage() == true)
+        updatePlayerMuteState()
+    }
 }

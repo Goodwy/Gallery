@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/playback_speed_holder"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/activity_margin">
+
+    <com.goodwy.commons.views.MyTextView
+        android:id="@+id/playback_speed_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/medium_margin"
+        android:text="@string/playback_speed"
+        android:textSize="@dimen/big_text_size" />
+
+    <com.goodwy.commons.views.MyTextView
+        android:id="@+id/playback_speed_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/playback_speed_title"
+        android:layout_alignBottom="@+id/playback_speed_title"
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/medium_margin"
+        android:gravity="center"
+        android:textSize="@dimen/big_text_size"
+        tools:text="1.00x" />
+
+    <ImageView
+        android:id="@+id/playback_speed_slow"
+        android:layout_width="@dimen/smaller_icon_size"
+        android:layout_height="@dimen/smaller_icon_size"
+        android:layout_marginStart="@dimen/medium_margin"
+        android:layout_marginBottom="@dimen/medium_margin"
+        android:layout_below="@+id/playback_speed_seekbar"
+        android:layout_alignStart="@+id/playback_speed_seekbar"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_minus_circle" />
+
+    <com.goodwy.commons.views.MyTextView
+        android:id="@+id/playbackSpeedX050"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/medium_margin"
+        android:layout_alignTop="@+id/playback_speed_slow"
+        android:layout_alignBottom="@+id/playback_speed_slow"
+        android:layout_toStartOf="@+id/playbackSpeedX100"
+        android:background="@drawable/button_background_16dp"
+        android:paddingHorizontal="@dimen/normal_margin"
+        android:gravity="center"
+        android:textSize="@dimen/big_text_size"
+        android:text="0,50x"
+        tools:ignore="HardcodedText" />
+
+    <com.goodwy.commons.views.MyTextView
+        android:id="@+id/playbackSpeedX100"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/playback_speed_slow"
+        android:layout_alignBottom="@+id/playback_speed_slow"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_background_16dp"
+        android:paddingHorizontal="@dimen/normal_margin"
+        android:gravity="center"
+        android:textSize="@dimen/big_text_size"
+        android:text="1,00x"
+        tools:ignore="HardcodedText" />
+
+    <com.goodwy.commons.views.MyTextView
+        android:id="@+id/playbackSpeedX150"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/medium_margin"
+        android:layout_alignTop="@+id/playback_speed_slow"
+        android:layout_alignBottom="@+id/playback_speed_slow"
+        android:layout_toEndOf="@+id/playbackSpeedX100"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_background_16dp"
+        android:paddingHorizontal="@dimen/normal_margin"
+        android:gravity="center"
+        android:textSize="@dimen/big_text_size"
+        android:text="1,50x"
+        tools:ignore="HardcodedText" />
+
+    <ImageView
+        android:id="@+id/playback_speed_fast"
+        android:layout_width="@dimen/smaller_icon_size"
+        android:layout_height="@dimen/smaller_icon_size"
+        android:layout_marginEnd="@dimen/medium_margin"
+        android:layout_marginBottom="@dimen/medium_margin"
+        android:layout_below="@+id/playback_speed_seekbar"
+        android:layout_alignEnd="@+id/playback_speed_seekbar"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_plus_circle" />
+
+    <com.goodwy.commons.views.MySeekBar
+        android:id="@+id/playback_speed_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/playback_speed_title"
+        android:layout_marginBottom="@dimen/medium_margin"
+        android:padding="@dimen/activity_margin" />
+
+</RelativeLayout>
