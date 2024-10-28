@@ -384,7 +384,7 @@ open class VideoPlayerActivity : SimpleActivity(), SeekBar.OnSeekBarChangeListen
             if (config.autoplayVideos) {
                 resumeVideo()
             } else {
-                binding.bottomVideoTimeHolder.videoTogglePlayPause.setImageResource(com.goodwy.commons.R.drawable.ic_play_vector)
+                binding.bottomVideoTimeHolder.videoTogglePlayPause.setImageResource(R.drawable.ic_play_vector)
             }
         }
     }
@@ -399,7 +399,7 @@ open class VideoPlayerActivity : SimpleActivity(), SeekBar.OnSeekBarChangeListen
     }
 
     private fun resumeVideo() {
-        binding.bottomVideoTimeHolder.videoTogglePlayPause.setImageResource(com.goodwy.commons.R.drawable.ic_pause_vector)
+        binding.bottomVideoTimeHolder.videoTogglePlayPause.setImageResource(R.drawable.ic_pause_vector)
         if (mExoPlayer == null) {
             return
         }
@@ -416,7 +416,7 @@ open class VideoPlayerActivity : SimpleActivity(), SeekBar.OnSeekBarChangeListen
     }
 
     private fun pauseVideo() {
-        binding.bottomVideoTimeHolder.videoTogglePlayPause.setImageResource(com.goodwy.commons.R.drawable.ic_play_vector)
+        binding.bottomVideoTimeHolder.videoTogglePlayPause.setImageResource(R.drawable.ic_play_vector)
         if (mExoPlayer == null) {
             return
         }
@@ -440,7 +440,13 @@ open class VideoPlayerActivity : SimpleActivity(), SeekBar.OnSeekBarChangeListen
 
     private fun updatePlayerMuteState() {
         val isMuted = config.muteVideos
-        val drawableId = if (isMuted) R.drawable.ic_vector_speaker_off else R.drawable.ic_vector_speaker_on
+        val drawableId = if (isMuted) {
+            mExoPlayer?.mute()
+            R.drawable.ic_vector_speaker_off
+        } else {
+            mExoPlayer?.unmute()
+            R.drawable.ic_vector_speaker_on
+        }
 
         binding.bottomVideoTimeHolder.videoToggleMute.setImageDrawable(
             AppCompatResources.getDrawable(this, drawableId)

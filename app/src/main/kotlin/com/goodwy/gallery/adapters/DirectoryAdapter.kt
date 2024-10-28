@@ -851,7 +851,7 @@ class DirectoryAdapter(
             dirPin.beVisibleIf(pinnedFolders.contains(directory.path))
             dirLocation.beVisibleIf(directory.location != LOCATION_INTERNAL)
             if (dirLocation.isVisible()) {
-                dirLocation.setImageResource(if (directory.location == LOCATION_SD) com.goodwy.commons.R.drawable.ic_sd_card_vector else com.goodwy.commons.R.drawable.ic_usb_vector)
+                dirLocation.setImageResource(if (directory.location == LOCATION_SD) R.drawable.ic_sd_card_vector else R.drawable.ic_usb_vector)
             }
 
             val itemCount = directory.subfoldersMediaCount

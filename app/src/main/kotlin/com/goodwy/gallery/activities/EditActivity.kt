@@ -1032,7 +1032,7 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
     override fun toggleUndoVisibility(visible: Boolean) {
         //bottom_draw_undo.beVisibleIf(visible)
         binding.editorToolbar.menu.findItem(R.id.undo).isEnabled = visible
-        val drawableId = if (visible) com.goodwy.commons.R.drawable.ic_undo_vector else R.drawable.ic_undo_gray
+        val drawableId = if (visible) R.drawable.ic_undo_vector else R.drawable.ic_undo_gray
         val iconColor = if (baseConfig.topAppBarColorIcon) getProperPrimaryColor() else Color.WHITE
         val drawable = resources.getColoredDrawableWithColor(this, drawableId, iconColor)
         binding.editorToolbar.menu.findItem(R.id.undo).icon = drawable
@@ -1041,7 +1041,7 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
     override fun toggleRedoVisibility(visible: Boolean) {
         //bottom_draw_redo.beVisibleIf(visible)
         binding.editorToolbar.menu.findItem(R.id.redo).isEnabled = visible
-        val drawableId = if (visible) com.goodwy.commons.R.drawable.ic_redo_vector else R.drawable.ic_redo_gray
+        val drawableId = if (visible) R.drawable.ic_redo_vector else R.drawable.ic_redo_gray
         val iconColor = if (baseConfig.topAppBarColorIcon) getProperPrimaryColor() else Color.WHITE
         val drawable = resources.getColoredDrawableWithColor(this, drawableId, iconColor)
         binding.editorToolbar.menu.findItem(R.id.redo).icon = drawable

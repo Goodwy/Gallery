@@ -1,5 +1,6 @@
 package com.goodwy.gallery.views
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.media.AudioManager
@@ -15,6 +16,7 @@ import com.goodwy.commons.extensions.onGlobalLayout
 import com.goodwy.gallery.R
 import com.goodwy.gallery.extensions.audioManager
 import com.goodwy.gallery.helpers.DRAG_THRESHOLD
+import kotlin.math.abs
 
 // allow horizontal swipes through the layout, else it can cause glitches at zoomed in images
 class MediaSideScroll(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -29,6 +31,7 @@ class MediaSideScroll(context: Context, attrs: AttributeSet) : RelativeLayout(co
     private var mIsBrightnessScroll = false
     private var mPassTouches = false
     private var dragThreshold = DRAG_THRESHOLD * context.resources.displayMetrics.density
+    private var init = false
 
     private var mSlideInfoText = ""
     private var mSlideInfoFadeHandler = Handler()
@@ -53,11 +56,12 @@ class MediaSideScroll(context: Context, attrs: AttributeSet) : RelativeLayout(co
         onGlobalLayout {
             mViewHeight = height
         }
+        init = true
     }
 
     private val gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
         override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-            singleTap(e.rawX, e.rawY)
+            if (init) singleTap(e.rawX, e.rawY)
             return true
         }
 
@@ -79,6 +83,7 @@ class MediaSideScroll(context: Context, attrs: AttributeSet) : RelativeLayout(co
         return super.dispatchTouchEvent(ev)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (mPassTouches && activity == null) {
             return false
@@ -104,9 +109,9 @@ class MediaSideScroll(context: Context, attrs: AttributeSet) : RelativeLayout(co
                 val diffX = mTouchDownX - event.rawX
                 val diffY = mTouchDownY - event.rawY
 
-                if (Math.abs(diffY) > dragThreshold && Math.abs(diffY) > Math.abs(diffX)) {
+                if (abs(diffY) > dragThreshold && abs(diffY) > abs(diffX)) {
                     var percent = ((diffY / mViewHeight) * 100).toInt() * 3
-                    percent = Math.min(100, Math.max(-100, percent))
+                    percent = 100.coerceAtMost((-100).coerceAtLeast(percent)) ?: 0
 
                     if ((percent == 100 && event.rawY > mLastTouchY) || (percent == -100 && event.rawY < mLastTouchY)) {
                         mTouchDownY = event.rawY
@@ -114,7 +119,7 @@ class MediaSideScroll(context: Context, attrs: AttributeSet) : RelativeLayout(co
                     }
 
                     percentChanged(percent)
-                } else if (Math.abs(diffX) > dragThreshold || Math.abs(diffY) > dragThreshold) {
+                } else if (abs(diffX) > dragThreshold || abs(diffY) > dragThreshold) {
                     if (!mPassTouches) {
                         event.action = MotionEvent.ACTION_DOWN
                         event.setLocation(event.rawX, event.rawY)
@@ -194,6 +199,7 @@ class MediaSideScroll(context: Context, attrs: AttributeSet) : RelativeLayout(co
         }, SLIDE_INFO_FADE_DELAY)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun showValue(percent: Int) {
         slideInfoView.apply {
             text = "$mSlideInfoText:\n$percent%"

@@ -613,9 +613,9 @@ class MediaAdapter(
             if (medium.isVideo()) {
                 playPortraitOutline?.setImageResource(
                     if (isListViewType) {
-                        com.goodwy.commons.R.drawable.ic_play_outline_vector
+                        R.drawable.ic_play_outline_vector
                     } else {
-                        com.goodwy.commons.R.drawable.ic_play_vector
+                        R.drawable.ic_play_vector
                     }
                 )
                 playPortraitOutline?.beVisible()

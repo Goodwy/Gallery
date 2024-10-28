@@ -343,7 +343,8 @@ class SettingsActivity : SimpleActivity() {
                 checkedItemId = baseConfig.overflowIcon + 1,
                 defaultItemId = OVERFLOW_ICON_HORIZONTAL + 1,
                 titleId = com.goodwy.strings.R.string.overflow_icon,
-                size = pixels(com.goodwy.commons.R.dimen.normal_icon_size).toInt()
+                size = pixels(com.goodwy.commons.R.dimen.normal_icon_size).toInt(),
+                color = getProperTextColor()
             ) { wasPositivePressed, newValue ->
                 if (wasPositivePressed) {
                     if (baseConfig.overflowIcon != newValue - 1) {

@@ -123,7 +123,7 @@
             app:tabIndicatorGravity="stretch"
             app:tabIndicatorHeight="48dp"
             app:tabMode="scrollable"
-            app:tabRippleColor="@android:color/transparent"
+            app:tabRippleColor="@null"
             app:tabSelectedTextColor="@android:color/white" />
 
     </RelativeLayout>

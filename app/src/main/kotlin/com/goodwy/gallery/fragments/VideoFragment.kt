@@ -766,7 +766,14 @@ class VideoFragment : ViewPagerFragment(), TextureView.SurfaceTextureListener,
     private fun updatePlayerMuteState() {
         val context = context ?: return
         val isMuted = mConfig.muteVideos
-        val drawableId = if (isMuted) R.drawable.ic_vector_speaker_off else R.drawable.ic_vector_speaker_on
+        val drawableId = if (isMuted) {
+            mExoPlayer?.mute()
+            R.drawable.ic_vector_speaker_off
+        } else {
+            mExoPlayer?.unmute()
+            R.drawable.ic_vector_speaker_on
+        }
+
         binding.bottomVideoTimeHolder.videoToggleMute.setImageDrawable(
             AppCompatResources.getDrawable(context, drawableId)
         )
@@ -797,7 +804,7 @@ class VideoFragment : ViewPagerFragment(), TextureView.SurfaceTextureListener,
         }
 
         if (!wasEnded || !mConfig.loopVideos) {
-            mPlayPauseButton.setImageResource(com.goodwy.commons.R.drawable.ic_pause_vector)
+            mPlayPauseButton.setImageResource(R.drawable.ic_pause_vector)
         }
 
         if (!mWasVideoStarted) {
@@ -829,7 +836,7 @@ class VideoFragment : ViewPagerFragment(), TextureView.SurfaceTextureListener,
             mExoPlayer?.playWhenReady = false
         }
 
-        mPlayPauseButton.setImageResource(com.goodwy.commons.R.drawable.ic_play_vector)
+        mPlayPauseButton.setImageResource(R.drawable.ic_play_vector)
         activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         mPositionAtPause = mExoPlayer?.currentPosition ?: 0L
     }

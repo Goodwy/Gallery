@@ -473,9 +473,9 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
 
     override fun updatePlayPause(play: Boolean) {
         if (play) {
-            binding.bottomActions.bottomPlayPause.setImageResource(com.goodwy.commons.R.drawable.ic_play_vector)
+            binding.bottomActions.bottomPlayPause.setImageResource(R.drawable.ic_play_vector)
         } else {
-            binding.bottomActions.bottomPlayPause.setImageResource(com.goodwy.commons.R.drawable.ic_pause_vector)
+            binding.bottomActions.bottomPlayPause.setImageResource(R.drawable.ic_pause_vector)
         }
     }
 

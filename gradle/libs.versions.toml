@@ -13,7 +13,7 @@ exif = "1.0.1"
 #Room
 room = "2.6.1"
 #Goodwy
-right-commons = "47ff838f0b"
+right-commons = "c3a91f4975"
 rustore = "5.1.1"
 behavioRule = "1.0.1"
 rxAnimation = "2.1.1"
@@ -45,8 +45,8 @@ app-build-javaVersion = "VERSION_17"
 app-build-kotlinJVMTarget = "17"
 #versioning
 app-version-appId = "com.goodwy.gallery"
-app-version-versionCode = "550"
-app-version-versionName = "5.5.0"
+app-version-versionCode = "600"
+app-version-versionName = "6.0.0"
 [libraries]
 #AndroidX
 androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3Exoplayer" }

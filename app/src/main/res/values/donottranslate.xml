@@ -6,7 +6,7 @@
     <string name="package_name">com.goodwy.gallery</string>
 
     <!-- Release notes -->
-    <string name="release_550">
+    <string name="release_600">
         Changed theme logic\n
         Improved app lock logic and user interface\n
         The mute logic has changed. Now muting an app does not affect the system, but system sound settings affect the app\n

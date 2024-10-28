@@ -1498,7 +1498,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
     private fun checkWhatsNewDialog() {
         arrayListOf<Release>().apply {
             add(Release(504, R.string.release_504))
-            add(Release(550, R.string.release_550))
+            add(Release(600, R.string.release_600))
             checkWhatsNew(this, BuildConfig.VERSION_CODE)
         }
     }

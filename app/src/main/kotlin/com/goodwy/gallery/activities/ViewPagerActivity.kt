@@ -766,12 +766,12 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
     private fun getChangeOrientationIcon(): Int {
         return if (mIsOrientationLocked) {
             if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-                com.goodwy.commons.R.drawable.ic_orientation_portrait_vector
+                R.drawable.ic_orientation_portrait_vector
             } else {
-                com.goodwy.commons.R.drawable.ic_orientation_landscape_vector
+                R.drawable.ic_orientation_landscape_vector
             }
         } else {
-            com.goodwy.commons.R.drawable.ic_orientation_auto_vector
+            R.drawable.ic_orientation_auto_vector
         }
     }
 
@@ -1020,7 +1020,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         binding.bottomActions.bottomFavorite.setImageResource(favoriteIcon)
 
         val hideIcon =
-            if (medium.isHidden()) com.goodwy.commons.R.drawable.ic_unhide_vector else com.goodwy.commons.R.drawable.ic_hide_vector
+            if (medium.isHidden()) com.goodwy.commons.R.drawable.ic_unhide_vector else R.drawable.ic_hide_vector
         binding.bottomActions.bottomToggleFileVisibility.setImageResource(hideIcon)
 
         binding.bottomActions.bottomRotate.beVisibleIf(config.visibleBottomActions and BOTTOM_ACTION_ROTATE != 0 && getCurrentMedium()?.isImage() == true)
@@ -1508,9 +1508,9 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
 
     override fun updatePlayPause(play: Boolean) {
         if (play) {
-            binding.bottomActions.bottomPlayPause.setImageResource(com.goodwy.commons.R.drawable.ic_play_vector)
+            binding.bottomActions.bottomPlayPause.setImageResource(R.drawable.ic_play_vector)
         } else {
-            binding.bottomActions.bottomPlayPause.setImageResource(com.goodwy.commons.R.drawable.ic_pause_vector)
+            binding.bottomActions.bottomPlayPause.setImageResource(R.drawable.ic_pause_vector)
         }
     }
 }
