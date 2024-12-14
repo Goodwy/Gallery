@@ -3,6 +3,7 @@ package com.goodwy.gallery.activities
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.RemoteViews
@@ -43,10 +44,13 @@ class WidgetConfigureActivity : SimpleActivity() {
             finish()
         }
 
+        binding.folderPickerHolder.background.applyColorFilter(getProperBackgroundColor())
+        binding.configTextColorHolder.beVisibleIf(config.showWidgetFolderName)
+
         binding.configSave.setOnClickListener { saveConfig() }
         binding.configBgColor.setOnClickListener { pickBackgroundColor() }
-        binding.configTextColor.setOnClickListener { pickTextColor() }
-        binding.folderPickerValue.setOnClickListener { changeSelectedFolder() }
+        binding.configTextColorHolder.setOnClickListener { pickTextColor() }
+        binding.folderPickerValueHolder.setOnClickListener { changeSelectedFolder() }
         //binding.configImageHolder.setOnClickListener { changeSelectedFolder() }
         binding.configImage.setOnClickListener { changeSelectedFolder() }
         binding.configFolderName.setOnClickListener { pickTextColor() }
@@ -62,6 +66,7 @@ class WidgetConfigureActivity : SimpleActivity() {
         binding.folderPickerShowFolderNameHolder.setOnClickListener {
             binding.folderPickerShowFolderName.toggle()
             handleFolderNameDisplay()
+            binding.configTextColorHolder.beVisibleIf(binding.folderPickerShowFolderName.isChecked)
         }
 
         getCachedDirectories(false, false) {
@@ -88,7 +93,7 @@ class WidgetConfigureActivity : SimpleActivity() {
         }
         updateBackgroundColor()
 
-        mTextColor = config.widgetTextColor
+        mTextColor = config.widgetLabelColor
         if (mTextColor == resources.getColor(com.goodwy.commons.R.color.default_widget_text_color) && isDynamicTheme()) {
             mTextColor = resources.getColor(com.goodwy.commons.R.color.you_primary_color, theme)
         }
@@ -119,7 +124,7 @@ class WidgetConfigureActivity : SimpleActivity() {
     private fun storeWidgetColors() {
         config.apply {
             widgetBgColor = mBgColor
-            widgetTextColor = mTextColor
+            widgetLabelColor = mTextColor
         }
     }
 
@@ -133,19 +138,22 @@ class WidgetConfigureActivity : SimpleActivity() {
     private fun updateTextColor() {
         binding.configFolderName.setTextColor(mTextColor)
         binding.configTextColor.setFillWithStroke(mTextColor, mTextColor)
-        binding.configSave.setTextColor(getProperPrimaryColor()) //getProperPrimaryColor().getContrastColor()
+        binding.configSave.setTextColor(getProperPrimaryColor().getContrastColor())
     }
 
     private fun updateBackgroundColor() {
         mBgColor = mBgColorWithoutTransparency.adjustAlpha(mBgAlpha)
 //        binding.configImageHolder.background.applyColorFilter(mBgColor)
         binding.configBgColor.setFillWithStroke(mBgColor, mBgColor)
-//        binding.configSave.backgroundTintList = ColorStateList.valueOf(getProperPrimaryColor())
+        binding.configSave.backgroundTintList = ColorStateList.valueOf(getProperPrimaryColor())
     }
 
     private fun pickBackgroundColor() {
-        ColorPickerDialog(this, mBgColorWithoutTransparency) { wasPositivePressed, color ->
-            if (wasPositivePressed) {
+        ColorPickerDialog(this, mBgColorWithoutTransparency,
+            addDefaultColorButton = true,
+            colorDefault = resources.getColor(com.goodwy.commons.R.color.default_widget_bg_color)
+        ) { wasPositivePressed, color, wasDefaultPressed ->
+            if (wasPositivePressed || wasDefaultPressed) {
                 mBgColorWithoutTransparency = color
                 updateBackgroundColor()
             }
@@ -153,8 +161,11 @@ class WidgetConfigureActivity : SimpleActivity() {
     }
 
     private fun pickTextColor() {
-        ColorPickerDialog(this, mTextColor) { wasPositivePressed, color ->
-            if (wasPositivePressed) {
+        ColorPickerDialog(this, mTextColor,
+            addDefaultColorButton = true,
+            colorDefault = resources.getColor(com.goodwy.commons.R.color.default_widget_label_color)
+        ) { wasPositivePressed, color, wasDefaultPressed ->
+            if (wasPositivePressed || wasDefaultPressed) {
                 mTextColor = color
                 updateTextColor()
             }

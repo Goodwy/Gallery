@@ -18,6 +18,8 @@
     <string name="by_last_modified_yearly_g">Viimati muudetud (igal aastal)</string>
     <string name="by_date_taken_yearly_g">Võetud kuupäev (igal aastal)</string>
 
+    <string name="hide_grouping_button">Peida rühmitamisnupp</string>
     <string name="eraser">Kustutuskumm</string>
     <string name="eyedropper">Pipetti</string>
+    <string name="hide_grouping_bar">Peida rühmitamispaneel</string>
 </resources>

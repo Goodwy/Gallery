@@ -6,16 +6,12 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/widget_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <ImageView
         android:id="@+id/widget_imageview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/widget_folder_name"
         android:layout_centerInParent="true"
+        android:contentDescription="@null"
         android:paddingLeft="@dimen/tiny_margin"
         android:paddingTop="@dimen/small_margin"
         android:paddingRight="@dimen/tiny_margin"
@@ -28,11 +24,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:ellipsize="end"
-        android:gravity="center"
+        android:gravity="center|bottom"
         android:includeFontPadding="false"
         android:lines="1"
-        android:padding="@dimen/tiny_margin"
-        android:textSize="@dimen/bigger_text_size"
+        android:paddingTop="@dimen/small_margin"
+        android:paddingHorizontal="@dimen/tiny_margin"
+        android:textSize="13sp"
+        android:textColor="@color/white"
         tools:text="@string/internal" />
 
 </RelativeLayout>

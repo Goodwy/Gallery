@@ -18,6 +18,8 @@
     <string name="by_last_modified_yearly_g">Zadnjoj promjeni (godišnje)</string>
     <string name="by_date_taken_yearly_g">Datumu snimanja (godišnje)</string>
 
+    <string name="hide_grouping_button">Gumb Sakrij grupiranje</string>
     <string name="eraser">Gumica za brisanje</string>
     <string name="eyedropper">Kapaljka za oči</string>
+    <string name="hide_grouping_bar">Sakrij ploču za grupiranje</string>
 </resources>

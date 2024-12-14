@@ -13,8 +13,7 @@ exif = "1.0.1"
 #Room
 room = "2.6.1"
 #Goodwy
-right-commons = "c3a91f4975"
-rustore = "5.1.1"
+right-commons = "a6d473bc2e"
 behavioRule = "1.0.1"
 rxAnimation = "2.1.1"
 androidx-lifecycleprocess = "2.7.0"
@@ -45,8 +44,8 @@ app-build-javaVersion = "VERSION_17"
 app-build-kotlinJVMTarget = "17"
 #versioning
 app-version-appId = "com.goodwy.gallery"
-app-version-versionCode = "600"
-app-version-versionName = "6.0.0"
+app-version-versionCode = "601"
+app-version-versionName = "6.0.1"
 [libraries]
 #AndroidX
 androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3Exoplayer" }
@@ -60,7 +59,6 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 #Goodwy
 goodwy-commons = { module = "com.github.Goodwy:Goodwy-Commons", version.ref = "right-commons" }
-rustore-client = { module = "ru.rustore.sdk:billingclient", version.ref = "rustore" }
 behavio-rule = { module = "com.github.Liverm0r:BehavioRule", version.ref = "behavioRule" }
 rx-animation = { module = "com.mikhaellopez:rxanimation", version.ref = "rxAnimation" }
 androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycleprocess" }

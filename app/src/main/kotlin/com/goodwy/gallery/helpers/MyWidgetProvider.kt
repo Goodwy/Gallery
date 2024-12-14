@@ -24,6 +24,7 @@ import com.goodwy.gallery.extensions.directoryDB
 import com.goodwy.gallery.extensions.getFolderNameFromPath
 import com.goodwy.gallery.extensions.widgetsDB
 import com.goodwy.gallery.models.Widget
+import kotlin.math.max
 
 class MyWidgetProvider : AppWidgetProvider() {
     private fun setupAppOpenIntent(context: Context, views: RemoteViews, id: Int, widget: Widget) {
@@ -43,28 +44,30 @@ class MyWidgetProvider : AppWidgetProvider() {
                 val views = RemoteViews(context.packageName, R.layout.widget).apply {
                     //applyColorFilter(R.id.widget_background, config.widgetBgColor)
                     setVisibleIf(R.id.widget_folder_name, config.showWidgetFolderName)
-                    setTextColor(R.id.widget_folder_name, config.widgetTextColor)
+                    setTextColor(R.id.widget_folder_name, config.widgetLabelColor)
                     setText(R.id.widget_folder_name, context.getFolderNameFromPath(it.folderPath))
                 }
 
                 val path = context.directoryDB.getDirectoryThumbnail(it.folderPath) ?: return@forEach
-                val options = RequestOptions()
-                    .signature(path.getFileSignature())
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-
-                if (context.config.cropThumbnails) {
-                    options.centerCrop()
-                } else {
-                    options.fitCenter()
-                }
+//                val options = RequestOptions()
+//                    .signature(path.getFileSignature())
+//                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+//
+//                if (context.config.cropThumbnails) {
+//                    options.centerCrop()
+//                } else {
+//                    options.fitCenter()
+//                }
 
                 val density = context.resources.displayMetrics.density
                 val appWidgetOptions = appWidgetManager.getAppWidgetOptions(appWidgetIds.first())
                 val width = appWidgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
                 val height = appWidgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
 
-                val widgetSize = (Math.max(width, height) * density).toInt()
-                val radius = context.resources.getDimensionPixelSize(com.goodwy.commons.R.dimen.dialog_corner_radius)
+                val widgetSize = (max(width, height) * density).toInt()
+                val radius =
+                    if (widgetSize < 200) context.resources.getDimensionPixelSize(com.goodwy.commons.R.dimen.activity_margin)
+                    else context.resources.getDimensionPixelSize(com.goodwy.commons.R.dimen.dialog_corner_radius)
                 try {
                     val image = Glide.with(context)
                         .asBitmap()

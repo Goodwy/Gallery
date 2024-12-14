@@ -1,5 +1,6 @@
 package com.goodwy.gallery.adapters
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
@@ -565,6 +566,7 @@ class MediaAdapter(
 
     private fun getItemWithKey(key: Int): Medium? = media.firstOrNull { (it as? Medium)?.path?.hashCode() == key } as? Medium
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateMedia(newMedia: ArrayList<ThumbnailItem>) {
         val thumbnailItems = newMedia.clone() as ArrayList<ThumbnailItem>
         if (thumbnailItems.hashCode() != currentMediaHash) {
@@ -575,6 +577,7 @@ class MediaAdapter(
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateDisplayFilenames(displayFilenames: Boolean) {
         this.displayFilenames = displayFilenames
         notifyDataSetChanged()
@@ -739,7 +742,8 @@ class MediaAdapter(
             realIndex++
         }
 
-        return (media[realIndex] as? Medium)?.getBubbleText(sorting, activity, dateFormat, timeFormat) ?: ""
+        return if (realIndex >= 0 && realIndex < media.size) (media[realIndex] as? Medium)?.getBubbleText(sorting, activity, dateFormat, timeFormat) ?: ""
+        else ""
     }
 
     private fun bindItem(view: View, medium: Medium): MediaItemBinding {

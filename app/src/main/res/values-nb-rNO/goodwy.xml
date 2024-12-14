@@ -18,6 +18,8 @@
     <string name="by_last_modified_yearly_g">Sist endret (årlig)</string>
     <string name="by_date_taken_yearly_g">Dato tatt (årlig)</string>
 
+    <string name="hide_grouping_button">Skjul gruppering-knapp</string>
     <string name="eraser">Viskelær</string>
     <string name="eyedropper">Pipette</string>
+    <string name="hide_grouping_bar">Skjul grupperingspanel</string>
 </resources>

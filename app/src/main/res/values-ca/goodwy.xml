@@ -18,6 +18,8 @@
     <string name="by_last_modified_yearly_g">Última modificació (anualment)</string>
     <string name="by_date_taken_yearly_g">Data de presa (anualment)</string>
 
+    <string name="hide_grouping_button">Botó Amaga l\'agrupació</string>
     <string name="eraser">Goma d\'esborrar</string>
     <string name="eyedropper">Comptagotes</string>
+    <string name="hide_grouping_bar">Amaga el tauler d\'agrupació</string>
 </resources>

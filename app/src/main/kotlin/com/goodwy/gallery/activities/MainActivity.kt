@@ -1,5 +1,6 @@
 package com.goodwy.gallery.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ClipData
 import android.content.Intent
@@ -199,6 +200,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
         mTempShowHiddenHandler.removeCallbacksAndMessages(null)
     }
 
+    @SuppressLint("UnsafeIntentLaunch")
     override fun onResume() {
         super.onResume()
         updateMenuColors()
@@ -318,7 +320,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             if (mCurrentPathPrefix.isEmpty()) {
                 super.onBackPressed()
             } else {
-                mOpenedSubfolders.removeLast()
+                mOpenedSubfolders.removeAt(mOpenedSubfolders.lastIndex)
                 mCurrentPathPrefix = mOpenedSubfolders.last()
                 setupAdapter(mDirs)
             }
@@ -1499,6 +1501,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
         arrayListOf<Release>().apply {
             add(Release(504, R.string.release_504))
             add(Release(600, R.string.release_600))
+            add(Release(601, R.string.release_601))
             checkWhatsNew(this, BuildConfig.VERSION_CODE)
         }
     }

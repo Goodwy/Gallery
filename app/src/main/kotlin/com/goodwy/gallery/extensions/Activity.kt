@@ -115,7 +115,7 @@ fun SimpleActivity.launchAbout() {
 
     if (!resources.getBoolean(com.goodwy.commons.R.bool.hide_google_relations)) {
         faqItems.add(FAQItem(com.goodwy.commons.R.string.faq_2_title_commons, com.goodwy.strings.R.string.faq_2_text_commons_g))
-        faqItems.add(FAQItem(com.goodwy.commons.R.string.faq_6_title_commons, com.goodwy.commons.R.string.faq_6_text_commons))
+        faqItems.add(FAQItem(com.goodwy.commons.R.string.faq_6_title_commons, com.goodwy.strings.R.string.faq_6_text_commons_g))
         faqItems.add(FAQItem(com.goodwy.commons.R.string.faq_7_title_commons, com.goodwy.commons.R.string.faq_7_text_commons))
         faqItems.add(FAQItem(com.goodwy.commons.R.string.faq_10_title_commons, com.goodwy.commons.R.string.faq_10_text_commons))
     }

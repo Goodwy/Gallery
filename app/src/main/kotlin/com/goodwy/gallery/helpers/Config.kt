@@ -588,4 +588,12 @@ class Config(context: Context) : BaseConfig(context) {
     var showWarning: Boolean
         get() = prefs.getBoolean(SHOW_WARNING, true)
         set(showWarning) = prefs.edit().putBoolean(SHOW_WARNING, showWarning).apply()
+
+    var hideGroupingBar: Boolean
+        get() = prefs.getBoolean(HIDE_GROUPING_BAR, false)
+        set(hideGroupingBar) = prefs.edit().putBoolean(HIDE_GROUPING_BAR, hideGroupingBar).apply()
+
+    var hideGroupingButton: Boolean
+        get() = prefs.getBoolean(HIDE_GROUPING_BUTTON, false)
+        set(hideGroupingButton) = prefs.edit().putBoolean(HIDE_GROUPING_BUTTON, hideGroupingButton).apply()
 }

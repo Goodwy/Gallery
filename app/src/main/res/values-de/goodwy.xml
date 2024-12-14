@@ -18,6 +18,8 @@
     <string name="by_last_modified_yearly_g">Zuletzt geändert (jährlich)</string>
     <string name="by_date_taken_yearly_g">Aufnahmedatum (jährlich)</string>
 
+    <string name="hide_grouping_button">Schaltfläche \"Gruppierung ausblenden\"</string>
     <string name="eraser">Radiergummi</string>
     <string name="eyedropper">Pipette</string>
+    <string name="hide_grouping_bar">Gruppierungsfeld ausblenden</string>
 </resources>

@@ -17,6 +17,8 @@
     <string name="by_last_modified_yearly_g">Last modified (yearly)</string>
     <string name="by_date_taken_yearly_g">Date taken (yearly)</string>
 
+    <string name="hide_grouping_button">دکمه مخفی کردن گروه بندی</string>
     <string name="eraser">پاک کن</string>
     <string name="eyedropper">قطره چشم</string>
+    <string name="hide_grouping_bar">پنهان کردن پنل گروه بندی</string>
 </resources>

@@ -616,7 +616,7 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
         updateBrushSize(config.lastEditorBrushSize)
 
         binding.bottomEditorDrawActions.bottomDrawColorClickable.setOnClickListener {
-            ColorPickerDialog(this, drawColor) { wasPositivePressed, color ->
+            ColorPickerDialog(this, drawColor) { wasPositivePressed, color, _ ->
                 if (wasPositivePressed) {
                     updateDrawColor(color)
                 }

@@ -17,6 +17,8 @@
     <string name="all_photos">Все фото</string>
     <string name="by_last_modified_yearly_g">Последнее изменение (год)</string>
     <string name="by_date_taken_yearly_g">Дата съёмки (год)</string>
+    <string name="hide_grouping_bar">Скрыть панель группировки</string>
+    <string name="hide_grouping_button">Скрыть кнопку группировки</string>
 
     <string name="eraser">Ластик</string>
     <string name="eyedropper">Пипетка</string>

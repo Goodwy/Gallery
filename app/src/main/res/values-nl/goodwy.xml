@@ -18,6 +18,8 @@
     <string name="by_last_modified_yearly_g">Laatst gewijzigd (jaarlijks)</string>
     <string name="by_date_taken_yearly_g">Opnamedatum (jaarlijks)</string>
 
+    <string name="hide_grouping_button">Knop Groeperen verbergen</string>
     <string name="eraser">Gom</string>
     <string name="eyedropper">Pipet</string>
+    <string name="hide_grouping_bar">Groeperingspaneel verbergen</string>
 </resources>

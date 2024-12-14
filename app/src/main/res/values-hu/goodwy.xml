@@ -18,6 +18,8 @@
     <string name="by_last_modified_yearly_g">Utoljára módosítva (évi)</string>
     <string name="by_date_taken_yearly_g">Felvétel dátuma (évi)</string>
 
+    <string name="hide_grouping_button">Csoportosítás elrejtése gomb</string>
     <string name="eraser">Radír</string>
     <string name="eyedropper">Szemcseppentő</string>
+    <string name="hide_grouping_bar">Csoportosítási panel elrejtése</string>
 </resources>

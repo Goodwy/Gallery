@@ -103,6 +103,9 @@ const val SEARCH_ALL_FILES_BY_DEFAULT = "search_all_files_by_default"
 const val LAST_EXPORTED_FAVORITES_FOLDER = "last_exported_favorites_folder"
 const val SHOW_PERMISSION_RATIONALE = "show_permission_rationale"
 const val SHOW_WARNING = "show_warning"
+// Goodwy
+const val HIDE_GROUPING_BAR = "hide_grouping_bar"
+const val HIDE_GROUPING_BUTTON = "hide_grouping_button"
 
 // slideshow
 const val SLIDESHOW_INTERVAL = "slideshow_interval"

@@ -18,6 +18,8 @@
     <string name="by_last_modified_yearly_g">Son değiştirilme (yıllık)</string>
     <string name="by_date_taken_yearly_g">Çekildiği tarih (yıllık)</string>
 
+    <string name="hide_grouping_button">Gruplandırmayı gizle düğmesi</string>
     <string name="eraser">Silgi</string>
     <string name="eyedropper">Damlalık</string>
+    <string name="hide_grouping_bar">Gruplandırma panelini gizle</string>
 </resources>

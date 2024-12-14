@@ -45,7 +45,7 @@ class SettingsActivity : SimpleActivity() {
     private var mRecycleBinContentSize = 0L
     private val binding by viewBinding(ActivitySettingsBinding::inflate)
     private val purchaseHelper = PurchaseHelper(this)
-    private val ruStoreHelper = RuStoreHelper(this)
+    private var ruStoreHelper: RuStoreHelper? = null
     private val productIdX1 = BuildConfig.PRODUCT_ID_X1
     private val productIdX2 = BuildConfig.PRODUCT_ID_X2
     private val productIdX3 = BuildConfig.PRODUCT_ID_X3
@@ -116,10 +116,11 @@ class SettingsActivity : SimpleActivity() {
         }
         if (isRuStoreInstalled()) {
             //RuStore
-            ruStoreHelper.checkPurchasesAvailability()
+            ruStoreHelper = RuStoreHelper()
+            ruStoreHelper!!.checkPurchasesAvailability(this@SettingsActivity)
 
             lifecycleScope.launch {
-                ruStoreHelper.eventStart
+                ruStoreHelper!!.eventStart
                     .flowWithLifecycle(lifecycle)
                     .collect { event ->
                         handleEventStart(event)
@@ -127,12 +128,12 @@ class SettingsActivity : SimpleActivity() {
             }
 
             lifecycleScope.launch {
-                ruStoreHelper.statePurchased
+                ruStoreHelper!!.statePurchased
                     .flowWithLifecycle(lifecycle)
                     .collect { state ->
                         //update of purchased
                         if (!state.isLoading && ruStoreIsConnected) {
-                            baseConfig.isProRuStore = state.purchases.firstOrNull() != null
+                            config.isProRuStore = state.purchases.firstOrNull() != null
                             updatePro()
                         }
                     }
@@ -155,6 +156,8 @@ class SettingsActivity : SimpleActivity() {
         setupManageIncludedFolders()
         setupManageExcludedFolders()
         setupManageHiddenFolders()
+        setupHideGroupingBar()
+        setupHideGroupingButton()
         setupShowHiddenItems()
         setupSearchAllFiles()
         setupFileLoadingPriority()
@@ -329,7 +332,7 @@ class SettingsActivity : SimpleActivity() {
 
     private fun setupOverflowIcon() = binding.apply {
         settingsOverflowIcon.applyColorFilter(getProperTextColor())
-        settingsOverflowIcon.setImageResource(getOverflowIcon(baseConfig.overflowIcon))
+        settingsOverflowIcon.setImageResource(getOverflowIcon(config.overflowIcon))
         settingsOverflowIconHolder.setOnClickListener {
             val items = arrayListOf(
                 com.goodwy.commons.R.drawable.ic_more_horiz,
@@ -340,16 +343,16 @@ class SettingsActivity : SimpleActivity() {
             IconListDialog(
                 activity = this@SettingsActivity,
                 items = items,
-                checkedItemId = baseConfig.overflowIcon + 1,
+                checkedItemId = config.overflowIcon + 1,
                 defaultItemId = OVERFLOW_ICON_HORIZONTAL + 1,
                 titleId = com.goodwy.strings.R.string.overflow_icon,
                 size = pixels(com.goodwy.commons.R.dimen.normal_icon_size).toInt(),
                 color = getProperTextColor()
             ) { wasPositivePressed, newValue ->
                 if (wasPositivePressed) {
-                    if (baseConfig.overflowIcon != newValue - 1) {
-                        baseConfig.overflowIcon = newValue - 1
-                        settingsOverflowIcon.setImageResource(getOverflowIcon(baseConfig.overflowIcon))
+                    if (config.overflowIcon != newValue - 1) {
+                        config.overflowIcon = newValue - 1
+                        settingsOverflowIcon.setImageResource(getOverflowIcon(config.overflowIcon))
                     }
                 }
             }
@@ -435,6 +438,7 @@ class SettingsActivity : SimpleActivity() {
         binding.settingsManageIncludedFoldersSize.text = config.includedFolders.size.toString()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setupManageExcludedFolders() {
         binding.settingsManageExcludedFoldersHolder.setOnClickListener {
             handleExcludedFolderPasswordProtection {
@@ -444,6 +448,7 @@ class SettingsActivity : SimpleActivity() {
         binding.settingsManageExcludedFoldersSize.text = config.excludedFolders.size.toString()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setupManageHiddenFolders() {
         binding.settingsManageHiddenFoldersHolder.beGoneIf(isQPlus())
         binding.settingsManageHiddenFoldersHolder.setOnClickListener {
@@ -455,6 +460,26 @@ class SettingsActivity : SimpleActivity() {
             runOnUiThread {
                 binding.settingsManageHiddenFoldersSize.text = it.size.toString()
             }
+        }
+    }
+
+    private fun setupHideGroupingBar() {
+        binding.settingsHideGroupingBar.isChecked = config.hideGroupingBar
+        binding.settingsHideGroupingBarHolder.setOnClickListener {
+            binding.settingsHideGroupingBar.toggle()
+            config.hideGroupingBar = binding.settingsHideGroupingBar.isChecked
+            binding.settingsHideGroupingButtonHolder.beGoneIf(config.hideGroupingBar)
+            config.tabsChanged = true
+        }
+    }
+
+    private fun setupHideGroupingButton() {
+        binding.settingsHideGroupingButtonHolder.beGoneIf(config.hideGroupingBar)
+        binding.settingsHideGroupingButton.isChecked = config.hideGroupingButton
+        binding.settingsHideGroupingButtonHolder.setOnClickListener {
+            binding.settingsHideGroupingButton.toggle()
+            config.hideGroupingButton = binding.settingsHideGroupingButton.isChecked
+            config.tabsChanged = true
         }
     }
 
@@ -1049,7 +1074,7 @@ class SettingsActivity : SimpleActivity() {
     }
 
     private fun getExportFavoritesFilename(): String {
-        val appName = baseConfig.appId.removeSuffix(".debug").removeSuffix(".pro").removePrefix("com.simplemobiletools.")
+        val appName = baseConfig.appId.removeSuffix(".debug").removeSuffix(".pro").removePrefix("com.goodwy.")
         return "$appName-favorites_${getCurrentFormattedDateTime()}"
     }
 
@@ -1105,19 +1130,26 @@ class SettingsActivity : SimpleActivity() {
     private fun setupExportSettings() {
         binding.settingsExportHolder.setOnClickListener {
             val configItems = LinkedHashMap<String, Any>().apply {
+                put(TOP_APP_BAR_COLOR_ICON, config.topAppBarColorIcon)
+                put(TOP_APP_BAR_COLOR_TITLE, config.topAppBarColorTitle)
+                put(TEXT_CURSOR_COLOR, config.textCursorColor)
                 put(TEXT_COLOR, config.textColor)
                 put(BACKGROUND_COLOR, config.backgroundColor)
                 put(PRIMARY_COLOR, config.primaryColor)
                 put(ACCENT_COLOR, config.accentColor)
+                put(OVERFLOW_ICON, config.overflowIcon)
                 put(APP_ICON_COLOR, config.appIconColor)
                 put(USE_ENGLISH, config.useEnglish)
                 put(WAS_USE_ENGLISH_TOGGLED, config.wasUseEnglishToggled)
                 put(WIDGET_BG_COLOR, config.widgetBgColor)
                 put(WIDGET_TEXT_COLOR, config.widgetTextColor)
+                put(WIDGET_LABEL_COLOR, config.widgetLabelColor)
                 put(DATE_FORMAT, config.dateFormat)
                 put(USE_24_HOUR_FORMAT, config.use24HourFormat)
                 put(INCLUDED_FOLDERS, TextUtils.join(",", config.includedFolders))
                 put(EXCLUDED_FOLDERS, TextUtils.join(",", config.excludedFolders))
+                put(HIDE_GROUPING_BAR, config.hideGroupingBar)
+                put(HIDE_GROUPING_BUTTON, config.hideGroupingButton)
                 put(SHOW_HIDDEN_MEDIA, config.showHiddenMedia)
                 put(FILE_LOADING_PRIORITY, config.fileLoadingPriority)
                 put(AUTOPLAY_VIDEOS, config.autoplayVideos)
@@ -1242,10 +1274,14 @@ class SettingsActivity : SimpleActivity() {
 
         for ((key, value) in configValues) {
             when (key) {
+                TOP_APP_BAR_COLOR_ICON -> config.topAppBarColorIcon = value.toBoolean()
+                TOP_APP_BAR_COLOR_TITLE -> config.topAppBarColorTitle = value.toBoolean()
+                TEXT_CURSOR_COLOR -> config.textCursorColor = value.toInt()
                 TEXT_COLOR -> config.textColor = value.toInt()
                 BACKGROUND_COLOR -> config.backgroundColor = value.toInt()
                 PRIMARY_COLOR -> config.primaryColor = value.toInt()
                 ACCENT_COLOR -> config.accentColor = value.toInt()
+                OVERFLOW_ICON -> config.overflowIcon = value.toInt()
                 APP_ICON_COLOR -> {
                     if (getAppIconColors().contains(value.toInt())) {
                         config.appIconColor = value.toInt()
@@ -1258,10 +1294,13 @@ class SettingsActivity : SimpleActivity() {
                 WAS_USE_ENGLISH_TOGGLED -> config.wasUseEnglishToggled = value.toBoolean()
                 WIDGET_BG_COLOR -> config.widgetBgColor = value.toInt()
                 WIDGET_TEXT_COLOR -> config.widgetTextColor = value.toInt()
+                WIDGET_LABEL_COLOR -> config.widgetLabelColor = value.toInt()
                 DATE_FORMAT -> config.dateFormat = value.toString()
                 USE_24_HOUR_FORMAT -> config.use24HourFormat = value.toBoolean()
                 INCLUDED_FOLDERS -> config.addIncludedFolders(value.toStringSet())
                 EXCLUDED_FOLDERS -> config.addExcludedFolders(value.toStringSet())
+                HIDE_GROUPING_BAR -> config.hideGroupingBar = value.toBoolean()
+                HIDE_GROUPING_BUTTON -> config.hideGroupingButton = value.toBoolean()
                 SHOW_HIDDEN_MEDIA -> config.showHiddenMedia = value.toBoolean()
                 FILE_LOADING_PRIORITY -> config.fileLoadingPriority = value.toInt()
                 AUTOPLAY_VIDEOS -> config.autoplayVideos = value.toBoolean()
@@ -1397,7 +1436,7 @@ class SettingsActivity : SimpleActivity() {
             arrayListOf(productIdX1, productIdX2, productIdX4,
                 subscriptionIdX1, subscriptionIdX2, subscriptionIdX3,
                 subscriptionYearIdX1, subscriptionYearIdX2, subscriptionYearIdX3)
-        ruStoreHelper.getProducts(productList)
+        ruStoreHelper!!.getProducts(productList)
     }
 
     private fun handleEventStart(event: StartPurchasesEvent) {

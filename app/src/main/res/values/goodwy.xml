@@ -16,6 +16,8 @@
     <string name="all_photos">All Photos</string>
     <string name="by_last_modified_yearly_g">Last modified (yearly)</string>
     <string name="by_date_taken_yearly_g">Date taken (yearly)</string>
+    <string name="hide_grouping_bar">Hide the grouping bar</string>
+    <string name="hide_grouping_button">Hide the grouping button</string>
 
     <string name="eraser">Eraser</string>
     <string name="eyedropper">Eyedropper</string>

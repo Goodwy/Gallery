@@ -163,4 +163,6 @@
     <string name="reorder_by_dragging">Aildrefnu ffolderi drwy lusgo</string>
     <string name="paths_imported_successfully">Wedi mewnforio\'r llwybrau\'n llwyddiannus</string>
     <string name="toggle_file_visibility">Newid gwelededd y ffeil</string>
+    <string name="hide_grouping_bar">Cuddio panel grwpio</string>
+    <string name="hide_grouping_button">Cuddio botwm grwpio</string>
 </resources>

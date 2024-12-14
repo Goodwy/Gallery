@@ -1038,12 +1038,15 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     }
 
     private fun setupTabsColor() {
-        val black = 0xFF000000.toInt()
-        val tabBackground = when (getProperBackgroundColor()) {
-            black -> resources.getColor(R.color.tab_background_black)
-            else -> getBottomNavigationBackgroundColor()
+        val tabBackground = when {
+            isLightTheme() -> resources.getColor(R.color.tab_background_light)
+            isGrayTheme() -> resources.getColor(R.color.tab_background_gray)
+            isBlackTheme() -> resources.getColor(R.color.tab_background_black)
+            else -> getBottomNavigationBackgroundColor().adjustAlpha(0.95f)
         }
         binding.mainTopTabsBackground.backgroundTintList = ColorStateList.valueOf(tabBackground)
+        binding.groupButton.backgroundTintList = ColorStateList.valueOf(tabBackground)
+        binding.groupButton.setColorFilter(getProperTextColor())
         binding.mainTopTabsHolder.setSelectedTabIndicatorColor(getProperBackgroundColor())
         binding.mainTopTabsHolder.setTabTextColors(getProperTextColor(), getProperPrimaryColor())
     }
@@ -1053,8 +1056,9 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         val pathToUse = mPath.ifEmpty { SHOW_ALL }
         val currGrouping = config.getFolderGrouping(pathToUse)
         val tabType = getTabType(currGrouping)
-        if (tabType != 0 && !config.scrollHorizontally) {
+        if (tabType != 0 && !config.scrollHorizontally && !config.hideGroupingBar) {
             binding.mainTopTabsContainer.beVisible()
+            binding.groupButton.beGoneIf(config.hideGroupingButton)
             tabsList.forEachIndexed { index, _ ->
                 val tab = binding.mainTopTabsHolder.newTab().setText(getTabLabel(index, tabType))
                 tab.contentDescription = getTabLabel(index, tabType)
@@ -1077,6 +1081,8 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
             )
 
             binding.mainTopTabsHolder.selectTab(binding.mainTopTabsHolder.getTabAt(getDefaultTab(currGrouping)))
+
+            binding.groupButton.setOnClickListener { showGroupByDialog() }
         } else binding.mainTopTabsContainer.beGone()
     }
 
@@ -1113,14 +1119,14 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                 0 -> R.string.by_file_type
                 1 -> R.string.by_extension
                 2 -> R.string.by_folder
-                else -> R.string.all_photos
+                else -> com.goodwy.strings.R.string.all_g
             }
         } else {
             when (position) {
                 0 -> R.string.years
                 1 -> R.string.months
                 2 -> R.string.days
-                else -> R.string.all_photos
+                else -> com.goodwy.strings.R.string.all_g
             }
         }
 

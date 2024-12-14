@@ -255,4 +255,6 @@
     <string name="faq_3_title">Como posso fazer para que um álbum seja sempre mostrado no topo?</string>
     <string name="faq_8_text">Adicionar uma pasta ás \"Pastas Incluídas\" não exclui mais nada automaticamente. Em Definições–&gt; Gerir Pastas Excluídas, exclua a directoria root \"/\" e de seguida, adicione as pastas que pretende em Definições–&gt; Gerir Pastas Incluídas. Isto fará com que apenas as pastas seleccionadas sejam visíveis, uma vez que, quer a acção de incluir, quer a de excluir são recursivas. Isto faz com que uma pasta que é simultânemente excluída e incluída, acabe por ficar visível.</string>
     <string name="faq_10_title">Posso recortar imagens com esta aplicação?</string>
+    <string name="hide_grouping_bar">Ocultar o painel de agrupamento</string>
+    <string name="hide_grouping_button">Ocultar botão de agrupamento</string>
 </resources>
