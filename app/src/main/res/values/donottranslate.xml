@@ -6,6 +6,9 @@
     <string name="package_name">com.goodwy.gallery</string>
 
     <!-- Release notes -->
+    <string name="release_610">
+        Improved performance, bug fixes
+    </string>
     <string name="release_601">
         Added ‘Hide the grouping bar‘ option\n
         Added grouping button, you can disable it in the settings\n

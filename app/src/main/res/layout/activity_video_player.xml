@@ -40,7 +40,7 @@
     <TextView
         android:id="@+id/video_bottom_gradient"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/default_status_action_height"
         android:layout_alignTop="@+id/video_time_holder"
         android:layout_alignParentBottom="true"
         android:background="@drawable/gradient_background"

@@ -160,15 +160,23 @@ class MediaSideScroll(context: Context, attrs: AttributeSet) : RelativeLayout(co
     }
 
     private fun volumePercentChanged(percent: Int) {
-        val stream = AudioManager.STREAM_MUSIC ?: 3
-        val maxVolume = activity!!.audioManager.getStreamMaxVolume(stream) ?: 100
+        val stream = AudioManager.STREAM_MUSIC
+        val maxVolume = try {
+            activity!!.audioManager.getStreamMaxVolume(stream)
+        } catch (e: Exception) {
+            100
+        }
         val percentPerPoint = 100 / maxVolume
         if (percentPerPoint == 0) {
             return
         }
 
         val addPoints = percent / percentPerPoint
-        val newVolume = maxVolume.coerceAtMost(0.coerceAtLeast(mTouchDownValue + addPoints)) ?: addPoints
+        val newVolume = try {
+            maxVolume.coerceAtMost(0.coerceAtLeast(mTouchDownValue + addPoints))
+        } catch (e: Exception) {
+            addPoints
+        }
         activity!!.audioManager.setStreamVolume(stream, newVolume, 0)
 
         val absolutePercent = ((newVolume / maxVolume.toFloat()) * 100).toInt()
