@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Matrix
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.PictureDrawable
@@ -17,7 +18,9 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.RelativeLayout
+import androidx.core.graphics.drawable.toBitmapOrNull
 import androidx.exifinterface.media.ExifInterface.*
 import com.alexvasilkov.gestures.GestureController
 import com.alexvasilkov.gestures.State
@@ -36,8 +39,8 @@ import com.davemorrissey.labs.subscaleview.ImageDecoder
 import com.davemorrissey.labs.subscaleview.ImageRegionDecoder
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.github.penfeizhou.animation.apng.APNGDrawable
+import com.github.penfeizhou.animation.avif.AVIFDrawable
 import com.github.penfeizhou.animation.webp.WebPDrawable
-import com.goodwy.commons.activities.BaseSimpleActivity
 import com.goodwy.commons.extensions.*
 import com.goodwy.commons.helpers.ensureBackgroundThread
 import com.goodwy.commons.helpers.isRPlus
@@ -48,7 +51,6 @@ import com.goodwy.gallery.activities.ViewPagerActivity
 import com.goodwy.gallery.adapters.PortraitPhotosAdapter
 import com.goodwy.gallery.databinding.PagerPhotoItemBinding
 import com.goodwy.gallery.extensions.config
-import com.goodwy.gallery.extensions.saveRotatedImageToFile
 import com.goodwy.gallery.extensions.sendFakeClick
 import com.goodwy.gallery.helpers.*
 import com.goodwy.gallery.models.Medium
@@ -89,6 +91,8 @@ class PhotoFragment : ViewPagerFragment() {
     private var mScreenWidth = 0
     private var mScreenHeight = 0
     private var mCurrentGestureViewZoom = 1f
+    private var mIsTouched = false
+    private var mInitialZoom = 1f
 
     private var mStoredShowExtendedDetails = false
     private var mStoredHideExtendedDetails = false
@@ -145,12 +149,16 @@ class PhotoFragment : ViewPagerFragment() {
 
                 gesturesView.controller.addOnStateChangeListener(object : GestureController.OnStateChangeListener {
                     override fun onStateChanged(state: State) {
+                        if (!mIsTouched) {
+                            mInitialZoom = state.zoom
+                        }
                         mCurrentGestureViewZoom = state.zoom
                     }
                 })
 
                 gesturesView.setOnTouchListener { v, event ->
-                    if (mCurrentGestureViewZoom == 1f) {
+                    mIsTouched = true
+                    if (Math.abs(mCurrentGestureViewZoom - mInitialZoom) < MAX_ZOOM_EQUALITY_TOLERANCE) {
                         handleEvent(event)
                     }
                     false
@@ -220,6 +228,7 @@ class PhotoFragment : ViewPagerFragment() {
 
     override fun onPause() {
         super.onPause()
+        activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         storeStateVariables()
     }
 
@@ -245,6 +254,7 @@ class PhotoFragment : ViewPagerFragment() {
             mShouldResetImage = false
         }
 
+        val keepScreenOn = config.keepScreenOn
         val allowPhotoGestures = config.allowPhotoGestures
         val allowInstantChange = config.allowInstantChange
 
@@ -252,6 +262,10 @@ class PhotoFragment : ViewPagerFragment() {
             photoBrightnessController.beVisibleIf(allowPhotoGestures)
             instantPrevItem.beVisibleIf(allowInstantChange)
             instantNextItem.beVisibleIf(allowInstantChange)
+        }
+
+        if (keepScreenOn) {
+            activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
 
         storeStateVariables()
@@ -271,12 +285,6 @@ class PhotoFragment : ViewPagerFragment() {
         }
 
         mLoadZoomableViewHandler.removeCallbacksAndMessages(null)
-        if (mCurrentRotationDegrees != 0) {
-            ensureBackgroundThread {
-                val path = mMedium.path
-                (activity as? BaseSimpleActivity)?.saveRotatedImageToFile(path, path, mCurrentRotationDegrees, false) {}
-            }
-        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -311,7 +319,9 @@ class PhotoFragment : ViewPagerFragment() {
         super.setMenuVisibility(menuVisible)
         mIsFragmentVisible = menuVisible
         if (mWasInit) {
-            if (!mMedium.isGIF() && !mMedium.isWebP() && !mMedium.isApng()) {
+            val isNotAnimatedContent =
+                !mMedium.isGIF() && !mMedium.isApng() && !mMedium.isAvif() && !mMedium.isWebP()
+            if (isNotAnimatedContent) {
                 photoFragmentVisibilityChanged(menuVisible)
             }
         }
@@ -342,9 +352,11 @@ class PhotoFragment : ViewPagerFragment() {
 
     private fun photoFragmentVisibilityChanged(isVisible: Boolean) {
         if (isVisible) {
+            applyProperColorMode(binding.gesturesView.drawable)
             scheduleZoomableView()
         } else {
             hideZoomableView()
+            ColorModeHelper.resetColorMode(activity)
         }
     }
 
@@ -380,6 +392,7 @@ class PhotoFragment : ViewPagerFragment() {
                     mMedium.isGIF() -> loadGif()
                     mMedium.isSVG() -> loadSVG()
                     mMedium.isApng() -> loadAPNG()
+                    mMedium.isAvif() -> loadAVIF()
                     else -> loadBitmap()
                 }
             }
@@ -426,6 +439,13 @@ class PhotoFragment : ViewPagerFragment() {
         }
     }
 
+    private fun loadAVIF() {
+        if (context != null) {
+            val drawable = AVIFDrawable.fromFile(mMedium.path)
+            binding.gesturesView.setImageDrawable(drawable)
+        }
+    }
+
     private fun loadBitmap(addZoomableView: Boolean = true) {
         if (context == null) {
             return
@@ -463,6 +483,7 @@ class PhotoFragment : ViewPagerFragment() {
             .apply(options)
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>, isFirstResource: Boolean): Boolean {
+                    resetColorModeIfVisible()
                     if (activity != null && !activity!!.isDestroyed && !activity!!.isFinishing) {
                         tryLoadingWithPicasso(addZoomableView)
                     }
@@ -476,6 +497,7 @@ class PhotoFragment : ViewPagerFragment() {
                     dataSource: DataSource,
                     isFirstResource: Boolean
                 ): Boolean {
+                    applyProperColorMode(resource)
                     val allowZoomingImages = context?.config?.allowZoomingImages ?: true
                     binding.gesturesView.controller.settings.isZoomEnabled = mMedium.isRaw() || mCurrentRotationDegrees != 0 || allowZoomingImages == false
                     if (mIsFragmentVisible && addZoomableView) {
@@ -505,6 +527,7 @@ class PhotoFragment : ViewPagerFragment() {
 
             picasso.into(binding.gesturesView, object : Callback {
                 override fun onSuccess() {
+                    applyProperColorMode(binding.gesturesView.drawable)
                     binding.gesturesView.controller.settings.isZoomEnabled =
                         mMedium.isRaw() || mCurrentRotationDegrees != 0 || context?.config?.allowZoomingImages == false
                     if (mIsFragmentVisible && addZoomableView) {
@@ -513,6 +536,7 @@ class PhotoFragment : ViewPagerFragment() {
                 }
 
                 override fun onError(e: Exception?) {
+                    resetColorModeIfVisible()
                     if (mMedium.path != mOriginalPath) {
                         mMedium.path = mOriginalPath
                         loadImage()
@@ -901,5 +925,20 @@ class PhotoFragment : ViewPagerFragment() {
         val fullscreenOffset = smallMargin + if (mIsFullscreen) 0 else requireContext().navigationBarHeight
         val actionsHeight = if (requireContext().config.bottomActions && !mIsFullscreen) resources.getDimension(R.dimen.bottom_actions_height) else 0f
         return requireContext().realScreenSize.y - height - actionsHeight - fullscreenOffset
+    }
+
+    private fun applyProperColorMode(resource: Drawable?) {
+        if (mIsFragmentVisible && activity != null) {
+            ColorModeHelper.setColorModeForImage(
+                activity = requireActivity(),
+                bitmap = (resource as? BitmapDrawable)?.bitmap ?: resource?.toBitmapOrNull()
+            )
+        }
+    }
+
+    private fun resetColorModeIfVisible() {
+        if (mIsFragmentVisible) {
+            ColorModeHelper.resetColorMode(activity)
+        }
     }
 }

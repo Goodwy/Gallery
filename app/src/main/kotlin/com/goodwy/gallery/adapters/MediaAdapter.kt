@@ -36,7 +36,6 @@ import com.goodwy.gallery.interfaces.MediaOperationsListener
 import com.goodwy.gallery.models.Medium
 import com.goodwy.gallery.models.ThumbnailItem
 import com.goodwy.gallery.models.ThumbnailSection
-import java.util.Collections
 
 class MediaAdapter(
     activity: BaseSimpleActivity,
@@ -341,7 +340,18 @@ class MediaAdapter(
     }
 
     private fun restoreFiles() {
-        activity.restoreRecycleBinPaths(getSelectedPaths()) {
+        val paths = getSelectedPaths()
+        if (paths.size > 1) {
+            activity.showRestoreConfirmationDialog(paths.size) {
+                doRestoreFiles(paths)
+            }
+        } else {
+            doRestoreFiles(paths)
+        }
+    }
+
+    private fun doRestoreFiles(paths: ArrayList<String>) {
+        activity.restoreRecycleBinPaths(paths) {
             listener?.refreshItems()
             finishActMode()
         }
@@ -607,7 +617,7 @@ class MediaAdapter(
                 0
             }
 
-            mediaItemHolder.setPadding(padding, padding, padding, padding)
+            if (!isListViewType) mediaItemHolder.setPadding(padding, padding, padding, padding)
 
             favorite.beVisibleIf(medium.isFavorite && config.markFavoriteItems)
             favorite.applyColorFilter(Color.WHITE)

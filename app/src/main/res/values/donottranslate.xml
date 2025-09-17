@@ -6,6 +6,28 @@
     <string name="package_name">com.goodwy.gallery</string>
 
     <!-- Release notes -->
+    <string name="release_650">
+        Added ‘Hide the grouping bar when scrolling‘ option\n
+        Added ‘Font size‘ option\n
+        Added date format YYYY.MM.DD\n
+        Persian calendar added\n
+        Support for animated AVIF images\n
+        Support for Ultra HDR images (Android 14+)\n
+        Support for wide-color-gamut images\n
+        Copy to clipboard button for images\n
+        Option to keep screen on while viewing media\n
+        Ability to sort folders by item count\n
+        Confirmation dialog when restoring media\n
+        Fixed volume adjustment bug on some devices\n
+        Fixed media picker showing only GIFs when both images and videos are requested\n
+        Fixed metadata loss (EXIF) when editing or resizing images\n
+        Fixed pixelation and artifacts in some JPEG XL images\n
+        Fixed unresponsive image/video controls after rotating device\n
+        Swipe-to-close gesture now works with WebP images\n
+        Fixed inaccurate or broken seeking in some videos\n
+        Image rotation edits no longer auto-save without confirmation\n
+        External keyboards now work properly in copy/move dialogs
+    </string>
     <string name="release_610">
         Improved performance, bug fixes
     </string>

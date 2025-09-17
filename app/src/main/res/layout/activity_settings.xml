@@ -29,69 +29,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <com.goodwy.commons.views.PurchaseThankYouItem
                 android:id="@+id/settings_purchase_thank_you_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:background="?attr/selectableItemBackground"
-                android:paddingEnd="@dimen/normal_margin">
-
-                <ImageView
-                    android:id="@+id/purchase_logo"
-                    android:layout_width="@dimen/app_logo"
-                    android:layout_height="@dimen/app_logo"
-                    android:layout_marginStart="@dimen/section_margin"
-                    android:layout_marginTop="@dimen/normal_margin"
-                    android:layout_marginBottom="@dimen/normal_margin"
-                    android:background="@drawable/button_white_bg"
-                    android:elevation="8dp"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_plus_support"
-                    android:tint="@color/color_primary"
-                    android:contentDescription="@string/donate"
-                    tools:ignore="UseAppTint"/>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/section_margin"
-                    android:layout_toEndOf="@+id/purchase_logo"
-                    android:layout_centerVertical="true">
-
-                    <com.goodwy.commons.views.MyTextView
-                        android:id="@+id/settings_purchase_thank_you"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/action_support_project"/>
-
-                    <com.goodwy.commons.views.MyTextView
-                        android:id="@+id/about_app_version"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/settings_purchase_thank_you"
-                        android:layout_marginTop="@dimen/tiny_margin"
-                        android:alpha="0.6"
-                        android:text="@string/pref_pay_summary"
-                        android:textSize="12sp"/>
-
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/moreButton"
-                        style="@style/AppTheme.Button.Chip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:layout_below="@+id/about_app_version"
-                        android:layout_marginTop="@dimen/medium_margin"
-                        android:alpha="0.4"
-                        android:background="@drawable/button_gray_bg"
-                        android:saveEnabled="false"
-                        android:text="@string/learn_more"
-                        android:textSize="10sp"
-                        android:textAllCaps="true"
-                        android:textColor="@color/default_text_color"
-                        tools:ignore="SmallSp"/>
-                </RelativeLayout>
-            </RelativeLayout>
+                android:layout_marginTop="@dimen/medium_margin"/>
 
             <TextView
                 android:id="@+id/settings_appearance_label"
@@ -342,18 +284,20 @@
                         style="@style/SettingsHolderStyle">
 
                         <com.goodwy.commons.views.MyTextView
-                            android:id="@+id/settings_change_date_time_format"
+                            android:id="@+id/settings_change_date_time_format_label"
                             style="@style/SettingsTextLabelStyle"
+                            android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginEnd="68dp"
+                            android:layout_toStartOf="@+id/settings_change_date_time_format"
                             android:text="@string/change_date_and_time_format" />
 
-                        <ImageView
-                            android:id="@+id/settings_change_date_time_format_chevron"
-                            style="@style/SettingsChevronStyle"
+                        <com.goodwy.commons.views.MyTextView
+                            android:id="@+id/settings_change_date_time_format"
+                            style="@style/SettingsTextValueStyle"
+                            android:maxWidth="@dimen/settings_value_width_long"
                             android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:contentDescription="@string/change_date_and_time_format"/>
+                            android:layout_marginEnd="@dimen/settings_margin"
+                            tools:text="01.01.2025 08:30" />
 
                     </RelativeLayout>
 
@@ -612,6 +556,17 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/settingsHideGroupingBarWhenScrollHolder"
+                        style="@style/SettingsHolderSwitchStyle">
+
+                        <com.goodwy.commons.views.MyMaterialSwitch
+                            android:id="@+id/settingsHideGroupingBarWhenScroll"
+                            style="@style/SettingsSwitchStyle"
+                            android:text="@string/hide_grouping_bar_when_scrolling"
+                            app:switchPadding="@dimen/bigger_margin" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
                         android:id="@+id/settingsChangeColourTopBarHolder"
                         style="@style/SettingsHolderSwitchStyle">
 
@@ -686,6 +641,18 @@
                             android:id="@+id/settings_allow_instant_change"
                             style="@style/SettingsSwitchStyle"
                             android:text="@string/allow_instant_change"
+                            app:switchPadding="@dimen/bigger_margin" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/settings_keep_screen_on_fullscreen_photos_holder"
+                        style="@style/SettingsHolderSwitchStyle">
+
+                        <com.goodwy.commons.views.MyMaterialSwitch
+                            android:id="@+id/settings_keep_screen_on_fullscreen_photos"
+                            style="@style/SettingsSwitchStyle"
+                            android:text="@string/keep_screen_on_fullscreen_photos"
                             app:switchPadding="@dimen/bigger_margin" />
 
                     </RelativeLayout>
@@ -937,74 +904,6 @@
             </androidx.cardview.widget.CardView>
 
             <TextView
-                android:id="@+id/settings_security_label"
-                style="@style/SettingsSectionLabelStyle"
-                android:text="@string/security"
-                tools:textColor="@color/primary"/>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/settings_security_holder"
-                style="@style/SettingsSectionHolder"
-                app:cardCornerRadius="@dimen/activity_margin"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:id="@+id/settingsSecurityWrapper"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:id="@+id/settings_app_password_protection_holder"
-                        style="@style/SettingsHolderSwitchStyle">
-
-                        <com.goodwy.commons.views.MyMaterialSwitch
-                            android:id="@+id/settings_app_password_protection"
-                            style="@style/SettingsSwitchStyle"
-                            android:text="@string/password_protect_whole_app"
-                            app:switchPadding="@dimen/bigger_margin" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/settings_hidden_item_password_protection_holder"
-                        style="@style/SettingsHolderSwitchStyle">
-
-                        <com.goodwy.commons.views.MyMaterialSwitch
-                            android:id="@+id/settings_hidden_item_password_protection"
-                            style="@style/SettingsSwitchStyle"
-                            android:text="@string/password_protect_hidden_items"
-                            app:switchPadding="@dimen/bigger_margin" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/settings_excluded_item_password_protection_holder"
-                        style="@style/SettingsHolderSwitchStyle">
-
-                        <com.goodwy.commons.views.MyMaterialSwitch
-                            android:id="@+id/settings_excluded_item_password_protection"
-                            style="@style/SettingsSwitchStyle"
-                            android:text="@string/password_protect_excluded"
-                            app:switchPadding="@dimen/bigger_margin" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/settings_file_deletion_password_protection_holder"
-                        style="@style/SettingsHolderSwitchStyle">
-
-                        <com.goodwy.commons.views.MyMaterialSwitch
-                            android:id="@+id/settings_file_deletion_password_protection"
-                            style="@style/SettingsSwitchStyle"
-                            android:text="@string/password_protect_file_deletion"
-                            app:switchPadding="@dimen/bigger_margin" />
-
-                    </RelativeLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <TextView
                 android:id="@+id/settings_file_operations_label"
                 style="@style/SettingsSectionLabelStyle"
                 android:text="@string/file_operations"
@@ -1132,6 +1031,74 @@
                             android:layout_alignParentEnd="true"
                             android:layout_marginEnd="@dimen/settings_margin"
                             tools:text="0 B" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/settings_security_label"
+                style="@style/SettingsSectionLabelStyle"
+                android:text="@string/security"
+                tools:textColor="@color/primary"/>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/settings_security_holder"
+                style="@style/SettingsSectionHolder"
+                app:cardCornerRadius="@dimen/activity_margin"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:id="@+id/settingsSecurityWrapper"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/settings_app_password_protection_holder"
+                        style="@style/SettingsHolderSwitchStyle">
+
+                        <com.goodwy.commons.views.MyMaterialSwitch
+                            android:id="@+id/settings_app_password_protection"
+                            style="@style/SettingsSwitchStyle"
+                            android:text="@string/password_protect_whole_app"
+                            app:switchPadding="@dimen/bigger_margin" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/settings_hidden_item_password_protection_holder"
+                        style="@style/SettingsHolderSwitchStyle">
+
+                        <com.goodwy.commons.views.MyMaterialSwitch
+                            android:id="@+id/settings_hidden_item_password_protection"
+                            style="@style/SettingsSwitchStyle"
+                            android:text="@string/password_protect_hidden_items"
+                            app:switchPadding="@dimen/bigger_margin" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/settings_excluded_item_password_protection_holder"
+                        style="@style/SettingsHolderSwitchStyle">
+
+                        <com.goodwy.commons.views.MyMaterialSwitch
+                            android:id="@+id/settings_excluded_item_password_protection"
+                            style="@style/SettingsSwitchStyle"
+                            android:text="@string/password_protect_excluded"
+                            app:switchPadding="@dimen/bigger_margin" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/settings_file_deletion_password_protection_holder"
+                        style="@style/SettingsHolderSwitchStyle">
+
+                        <com.goodwy.commons.views.MyMaterialSwitch
+                            android:id="@+id/settings_file_deletion_password_protection"
+                            style="@style/SettingsSwitchStyle"
+                            android:text="@string/password_protect_file_deletion"
+                            app:switchPadding="@dimen/bigger_margin" />
 
                     </RelativeLayout>
                 </LinearLayout>

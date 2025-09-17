@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dialog_scrollview"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -42,6 +43,32 @@
                 android:text="@string/square" />
 
         </RadioGroup>
+
+        <include layout="@layout/divider" />
+
+        <RelativeLayout
+            android:id="@+id/dialog_radio_folder_font_size_holder"
+            style="@style/SettingsHolderStyle"
+            android:paddingStart="@dimen/zero"
+            android:paddingEnd="@dimen/zero">
+
+            <com.goodwy.commons.views.MyTextView
+                android:id="@+id/dialog_radio_folder_font_size_label"
+                style="@style/SettingsTextLabelStyle"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/dialog_radio_folder_font_size"
+                android:textSize="@dimen/normal_text_size"
+                android:text="@string/font_size"/>
+
+            <com.goodwy.commons.views.MyTextView
+                android:id="@+id/dialog_radio_folder_font_size"
+                style="@style/SettingsTextValueStyle"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/settings_margin"
+                android:textSize="@dimen/normal_text_size"
+                tools:text="@string/medium"/>
+        </RelativeLayout>
 
         <include layout="@layout/divider" />
 

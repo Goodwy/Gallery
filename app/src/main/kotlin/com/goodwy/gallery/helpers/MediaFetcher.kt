@@ -10,7 +10,6 @@ import android.provider.BaseColumns
 import android.provider.MediaStore
 import android.provider.MediaStore.Files
 import android.provider.MediaStore.Images
-import android.text.format.DateFormat
 import com.goodwy.commons.extensions.*
 import com.goodwy.commons.helpers.*
 import com.goodwy.gallery.R
@@ -902,7 +901,8 @@ class MediaFetcher(val context: Context) {
             val cal = Calendar.getInstance(Locale.ENGLISH)
             cal.timeInMillis = timestamp.toLong()
             val format = if (showDay) context.config.dateFormat else if (hideMonth) "yyyy" else "MMMM yyyy"
-            DateFormat.format(format, cal).toString()
+//            DateFormat.format(format, cal).toString()
+            cal.timeInMillis.toDayCode(context, format)
         } else {
             ""
         }

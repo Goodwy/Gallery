@@ -531,6 +531,17 @@ fun BaseSimpleActivity.showRecycleBinEmptyingDialog(callback: () -> Unit) {
     }
 }
 
+fun BaseSimpleActivity.showRestoreConfirmationDialog(count: Int, callback: () -> Unit) {
+    ConfirmationDialog(
+        activity = this,
+        message = resources.getQuantityString(R.plurals.restore_confirmation, count, count),
+        positive = com.goodwy.commons.R.string.yes,
+        negative = com.goodwy.commons.R.string.no
+    ) {
+        callback()
+    }
+}
+
 fun BaseSimpleActivity.updateFavoritePaths(fileDirItems: ArrayList<FileDirItem>, destination: String) {
     ensureBackgroundThread {
         fileDirItems.forEach {
@@ -853,7 +864,7 @@ fun BaseSimpleActivity.launchResizeImageDialog(path: String, callback: (() -> Un
 }
 
 fun BaseSimpleActivity.resizeImage(oldPath: String, newPath: String, size: Point, callback: (success: Boolean) -> Unit) {
-    var oldExif: ExifInterface? = null
+    var oldExif: ExifInterface?
     val inputStream = contentResolver.openInputStream(Uri.fromFile(File(oldPath)))
     oldExif = ExifInterface(inputStream!!)
 

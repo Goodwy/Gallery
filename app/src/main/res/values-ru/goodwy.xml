@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Дата съёмки (год)</string>
     <string name="hide_grouping_bar">Скрыть панель группировки</string>
     <string name="hide_grouping_button">Скрыть кнопку группировки</string>
+    <string name="hide_grouping_bar_when_scrolling">Скрыть панель группировки при прокрутке</string>
 
     <string name="eraser">Ластик</string>
     <string name="eyedropper">Пипетка</string>

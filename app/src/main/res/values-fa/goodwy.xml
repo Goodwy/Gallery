@@ -2,20 +2,19 @@
 <resources>
     <string name="app_name_g">Right Gallery</string>
     <string name="app_launcher_name_g">گالری</string> <!--Not used-->
-    <string name="exclude_folder_description_g">This will exclude the selection together with its subfolders from Right Gallery only. You can manage excluded folders in Settings.</string>
-    <string name="excluded_activity_placeholder_g">Excluding folders will make them together with their subfolders hidden just in Right Gallery, they will still be visible in other applications.\n\nIf you want to hide them from other apps too, use the Hide function.</string>
-    <string name="faq_1_title_g">How can I make Right Gallery the default device gallery?</string>
-    <string name="faq_1_text_g">First you have to find the currently default gallery in the Apps section of your device settings, look for a button that says something like \"Open by default\", click on it, then select \"Clear defaults\".
-        The next time you will try opening an image or video you should see an app picker, where you can select Right Gallery and make it the default app.</string>
-    <string name="faq_5_text_g">Exclude prevents displaying the folder only in Right Gallery, while Hide works system-wise and it hides the folder from other galleries too. It works by creating an empty \".nomedia\" file in the given folder, which you can then remove with any file manager too. Note that some devices do not allow hiding folders like Camera, Screenshots and Downloads.</string>
+    <string name="exclude_folder_description_g">این کار، پوشه‌های انتخاب شده را به همراه زیرپوشه‌هایش فقط از گالری سمت راست حذف می‌کند. می‌توانید پوشه‌های حذف شده را در تنظیمات مدیریت کنید.</string>
+    <string name="excluded_activity_placeholder_g">حذف پوشه‌ها، آنها را به همراه زیرپوشه‌هایشان فقط در گالری سمت راست پنهان می‌کند، و همچنان در برنامه‌های دیگر قابل مشاهده خواهند بود.\n\nاگر می‌خواهید آنها را از برنامه‌های دیگر نیز پنهان کنید، از تابع Hide استفاده کنید.</string>
+    <string name="faq_1_title_g">چگونه می‌توانم گالری سمت راست را به گالری پیش‌فرض دستگاه تبدیل کنم؟</string>
+    <string name="faq_1_text_g">ابتدا باید گالری پیش‌فرض فعلی را در بخش برنامه‌ها در تنظیمات دستگاه خود پیدا کنید، به دنبال دکمه‌ای با عنوان "باز کردن به صورت پیش‌فرض" بگردید، روی آن کلیک کنید، سپس "پاک کردن پیش‌فرض‌ها" را انتخاب کنید. دفعه‌ی بعد که سعی می‌کنید یک تصویر یا ویدیو را باز کنید، باید یک انتخابگر برنامه ببینید، جایی که می‌توانید گالری راست را انتخاب کنید و آن را به عنوان برنامه‌ی پیش‌فرض قرار دهید.</string>
+    <string name="faq_5_text_g">حذف از نمایش پوشه فقط در گالری راست جلوگیری می‌کند، در حالی که مخفی کردن به صورت سیستمی کار می‌کند و پوشه را از گالری‌های دیگر نیز پنهان می‌کند. این کار با ایجاد یک فایل خالی \".nomedia\" در پوشه‌ی داده شده انجام می‌شود که می‌توانید آن را با هر مدیر فایلی نیز حذف کنید. توجه داشته باشید که برخی از دستگاه‌ها اجازه‌ی پنهان کردن پوشه‌هایی مانند دوربین، تصاویر و دانلودها را نمی‌دهند.</string>
 
     <!-- Grouping at media thumbnails -->
     <string name="years">سال ها</string>
     <string name="months">ماه ها</string>
     <string name="days">روزها</string>
     <string name="all_photos">همه عکس ها</string>
-    <string name="by_last_modified_yearly_g">Last modified (yearly)</string>
-    <string name="by_date_taken_yearly_g">Date taken (yearly)</string>
+    <string name="by_last_modified_yearly_g">آخرین اصلاح (سالانه)</string>
+    <string name="by_date_taken_yearly_g">تاریخ اخذ (سالانه)</string>
 
     <string name="hide_grouping_button">دکمه مخفی کردن گروه بندی</string>
     <string name="eraser">پاک کن</string>

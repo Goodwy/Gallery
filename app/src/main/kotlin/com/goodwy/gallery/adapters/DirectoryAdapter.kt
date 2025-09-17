@@ -6,6 +6,7 @@ import android.content.pm.ShortcutManager
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Icon
 import android.text.TextUtils
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MotionEvent
 import android.view.View
@@ -38,6 +39,7 @@ import com.goodwy.gallery.dialogs.ConfirmDeleteFolderDialog
 import com.goodwy.gallery.dialogs.ExcludeFolderDialog
 import com.goodwy.gallery.dialogs.PickMediumDialog
 import com.goodwy.gallery.extensions.*
+import com.goodwy.gallery.extensions.config
 import com.goodwy.gallery.helpers.*
 import com.goodwy.gallery.interfaces.DirectoryOperationsListener
 import com.goodwy.gallery.models.AlbumCover
@@ -75,6 +77,7 @@ class DirectoryAdapter(
     var directorySorting = config.directorySorting
     var dateFormat = config.dateFormat
     var timeFormat = activity.getTimeFormat()
+    private val fontSizeDir = config.fontSizeDir
 
     init {
         setupDragListener(true)
@@ -887,8 +890,18 @@ class DirectoryAdapter(
                 dirPin.applyColorFilter(textColor)
                 dirLocation.applyColorFilter(textColor)
                 dirDragHandle.beVisibleIf(isDragAndDropping)
+
+                val fontSize: Float = activity.getTextSizeDirBig(fontSizeDir)
+                val fontSizeSmall: Float = activity.getTextSizeDirSmall(fontSizeDir)
+                dirName.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
+                dirPath?.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSizeSmall)
+                photoCnt.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSizeSmall)
             } else {
                 dirDragHandleWrapper?.beVisibleIf(isDragAndDropping)
+
+                val fontSize: Float = activity.getTextSizeDir(fontSizeDir)
+                dirName.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
+                photoCnt.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
             }
 
             if (isDragAndDropping) {

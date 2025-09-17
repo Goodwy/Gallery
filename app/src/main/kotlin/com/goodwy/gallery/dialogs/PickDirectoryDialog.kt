@@ -1,7 +1,8 @@
 package com.goodwy.gallery.dialogs
 
 import android.graphics.Color
-import android.view.KeyEvent
+import android.view.KeyEvent.ACTION_UP
+import android.view.KeyEvent.KEYCODE_BACK
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -54,10 +55,12 @@ class PickDirectoryDialog(
             .setPositiveButton(com.goodwy.commons.R.string.ok, null)
             .setNegativeButton(com.goodwy.commons.R.string.cancel, null)
             .setOnKeyListener { dialogInterface, i, keyEvent ->
-                if (keyEvent.action == KeyEvent.ACTION_UP && i == KeyEvent.KEYCODE_BACK) {
+                return@setOnKeyListener if (keyEvent.action == ACTION_UP && i == KEYCODE_BACK) {
                     backPressed()
+                    true
+                } else {
+                    false
                 }
-                true
             }
 
         if (showOtherFolderButton) {
@@ -239,7 +242,7 @@ class PickDirectoryDialog(
             if (currentPathPrefix.isEmpty()) {
                 dialog?.dismiss()
             } else {
-                openedSubfolders.removeLast()
+                openedSubfolders.removeAt(openedSubfolders.lastIndex)
                 currentPathPrefix = openedSubfolders.last()
                 gotDirectories(allDirectories)
             }

@@ -3,6 +3,7 @@ package com.goodwy.gallery.helpers
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Environment
+import androidx.core.content.edit
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.goodwy.commons.helpers.*
@@ -308,6 +309,10 @@ class Config(context: Context) : BaseConfig(context) {
         get() = prefs.getBoolean(DELETE_EMPTY_FOLDERS, false)
         set(deleteEmptyFolders) = prefs.edit().putBoolean(DELETE_EMPTY_FOLDERS, deleteEmptyFolders).apply()
 
+    var keepScreenOn: Boolean
+        get() = prefs.getBoolean(KEEP_SCREEN_ON, true)
+        set(keepScreenOn) = prefs.edit().putBoolean(KEEP_SCREEN_ON, keepScreenOn).apply()
+
     var allowPhotoGestures: Boolean
         get() = prefs.getBoolean(ALLOW_PHOTO_GESTURES, false)
         set(allowPhotoGestures) = prefs.edit().putBoolean(ALLOW_PHOTO_GESTURES, allowPhotoGestures).apply()
@@ -596,4 +601,12 @@ class Config(context: Context) : BaseConfig(context) {
     var hideGroupingButton: Boolean
         get() = prefs.getBoolean(HIDE_GROUPING_BUTTON, false)
         set(hideGroupingButton) = prefs.edit().putBoolean(HIDE_GROUPING_BUTTON, hideGroupingButton).apply()
+
+    var hideGroupingBarWhenScroll: Boolean
+        get() = prefs.getBoolean(HIDE_GROUPING_BAR_WHEN_SCROLLING, false)
+        set(hideGroupingBarWhenScroll) = prefs.edit { putBoolean(HIDE_GROUPING_BAR_WHEN_SCROLLING, hideGroupingBarWhenScroll) }
+
+    var fontSizeDir: Int
+        get() = prefs.getInt(FONT_SIZE_DIR, FONT_SIZE_MEDIUM)
+        set(size) = prefs.edit { putInt(FONT_SIZE_DIR, size) }
 }

@@ -103,7 +103,8 @@
                 android:layout_alignBottom="@+id/main_top_tabs_background"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/circle_tab_background"
-                android:contentDescription="@string/rotate"
+                android:contentDescription="@string/group_by"
+                android:tooltipText="@string/group_by"
                 android:padding="@dimen/ten_dpi"
                 android:src="@drawable/ic_arrow_top_down"/>
 

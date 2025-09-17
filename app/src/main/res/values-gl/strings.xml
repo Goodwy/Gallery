@@ -251,4 +251,9 @@
     <string name="svgs">SVGs</string>
     <string name="editor">Editor</string>
     <string name="gifs">GIFs</string>
+    <plurals name="restore_confirmation">
+        <item quantity="one">Queres restablecer %d ficheiro?</item>
+        <item quantity="other">Queres restablecer %d ficheiros?</item>
+    </plurals>
+    <string name="keep_screen_on_fullscreen_photos">Manter a pantalla acesa mentras ves fotos a pantalla completa</string>
 </resources>

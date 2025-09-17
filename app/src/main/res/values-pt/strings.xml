@@ -255,4 +255,10 @@
     <string name="failed_to_load_media">Erro ao carregar os dados.</string>
     <string name="playback_speed">Velocidade de reprodução</string>
     <string name="full_storage_permission_required">Fossify Gallery precisa de acessso total para mostrar as fotos e os vídeos. Aceda a Definições &gt; Permissões &gt; Fotos e vídeos &gt; Permitir.</string>
+    <plurals name="restore_confirmation">
+        <item quantity="one">Tem certeza que deseja restaurar %d ficheiro?</item>
+        <item quantity="many">Tem certeza que deseja restaurar %d ficheiros?</item>
+        <item quantity="other">Tem certeza que deseja restaurar %d ficheiros?</item>
+    </plurals>
+    <string name="keep_screen_on_fullscreen_photos">Manter o ecrã ligado enquanto vê fotos em ecrã cheio</string>
 </resources>

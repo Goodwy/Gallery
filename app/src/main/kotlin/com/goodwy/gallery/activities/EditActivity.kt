@@ -1,7 +1,6 @@
 package com.goodwy.gallery.activities
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
@@ -14,9 +13,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
+import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import androidx.core.view.isInvisible
 import androidx.exifinterface.media.ExifInterface
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -50,8 +52,11 @@ import com.zomato.photofilters.FilterPack
 import com.zomato.photofilters.imageprocessors.Filter
 import java.io.*
 import kotlin.math.max
+import kotlinx.coroutines.*
+import androidx.core.graphics.scale
+import androidx.core.net.toUri
 
-class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener, CanvasListener {
+class EditActivity : SimpleActivity(), CanvasListener {
     companion object {
         init {
             System.loadLibrary("NativeImageProcessor")
@@ -89,6 +94,7 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
     private var oldExif: ExifInterface? = null
     private var filterInitialBitmap: Bitmap? = null
     private var originalUri: Uri? = null
+    private var bitmapCroppingJob: Job? = null
     private var isEraserOn = false
     private var isEyeDropperOn = false
     private val binding by viewBinding(ActivityEditBinding::inflate)
@@ -147,6 +153,7 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
     override fun onDestroy() {
         super.onDestroy()
         binding.editorDrawCanvas.mListener = null
+        ColorModeHelper.resetColorMode(this)
     }
 
     private fun setupOptionsMenu() {
@@ -245,6 +252,7 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
             .apply(options)
             .listener(object : RequestListener<Bitmap> {
                 override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>, isFirstResource: Boolean): Boolean {
+                    ColorModeHelper.resetColorMode(this@EditActivity)
                     if (uri != originalUri) {
                         uri = originalUri
                         Handler().post {
@@ -261,6 +269,7 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
                     dataSource: DataSource,
                     isFirstResource: Boolean
                 ): Boolean {
+                    ColorModeHelper.setColorModeForImage(this@EditActivity, bitmap)
                     val currentFilter = getFiltersAdapter()?.getCurrentFilter()
                     if (filterInitialBitmap == null) {
                         if (!isCropIntent) bottomFilterClicked() // TODO Edit Default open
@@ -294,7 +303,6 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
         refreshMenuItems()
         binding.cropImageView.apply {
             beVisible()
-            setOnCropImageCompleteListener(this@EditActivity)
             setImageUriAsync(uri)
             guidelines = CropImageView.Guidelines.ON
 
@@ -357,7 +365,7 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
         setOldExif()
 
         if (binding.cropImageView.isVisible()) {
-            binding.cropImageView.croppedImageAsync()
+            cropImageAsync()
         } else if (binding.editorDrawCanvas.isVisible()) {
             val bitmap = binding.editorDrawCanvas.getBitmap()
             if (saveUri.scheme == "file") {
@@ -395,6 +403,26 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
         }
     }
 
+    private fun setCropProgressBarVisibility(visible: Boolean) {
+        val progressBar: View? = binding.cropImageView.findViewById(com.canhub.cropper.R.id.CropProgressBar)
+        progressBar?.isInvisible = visible.not()
+    }
+
+    private fun cropImageAsync() {
+        setCropProgressBarVisibility(visible = true)
+        bitmapCroppingJob?.cancel()
+        bitmapCroppingJob = lifecycleScope.launch(CoroutineExceptionHandler { _, t ->
+            onCropImageComplete(bitmap = null, error = Exception(t))
+        }) {
+            val bitmap = withContext(Dispatchers.Default) {
+                binding.cropImageView.getCroppedImage()
+            }
+            onCropImageComplete(bitmap, null)
+        }.apply {
+            invokeOnCompletion { setCropProgressBarVisibility(visible = false) }
+        }
+    }
+
     private fun setOldExif() {
         var inputStream: InputStream? = null
         try {
@@ -424,7 +452,7 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
                 binding.cropImageView.isVisible() -> {
                     isSharingBitmap = true
                     runOnUiThread {
-                        binding.cropImageView.croppedImageAsync()
+                        cropImageAsync()
                     }
                 }
 
@@ -836,7 +864,7 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
         ResizeDialog(this, point) {
             resizeWidth = it.x
             resizeHeight = it.y
-            binding.cropImageView.croppedImageAsync()
+            cropImageAsync()
         }
     }
 
@@ -864,11 +892,10 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
         }
     }
 
-    override fun onCropImageComplete(view: CropImageView, result: CropImageView.CropResult) {
-        if (result.error == null && result.bitmap != null) {
+    private fun onCropImageComplete(bitmap: Bitmap?, error: Exception?) {
+        if (error == null && bitmap != null) {
             setOldExif()
 
-            val bitmap = result.bitmap!!
             if (isSharingBitmap) {
                 isSharingBitmap = false
                 shareBitmap(bitmap)
@@ -895,6 +922,7 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
                         outputStream?.close()
                     }
 
+                    copyExifToUri(oldExif, saveUri)
                     Intent().apply {
                         data = saveUri
                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -915,7 +943,7 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
                 toast(R.string.unknown_file_location)
             }
         } else {
-            toast("${getString(R.string.image_editing_failed)}: ${result.error?.message}")
+            toast("${getString(R.string.image_editing_failed)}: ${error?.message}")
         }
     }
 
@@ -987,22 +1015,32 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
             toast(com.goodwy.commons.R.string.saving)
         }
 
-        if (resizeWidth > 0 && resizeHeight > 0) {
-            val resized = Bitmap.createScaledBitmap(bitmap, resizeWidth, resizeHeight, false)
-            resized.compress(file.absolutePath.getCompressionFormat(), 90, out)
-        } else {
-            bitmap.compress(file.absolutePath.getCompressionFormat(), 90, out)
+        out.use {
+            if (resizeWidth > 0 && resizeHeight > 0) {
+                val resized = bitmap.scale(resizeWidth, resizeHeight, false)
+                resized.compress(file.absolutePath.getCompressionFormat(), 90, out)
+            } else {
+                bitmap.compress(file.absolutePath.getCompressionFormat(), 90, out)
+            }
         }
 
-        try {
-            val newExif = ExifInterface(file.absolutePath)
-            oldExif?.copyNonDimensionAttributesTo(newExif)
-        } catch (e: Exception) {
-        }
-
-        setResult(Activity.RESULT_OK, intent)
+        copyExifToUri(oldExif, file.toUri())
+        setResult(RESULT_OK, intent)
         scanFinalPath(file.absolutePath)
-        out.close()
+    }
+
+    private fun copyExifToUri(source: ExifInterface?, destination: Uri?) {
+        if (source == null || destination == null) return
+        if (destination.scheme == "content") {
+            contentResolver.openFileDescriptor(destination, "rw")?.use { pfd ->
+                val destExif = ExifInterface(pfd.fileDescriptor)
+                source.copyNonDimensionAttributesTo(destExif)
+            }
+        } else {
+            val file = File(destination.path!!)
+            val destExif = ExifInterface(file.absolutePath)
+            source.copyNonDimensionAttributesTo(destExif)
+        }
     }
 
     private fun editWith() {
@@ -1014,7 +1052,7 @@ class EditActivity : SimpleActivity(), CropImageView.OnCropImageCompleteListener
         val paths = arrayListOf(path)
         rescanPaths(paths) {
             fixDateTaken(paths, false)
-            setResult(Activity.RESULT_OK, intent)
+            setResult(RESULT_OK, intent)
             toast(com.goodwy.commons.R.string.file_saved)
             finish()
         }

@@ -1,19 +1,22 @@
 package com.goodwy.gallery.activities
 
-import android.app.Activity
 import android.app.WallpaperManager
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import androidx.core.net.toUri
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -107,8 +110,8 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         setupOptionsMenu()
         refreshMenuItems()
         updateMaterialActivityViews(
-            binding.mediaCoordinator,
-            binding.mediaGrid,
+            mainCoordinatorLayout = binding.mediaCoordinator,
+            nestedView = binding.mediaGrid,
             useTransparentNavigation = false, //!config.scrollHorizontally,
             useTopSearchMenu = true
         )
@@ -136,9 +139,11 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                     binding.mediaFastscroller.setPadding(0, 0, 0, bottomNavigationBarSize)
                     binding.mainTopTabsContainer.setPadding(0, 0, 0, bottomNavigationBarSize)
                 } else {
-                    binding.mediaGrid.setPadding(0, 0, 0, bottomNavigationBarSize) // needed clipToPadding="false"
+                    val bottomBarSize = resources.getDimension(R.dimen.bottom_actions_height).toInt()
+                    binding.mediaFastscroller.trackMarginEnd = bottomNavigationBarSize + bottomBarSize
+                    binding.mediaGrid.setPadding(0, 0, 0, bottomNavigationBarSize + bottomBarSize) // needed clipToPadding="false"
                 }
-                updateNavigationBarColor(getProperBackgroundColor())
+                //updateNavigationBarColor(getProperBackgroundColor())
             }
         }
     }
@@ -283,8 +288,19 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
+        if (requestCode == REQUEST_EDIT_IMAGE) {
+            if (resultCode == RESULT_OK && resultData != null) {
+                mMedia.clear()
+                refreshItems()
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, resultData)
+    }
+
     private fun refreshMenuItems() {
-        val isDefaultFolder = !config.defaultFolder.isEmpty() && File(config.defaultFolder).compareTo(File(mPath)) == 0
+        val isDefaultFolder = !config.defaultFolder.isEmpty()
+            && File(config.defaultFolder).compareTo(File(mPath)) == 0
 
         binding.mediaMenu.getToolbar().menu.apply {
             findItem(R.id.group).isVisible = !config.scrollHorizontally
@@ -296,11 +312,13 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
             findItem(R.id.folder_view).isVisible = mShowAll
             findItem(R.id.open_camera).isVisible = mShowAll
             findItem(R.id.about).isVisible = mShowAll
-            findItem(R.id.create_new_folder).isVisible = !mShowAll && mPath != RECYCLE_BIN && mPath != FAVORITES
+            findItem(R.id.create_new_folder).isVisible =
+                !mShowAll && mPath != RECYCLE_BIN && mPath != FAVORITES
             findItem(R.id.open_recycle_bin).isVisible = config.useRecycleBin && mPath != RECYCLE_BIN
 
             findItem(R.id.temporarily_show_hidden).isVisible = !config.shouldShowHidden
-            findItem(R.id.stop_showing_hidden).isVisible = (!isRPlus() || isExternalStorageManager()) && config.temporarilyShowHidden
+            findItem(R.id.stop_showing_hidden).isVisible =
+                (!isRPlus() || isExternalStorageManager()) && config.temporarilyShowHidden
 
             findItem(R.id.set_as_default_folder).isVisible = !isDefaultFolder && !mShowAll
             findItem(R.id.unset_as_default_folder).isVisible = isDefaultFolder
@@ -406,12 +424,16 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     private fun searchQueryChanged(text: String) {
         ensureBackgroundThread {
             try {
-                val filtered = mMedia.filter { it is Medium && it.name.contains(text, true) } as ArrayList
+                val filtered = mMedia
+                    .filter { it is Medium && it.name.contains(text, true) } as ArrayList
                 filtered.sortBy { it is Medium && !it.name.startsWith(text, true) }
-                val grouped = MediaFetcher(applicationContext).groupMedia(filtered as ArrayList<Medium>, mPath)
+                val grouped = MediaFetcher(applicationContext).groupMedia(
+                    media = filtered as ArrayList<Medium>, path = mPath
+                )
                 runOnUiThread {
                     if (grouped.isEmpty()) {
-                        binding.mediaEmptyTextPlaceholder.text = getString(com.goodwy.commons.R.string.no_items_found)
+                        binding.mediaEmptyTextPlaceholder.text =
+                            getString(com.goodwy.commons.R.string.no_items_found)
                         binding.mediaEmptyTextPlaceholder.beVisible()
                         binding.mediaFastscroller.beGone()
                     } else {
@@ -472,8 +494,14 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         if (currAdapter == null) {
             initZoomListener()
             MediaAdapter(
-                this, mMedia.clone() as ArrayList<ThumbnailItem>, this, mIsGetImageIntent || mIsGetVideoIntent || mIsGetAnyIntent,
-                mAllowPickingMultiple, mPath, binding.mediaGrid, binding.mediaRefreshLayout
+                activity = this,
+                media = mMedia.clone() as ArrayList<ThumbnailItem>,
+                listener = this,
+                isAGetIntent = mIsGetImageIntent || mIsGetVideoIntent || mIsGetAnyIntent,
+                allowMultiplePicks = mAllowPickingMultiple,
+                path = mPath,
+                recyclerView = binding.mediaGrid,
+                swipeRefreshLayout = binding.mediaRefreshLayout
             ) {
                 if (it is Medium && !isFinishing) {
                     itemClicked(it.path)
@@ -498,12 +526,81 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         }
 
         setupScrollDirection()
+        if (config.hideGroupingBarWhenScroll && !config.hideGroupingBar) setupTabsHide()
     }
 
     private fun setupScrollDirection() {
         val viewType = config.getFolderViewType(if (mShowAll) SHOW_ALL else mPath)
         val scrollHorizontally = config.scrollHorizontally && viewType == VIEW_TYPE_GRID
         binding.mediaFastscroller.setScrollVertically(!scrollHorizontally)
+    }
+
+    private fun setupTabsHide() {
+        val tabsContainer = binding.mainTopTabsContainer
+        val duration: Long = 400
+        binding.mediaGrid.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            private var lastY = 0
+            private val SCROLL_THRESHOLD = 10 // Minimal movement for reaction
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                // Ignore minor movements
+                if (Math.abs(dy) < SCROLL_THRESHOLD) return
+
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+                val firstVisibleItem = layoutManager.findViewByPosition(firstVisibleItemPosition)
+
+                // Checking whether we are at the top of the list
+                val isAtTop = firstVisibleItemPosition == 0 &&
+                    firstVisibleItem != null &&
+                    firstVisibleItem.top >= 0 // The first element is fully visible and not shifted upwards.
+
+                // If at the very top — always show
+                if (isAtTop) {
+                    if (tabsContainer.visibility != View.VISIBLE) {
+                        tabsContainer.visibility = View.VISIBLE
+                        tabsContainer.alpha = 0f
+                        tabsContainer.translationY = tabsContainer.height.toFloat()
+                        tabsContainer.animate()
+                            .translationY(0f)
+                            .alpha(1f)
+                            .setDuration(duration)
+                            .start()
+                    }
+                    return // We do not apply other rules if at the top
+                }
+
+                // If not at the top, process the scroll
+                val isScrollingDown = dy > 0
+                val isScrollingUp = dy < 0
+
+                if (isScrollingDown) {
+                    if (tabsContainer.isVisible) {
+                        tabsContainer.animate()
+                            .translationY(tabsContainer.height.toFloat())
+                            .alpha(0f)
+                            .setDuration(duration)
+                            .withEndAction { tabsContainer.visibility = View.GONE }
+                            .start()
+                    }
+                } else if (isScrollingUp) {
+                    if (tabsContainer.isGone) {
+                        tabsContainer.visibility = View.VISIBLE
+                        tabsContainer.alpha = 0f
+                        tabsContainer.translationY = tabsContainer.height.toFloat()
+                        tabsContainer.animate()
+                            .translationY(0f)
+                            .alpha(1f)
+                            .setDuration(duration)
+                            .start()
+                    }
+                }
+
+                lastY = dy
+            }
+        })
     }
 
     private fun checkLastMediaChanged() {
@@ -564,11 +661,13 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 
     private fun restoreAllFiles() {
         val paths = mMedia.filter { it is Medium }.map { (it as Medium).path } as ArrayList<String>
-        restoreRecycleBinPaths(paths) {
-            ensureBackgroundThread {
-                directoryDB.deleteDirPath(RECYCLE_BIN)
+        showRestoreConfirmationDialog(paths.size) {
+            restoreRecycleBinPaths(paths) {
+                ensureBackgroundThread {
+                    directoryDB.deleteDirPath(RECYCLE_BIN)
+                }
+                finish()
             }
-            finish()
         }
     }
 
@@ -624,7 +723,11 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         if (mLoadedInitialPhotos) {
             startAsyncTask()
         } else {
-            getCachedMedia(mPath, mIsGetVideoIntent, mIsGetImageIntent) {
+            getCachedMedia(
+                mPath,
+                mIsGetVideoIntent && !mIsGetImageIntent,
+                mIsGetImageIntent && !mIsGetVideoIntent
+            ) {
                 if (it.isEmpty()) {
                     runOnUiThread {
                         binding.mediaRefreshLayout.isRefreshing = true
@@ -641,7 +744,13 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 
     private fun startAsyncTask() {
         mCurrAsyncTask?.stopFetching()
-        mCurrAsyncTask = GetMediaAsynctask(applicationContext, mPath, mIsGetImageIntent, mIsGetVideoIntent, mShowAll) {
+        mCurrAsyncTask = GetMediaAsynctask(
+            context = applicationContext,
+            mPath = mPath,
+            isPickImage = mIsGetImageIntent && !mIsGetVideoIntent,
+            isPickVideo = mIsGetVideoIntent && !mIsGetImageIntent,
+            showAll = mShowAll
+        ) {
             ensureBackgroundThread {
                 val oldMedia = mMedia.clone() as ArrayList<ThumbnailItem>
                 val newMedia = it
@@ -650,14 +759,17 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 
                     // remove cached files that are no longer valid for whatever reason
                     val newPaths = newMedia.mapNotNull { it as? Medium }.map { it.path }
-                    oldMedia.mapNotNull { it as? Medium }.filter { !newPaths.contains(it.path) }.forEach {
-                        if (mPath == FAVORITES && getDoesFilePathExist(it.path)) {
-                            favoritesDB.deleteFavoritePath(it.path)
-                            mediaDB.updateFavorite(it.path, false)
-                        } else {
-                            mediaDB.deleteMediumPath(it.path)
+                    oldMedia
+                        .mapNotNull { it as? Medium }
+                        .filter { !newPaths.contains(it.path) }
+                        .forEach {
+                            if (mPath == FAVORITES && getDoesFilePathExist(it.path)) {
+                                favoritesDB.deleteFavoritePath(it.path)
+                                mediaDB.updateFavorite(it.path, false)
+                            } else {
+                                mediaDB.deleteMediumPath(it.path)
+                            }
                         }
-                    }
                 } catch (e: Exception) {
                 }
             }
@@ -667,7 +779,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     }
 
     private fun isDirEmpty(): Boolean {
-        return if (mMedia.size <= 0 && config.filterMedia > 0) {
+        return if (mMedia.isEmpty() && config.filterMedia > 0) {
             if (mPath != FAVORITES && mPath != RECYCLE_BIN) {
                 deleteDirectoryIfEmpty()
                 deleteDBDirectory()
@@ -742,10 +854,16 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         val layoutManager = binding.mediaGrid.layoutManager as MyGridLayoutManager
         if (config.scrollHorizontally) {
             layoutManager.orientation = RecyclerView.HORIZONTAL
-            binding.mediaRefreshLayout.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            binding.mediaRefreshLayout.layoutParams = RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
         } else {
             layoutManager.orientation = RecyclerView.VERTICAL
-            binding.mediaRefreshLayout.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            binding.mediaRefreshLayout.layoutParams = RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
         }
 
         layoutManager.spanCount = config.mediaColumnCnt
@@ -765,7 +883,10 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         val layoutManager = binding.mediaGrid.layoutManager as MyGridLayoutManager
         layoutManager.spanCount = 1
         layoutManager.orientation = RecyclerView.VERTICAL
-        binding.mediaRefreshLayout.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        binding.mediaRefreshLayout.layoutParams = RelativeLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         mZoomListener = null
     }
 
@@ -779,11 +900,19 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 
             var currentGridDecoration: GridSpacingItemDecoration? = null
             if (binding.mediaGrid.itemDecorationCount > 0) {
-                currentGridDecoration = binding.mediaGrid.getItemDecorationAt(0) as GridSpacingItemDecoration
+                currentGridDecoration =
+                    binding.mediaGrid.getItemDecorationAt(0) as GridSpacingItemDecoration
                 currentGridDecoration.items = media
             }
 
-            val newGridDecoration = GridSpacingItemDecoration(spanCount, spacing, config.scrollHorizontally, config.fileRoundedCorners, media, useGridPosition)
+            val newGridDecoration = GridSpacingItemDecoration(
+                spanCount = spanCount,
+                spacing = spacing,
+                isScrollingHorizontally = config.scrollHorizontally,
+                addSideSpacing = config.fileRoundedCorners,
+                items = media,
+                useGridPosition = useGridPosition
+            )
             if (currentGridDecoration.toString() != newGridDecoration.toString()) {
                 if (currentGridDecoration != null) {
                     binding.mediaGrid.removeItemDecoration(currentGridDecoration)
@@ -820,7 +949,14 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     private fun changeColumnCount() {
         val items = ArrayList<RadioItem>()
         for (i in 1..MAX_COLUMN_COUNT) {
-            items.add(RadioItem(i, resources.getQuantityString(com.goodwy.commons.R.plurals.column_counts, i, i)))
+            items.add(
+                RadioItem(
+                    id = i,
+                    title = resources.getQuantityString(
+                        com.goodwy.commons.R.plurals.column_counts, i, i
+                    )
+                )
+            )
         }
 
         val currentColumnCount = (binding.mediaGrid.layoutManager as MyGridLayoutManager).spanCount
@@ -872,10 +1008,13 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                 .load(File(path))
                 .apply(options)
                 .into(object : SimpleTarget<Bitmap>() {
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
                         try {
                             WallpaperManager.getInstance(applicationContext).setBitmap(resource)
-                            setResult(Activity.RESULT_OK)
+                            setResult(RESULT_OK)
                         } catch (ignored: IOException) {
                         }
 
@@ -884,8 +1023,8 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                 })
         } else if (mIsGetImageIntent || mIsGetVideoIntent || mIsGetAnyIntent) {
             Intent().apply {
-                data = Uri.parse(path)
-                setResult(Activity.RESULT_OK, this)
+                data = path.toUri()
+                setResult(RESULT_OK, this)
             }
             finish()
         } else {
@@ -937,7 +1076,8 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         mLatestMediaId = getLatestMediaId()
         mLatestMediaDateId = getLatestMediaByDateId()
         if (!isFromCache) {
-            val mediaToInsert = (mMedia).filter { it is Medium && it.deletedTS == 0L }.map { it as Medium }
+            val mediaToInsert =
+                (mMedia).filter { it is Medium && it.deletedTS == 0L }.map { it as Medium }
             Thread {
                 try {
                     mediaDB.insertAll(mediaToInsert)
@@ -948,13 +1088,22 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     }
 
     override fun tryDeleteFiles(fileDirItems: ArrayList<FileDirItem>, skipRecycleBin: Boolean) {
-        val filtered = fileDirItems.filter { !getIsPathDirectory(it.path) && it.path.isMediaFile() } as ArrayList
+        val filtered = fileDirItems
+            .filter { !getIsPathDirectory(it.path) && it.path.isMediaFile() } as ArrayList
         if (filtered.isEmpty()) {
             return
         }
 
-        if (config.useRecycleBin && !skipRecycleBin && !filtered.first().path.startsWith(recycleBinPath)) {
-            val movingItems = resources.getQuantityString(com.goodwy.commons.R.plurals.moving_items_into_bin, filtered.size, filtered.size)
+        if (
+            config.useRecycleBin
+            && !skipRecycleBin
+            && !filtered.first().path.startsWith(recycleBinPath)
+        ) {
+            val movingItems = resources.getQuantityString(
+                com.goodwy.commons.R.plurals.moving_items_into_bin,
+                filtered.size,
+                filtered.size
+            )
             toast(movingItems)
 
             movePathsInRecycleBin(filtered.map { it.path } as ArrayList<String>) {
@@ -965,13 +1114,19 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                 }
             }
         } else {
-            val deletingItems = resources.getQuantityString(com.goodwy.commons.R.plurals.deleting_items, filtered.size, filtered.size)
+            val deletingItems = resources.getQuantityString(
+                com.goodwy.commons.R.plurals.deleting_items,
+                filtered.size,
+                filtered.size
+            )
             toast(deletingItems)
             deleteFilteredFiles(filtered)
         }
     }
 
-    private fun shouldSkipAuthentication() = intent.getBooleanExtra(SKIP_AUTHENTICATION, false)
+    private fun shouldSkipAuthentication(): Boolean {
+        return intent.getBooleanExtra(SKIP_AUTHENTICATION, false)
+    }
 
     private fun deleteFilteredFiles(filtered: ArrayList<FileDirItem>) {
         deleteFiles(filtered) {
@@ -1006,7 +1161,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     override fun selectedPaths(paths: ArrayList<String>) {
         Intent().apply {
             putExtra(PICKED_PATHS, paths)
-            setResult(Activity.RESULT_OK, this)
+            setResult(RESULT_OK, this)
         }
         finish()
     }
@@ -1022,7 +1177,8 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         }
 
         if (binding.mediaGrid.itemDecorationCount > 0) {
-            val currentGridDecoration = binding.mediaGrid.getItemDecorationAt(0) as GridSpacingItemDecoration
+            val currentGridDecoration =
+                binding.mediaGrid.getItemDecorationAt(0) as GridSpacingItemDecoration
             currentGridDecoration.items = media
         }
     }

@@ -27,10 +27,12 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/smaller_margin"
         android:background="@drawable/circle_black_background"
+        android:contentDescription="@null"
         android:gravity="end"
         android:padding="@dimen/tiny_margin"
         android:src="@drawable/ic_star_vector"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/medium_check"
@@ -39,11 +41,12 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="@dimen/small_margin"
-        android:layout_marginEnd="@dimen/medium_margin"
+        android:layout_marginEnd="@dimen/small_margin"
         android:background="@drawable/circle_background"
         android:contentDescription="@null"
         android:src="@drawable/ic_check_outline"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/medium_name"
@@ -51,11 +54,10 @@
         android:layout_height="match_parent"
         android:layout_alignTop="@+id/medium_thumbnail"
         android:layout_alignBottom="@+id/medium_thumbnail"
-        android:layout_toStartOf="@+id/medium_check"
         android:layout_toEndOf="@+id/medium_thumbnail"
         android:ellipsize="end"
         android:gravity="center_vertical"
-        android:maxLines="2"
+        android:maxLines="3"
         android:paddingStart="@dimen/medium_margin"
         android:paddingEnd="@dimen/normal_margin"
         android:textColor="@android:color/white"

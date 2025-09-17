@@ -218,7 +218,7 @@ class EditorDrawCanvas(context: Context, attrs: AttributeSet) : View(context, at
         }
 
         if (mOperations.isNotEmpty()) {
-            val lastOp = mOperations.removeLast()
+            val lastOp = mOperations.removeAt(mOperations.lastIndex)
             mUndoneOperations.add(lastOp)
             invalidate()
         }
@@ -227,7 +227,7 @@ class EditorDrawCanvas(context: Context, attrs: AttributeSet) : View(context, at
 
     fun redo() {
         if (mUndoneOperations.isNotEmpty()) {
-            val undoneOperation = mUndoneOperations.removeLast()
+            val undoneOperation = mUndoneOperations.removeAt(mUndoneOperations.lastIndex)
             addOperation(undoneOperation)
             invalidate()
         }
@@ -245,7 +245,7 @@ class EditorDrawCanvas(context: Context, attrs: AttributeSet) : View(context, at
 
         // maybe free up some memory
         while (mOperations.size > MAX_HISTORY_COUNT) {
-            val item = mOperations.removeFirst()
+            val item = mOperations.removeAt(0)
             if (item is CanvasOp.BitmapOp) {
                 item.bitmap.recycle()
             }

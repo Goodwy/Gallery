@@ -4,7 +4,8 @@
     android:id="@+id/dir_holder"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/medium_margin"
+    android:layout_marginHorizontal="@dimen/medium_margin"
+    android:layout_marginVertical="@dimen/small_margin"
     android:clickable="true"
     android:focusable="true"
     android:paddingTop="@dimen/medium_margin">
@@ -96,6 +97,7 @@
         android:layout_alignStart="@+id/dir_thumbnail"
         android:layout_alignEnd="@+id/dir_thumbnail"
         android:paddingTop="@dimen/small_margin"
+        android:paddingHorizontal="@dimen/tiny_margin"
         android:textColor="@android:color/white"
         android:textSize="@dimen/normal_text_size"
         tools:text="Camera" />
@@ -108,6 +110,7 @@
         android:layout_alignStart="@+id/dir_thumbnail"
         android:layout_alignEnd="@+id/dir_thumbnail"
         android:layout_marginTop="-4dp"
+        android:paddingHorizontal="@dimen/tiny_margin"
         android:textColor="@android:color/white"
         android:textSize="@dimen/normal_text_size"
         android:alpha="0.6"

@@ -41,11 +41,10 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="@dimen/small_margin"
-        android:layout_marginEnd="@dimen/medium_margin"
+        android:layout_marginEnd="@dimen/small_margin"
         android:background="@drawable/circle_background"
         android:contentDescription="@null"
-        android:padding="@dimen/tiny_margin"
-        android:src="@drawable/ic_check_vector"
+        android:src="@drawable/ic_check_outline"
         android:visibility="gone"
         tools:visibility="visible" />
 

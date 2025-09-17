@@ -2,6 +2,7 @@ package com.goodwy.gallery.helpers
 
 import android.graphics.*
 import com.squareup.picasso.Transformation
+import androidx.core.graphics.createBitmap
 
 // taken from https://stackoverflow.com/a/35241525/1967672
 class PicassoRoundedCornersTransformation(private val radius: Float) : Transformation {
@@ -15,7 +16,7 @@ class PicassoRoundedCornersTransformation(private val radius: Float) : Transform
             source.recycle()
         }
 
-        val bitmap = Bitmap.createBitmap(size, size, source.config)
+        val bitmap = createBitmap(size, size, source.config ?: Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         val paint = Paint()
         val shader = BitmapShader(squaredBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)

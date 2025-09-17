@@ -45,6 +45,7 @@ const val INCLUDED_FOLDERS = "included_folders"
 const val ALBUM_COVERS = "album_covers"
 const val HIDE_SYSTEM_UI = "hide_system_ui"
 const val DELETE_EMPTY_FOLDERS = "delete_empty_folders"
+const val KEEP_SCREEN_ON = "keep_screen_on"
 const val ALLOW_PHOTO_GESTURES = "allow_photo_gestures"
 const val ALLOW_VIDEO_GESTURES = "allow_video_gestures"
 const val TEMP_FOLDER_PATH = "temp_folder_path"
@@ -106,6 +107,8 @@ const val SHOW_WARNING = "show_warning"
 // Goodwy
 const val HIDE_GROUPING_BAR = "hide_grouping_bar"
 const val HIDE_GROUPING_BUTTON = "hide_grouping_button"
+const val HIDE_GROUPING_BAR_WHEN_SCROLLING = "hide_grouping_bar_when_scrolling"
+const val FONT_SIZE_DIR = "font_size_dir"
 
 // slideshow
 const val SLIDESHOW_INTERVAL = "slideshow_interval"
@@ -138,6 +141,7 @@ const val SHOW_TEMP_HIDDEN_DURATION = 300000L
 const val CLICK_MAX_DURATION = 150
 const val CLICK_MAX_DISTANCE = 100
 const val MAX_CLOSE_DOWN_GESTURE_DURATION = 300
+const val MAX_ZOOM_EQUALITY_TOLERANCE = 0.01
 const val DRAG_THRESHOLD = 8
 const val MONTH_MILLISECONDS = MONTH_SECONDS * 1000L
 const val MIN_SKIP_LENGTH = 2000

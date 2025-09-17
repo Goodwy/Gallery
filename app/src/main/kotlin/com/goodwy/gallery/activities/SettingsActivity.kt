@@ -30,6 +30,7 @@ import ru.rustore.sdk.core.feature.model.FeatureAvailabilityResult
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
+import java.util.Calendar
 import java.util.Locale
 import java.util.Timer
 import kotlin.concurrent.schedule
@@ -176,6 +177,7 @@ class SettingsActivity : SimpleActivity() {
         setupScrollHorizontally()
         setupEnablePullToRefresh()
         setupHideTopBarWhenScroll()
+        setupHideGroupingBarWhenScroll()
         setupChangeColourTopBar()
 
         setupDarkBackground()
@@ -183,6 +185,7 @@ class SettingsActivity : SimpleActivity() {
         setupHideSystemUI()
         setupFileDeletionPasswordProtection()
         setupDeleteEmptyFolders()
+        setupKeepScreenOn()
         setupAllowPhotoGestures()
         setupAllowVideoGestures()
         setupAllowDownGesture()
@@ -267,7 +270,6 @@ class SettingsActivity : SimpleActivity() {
             binding.settingsManageIncludedFoldersChevron,
             binding.settingsManageExcludedFoldersChevron,
             binding.settingsManageHiddenFoldersChevron,
-            binding.settingsChangeDateTimeFormatChevron,
             binding.settingsFileThumbnailStyleLabelChevron,
             binding.settingsManageExtendedDetailsChevron,
             binding.settingsManageBottomActionsChevron,
@@ -298,18 +300,7 @@ class SettingsActivity : SimpleActivity() {
 
     private fun setupPurchaseThankYou() = binding.apply {
         settingsPurchaseThankYouHolder.beGoneIf(isPro())
-        settingsPurchaseThankYouHolder.setOnClickListener {
-            launchPurchase()
-        }
-        moreButton.setOnClickListener {
-            launchPurchase()
-        }
-        val appDrawable = resources.getColoredDrawableWithColor(this@SettingsActivity, com.goodwy.commons.R.drawable.ic_plus_support, getProperPrimaryColor())
-        purchaseLogo.setImageDrawable(appDrawable)
-        val drawable = resources.getColoredDrawableWithColor(this@SettingsActivity, com.goodwy.commons.R.drawable.button_gray_bg, getProperPrimaryColor())
-        moreButton.background = drawable
-        moreButton.setTextColor(getProperBackgroundColor())
-        moreButton.setPadding(2, 2, 2, 2)
+        settingsPurchaseThankYouHolder.onClick = { launchPurchase() }
     }
 
     private fun setupCustomizeColors() = binding.apply {
@@ -371,9 +362,16 @@ class SettingsActivity : SimpleActivity() {
     }
 
     private fun setupChangeDateTimeFormat() {
+        updateDateTimeFormat()
         binding.settingsChangeDateTimeFormatHolder.setOnClickListener {
-            ChangeDateTimeFormatDialog(this) {}
+            ChangeDateTimeFormatDialog(this, true) { updateDateTimeFormat() }
         }
+    }
+
+    private fun updateDateTimeFormat() {
+        val cal = Calendar.getInstance(Locale.ENGLISH).timeInMillis
+        val formatDate = cal.formatDate(this@SettingsActivity)
+        binding.settingsChangeDateTimeFormat.text = formatDate
     }
 
     private fun setupUseEnglish() = binding.apply {
@@ -584,16 +582,20 @@ class SettingsActivity : SimpleActivity() {
     }
 
     private fun setupScrollHorizontally() {
-        binding.settingsScrollHorizontally.isChecked = config.scrollHorizontally
-        binding.settingsScrollHorizontallyHolder.setOnClickListener {
-            binding.settingsScrollHorizontally.toggle()
-            config.scrollHorizontally = binding.settingsScrollHorizontally.isChecked
+        binding.apply {
+            settingsScrollHorizontally.isChecked = config.scrollHorizontally
+            settingsScrollHorizontallyHolder.setOnClickListener {
+                settingsScrollHorizontally.toggle()
+                config.scrollHorizontally = settingsScrollHorizontally.isChecked
 
-            if (config.scrollHorizontally) {
-                config.enablePullToRefresh = false
-                binding.settingsEnablePullToRefresh.isChecked = false
+                if (config.scrollHorizontally) {
+                    config.enablePullToRefresh = false
+                    settingsEnablePullToRefresh.isChecked = false
+                }
+                settingsHideBarWhenScrollHolder.beVisibleIf(!config.scrollHorizontally)
+                settingsChangeColourTopBarHolder.beVisibleIf(!config.scrollHorizontally)
+                settingsHideGroupingBarWhenScrollHolder.beVisibleIf(!config.scrollHorizontally)
             }
-            binding.settingsHideBarWhenScrollHolder.beVisibleIf(!config.scrollHorizontally)
         }
     }
 
@@ -606,8 +608,18 @@ class SettingsActivity : SimpleActivity() {
         }
     }
 
+    private fun setupHideGroupingBarWhenScroll() = binding.apply {
+        settingsHideGroupingBarWhenScrollHolder.beVisibleIf(!config.scrollHorizontally)
+        settingsHideGroupingBarWhenScroll.isChecked = config.hideGroupingBarWhenScroll
+        settingsHideGroupingBarWhenScrollHolder.setOnClickListener {
+            settingsHideGroupingBarWhenScroll.toggle()
+            config.hideGroupingBarWhenScroll = settingsHideGroupingBarWhenScroll.isChecked
+        }
+    }
+
     private fun setupChangeColourTopBar() {
         binding.apply {
+            settingsChangeColourTopBarHolder.beVisibleIf(!config.scrollHorizontally)
             settingsChangeColourTopBar.isChecked = config.changeColourTopBar
             settingsChangeColourTopBarHolder.setOnClickListener {
                 settingsChangeColourTopBar.toggle()
@@ -720,6 +732,14 @@ class SettingsActivity : SimpleActivity() {
         binding.settingsDeleteEmptyFoldersHolder.setOnClickListener {
             binding.settingsDeleteEmptyFolders.toggle()
             config.deleteEmptyFolders = binding.settingsDeleteEmptyFolders.isChecked
+        }
+    }
+
+    private fun setupKeepScreenOn() {
+        binding.settingsKeepScreenOnFullscreenPhotos.isChecked = config.keepScreenOn
+        binding.settingsKeepScreenOnFullscreenPhotosHolder.setOnClickListener {
+            binding.settingsKeepScreenOnFullscreenPhotos.toggle()
+            config.keepScreenOn = binding.settingsKeepScreenOnFullscreenPhotos.isChecked
         }
     }
 
@@ -1168,6 +1188,7 @@ class SettingsActivity : SimpleActivity() {
                 put(BLACK_BACKGROUND, config.blackBackground)
                 put(HIDE_SYSTEM_UI, config.hideSystemUI)
                 put(ALLOW_INSTANT_CHANGE, config.allowInstantChange)
+                put(KEEP_SCREEN_ON, config.keepScreenOn)
                 put(ALLOW_PHOTO_GESTURES, config.allowPhotoGestures)
                 put(ALLOW_DOWN_GESTURE, config.allowDownGesture)
                 put(ALLOW_ROTATING_WITH_GESTURES, config.allowRotatingWithGestures)
@@ -1319,6 +1340,7 @@ class SettingsActivity : SimpleActivity() {
                 BLACK_BACKGROUND -> config.blackBackground = value.toBoolean()
                 HIDE_SYSTEM_UI -> config.hideSystemUI = value.toBoolean()
                 ALLOW_INSTANT_CHANGE -> config.allowInstantChange = value.toBoolean()
+                KEEP_SCREEN_ON -> config.keepScreenOn = value.toBoolean()
                 ALLOW_PHOTO_GESTURES -> config.allowPhotoGestures = value.toBoolean()
                 ALLOW_DOWN_GESTURE -> config.allowDownGesture = value.toBoolean()
                 ALLOW_ROTATING_WITH_GESTURES -> config.allowRotatingWithGestures = value.toBoolean()

@@ -5,6 +5,8 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.ShortcutInfo
@@ -14,17 +16,15 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Icon
-import android.media.AudioManager
 import android.os.Bundle
 import android.os.Handler
-import android.text.format.DateUtils
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
 import android.widget.Toast
-import androidx.appcompat.content.res.AppCompatResources
+import androidx.annotation.OptIn
 import androidx.exifinterface.media.ExifInterface
 import androidx.media3.common.util.UnstableApi
 import androidx.print.PrintHelper
@@ -36,7 +36,6 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
-import com.goodwy.commons.dialogs.ConfirmationAdvancedDialog
 import com.goodwy.commons.dialogs.PropertiesDialog
 import com.goodwy.commons.dialogs.RenameItemDialog
 import com.goodwy.commons.extensions.*
@@ -59,8 +58,6 @@ import com.goodwy.gallery.models.Medium
 import com.goodwy.gallery.models.ThumbnailItem
 import java.io.File
 import kotlin.math.min
-import kotlin.time.Duration.Companion.days
-import kotlin.time.Duration.Companion.minutes
 
 @Suppress("UNCHECKED_CAST")
 class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, ViewPagerFragment.FragmentListener {
@@ -123,6 +120,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         }
     }
 
+    @OptIn(UnstableApi::class)
     override fun onResume() {
         super.onResume()
         if (!hasPermission(getPermissionToRequest())) {
@@ -157,7 +155,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         refreshMenuItems()
 
         val filename = getCurrentMedium()?.name ?: mPath.getFilenameFromPath()
-        val fileDate = getCurrentMedium()?.taken?.formatDate(this)
+        val fileDate = getCurrentMedium()?.taken?.formatDate(this, useRelativeDate = true)
         binding.mediumViewerToolbar.title = filename
         binding.mediumViewerToolbar.subtitle = fileDate
 
@@ -172,6 +170,8 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
 
     override fun onDestroy() {
         super.onDestroy()
+        ColorModeHelper.resetColorMode(this)
+
         if (intent.extras?.containsKey(IS_VIEW_INTENT) == true) {
             config.temporarilyShowHidden = false
         }
@@ -204,6 +204,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
                 findItem(R.id.menu_rename).isVisible = visibleBottomActions and BOTTOM_ACTION_RENAME == 0 && !currentMedium.getIsInRecycleBin()
                 findItem(R.id.menu_rotate).isVisible = currentMedium.isImage() && visibleBottomActions and BOTTOM_ACTION_ROTATE == 0
                 findItem(R.id.menu_set_as).isVisible = visibleBottomActions and BOTTOM_ACTION_SET_AS == 0
+                findItem(R.id.menu_copy_to_clipboard).isVisible = currentMedium.isImage()
                 findItem(R.id.menu_copy_to).isVisible = visibleBottomActions and BOTTOM_ACTION_COPY == 0
                 findItem(R.id.menu_move_to).isVisible = visibleBottomActions and BOTTOM_ACTION_MOVE == 0
                 findItem(R.id.menu_save_as).isVisible = rotationDegrees != 0
@@ -288,6 +289,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
                 R.id.menu_create_shortcut -> createShortcut()
                 R.id.menu_resize -> resizeImage()
                 R.id.menu_settings -> launchSettings()
+                R.id.menu_copy_to_clipboard -> copyImageToClipboard()
                 else -> return@setOnMenuItemClickListener false
             }
             return@setOnMenuItemClickListener true
@@ -452,7 +454,6 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
             }
 
             checkSystemUI()
-            fullscreenToggled()
         }
 
         if (intent.action == "com.android.camera.action.REVIEW") {
@@ -539,6 +540,10 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
                     }
 
                     hideSystemUI(true)
+                    if (!mIsFullScreen) {
+                        mIsFullScreen = true
+                        fullscreenToggled()
+                    }
                     mRandomSlideshowStopped = false
                     mSlideshowInterval = config.slideshowInterval
                     mSlideshowMoveBackwards = config.slideshowMoveBackwards
@@ -1117,6 +1122,14 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         launchResizeImageDialog(oldPath)
     }
 
+    private fun copyImageToClipboard() {
+        val clipboard = getSystemService(ClipboardManager::class.java) as ClipboardManager
+
+        val imagePath = getCurrentMedium()?.path ?: return
+        val clip = ClipData.newUri(contentResolver, "Image", getFinalUriFromPath(imagePath, BuildConfig.APPLICATION_ID))
+        clipboard.setPrimaryClip(clip)
+    }
+
     private fun checkDeleteConfirmation() {
         if (getCurrentMedium() == null) {
             return
@@ -1461,14 +1474,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
             val medium = getCurrentMedium()
             if (medium != null) {
                 binding.mediumViewerToolbar.title = medium.path.getFilenameFromPath()
-                //binding.mediumViewerToolbar.subtitle = medium.taken.formatDate(this)
-                binding.mediumViewerToolbar.subtitle = DateUtils.getRelativeDateTimeString(
-                    this,
-                    medium.taken,
-                    1.minutes.inWholeMilliseconds,
-                    2.days.inWholeMilliseconds,
-                    0,
-                )
+                binding.mediumViewerToolbar.subtitle = medium.taken.formatDate(this, useRelativeDate = true)
             }
         }
     }

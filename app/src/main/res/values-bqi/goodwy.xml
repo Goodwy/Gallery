@@ -18,7 +18,6 @@
     <string name="by_date_taken_yearly_g">Date taken (yearly)</string>
     <string name="hide_grouping_bar">Hide the grouping bar</string>
     <string name="hide_grouping_button">Hide the grouping button</string>
-    <string name="hide_grouping_bar_when_scrolling">Hide the grouping bar when scrolling</string>
 
     <string name="eraser">Eraser</string>
     <string name="eyedropper">Eyedropper</string>
