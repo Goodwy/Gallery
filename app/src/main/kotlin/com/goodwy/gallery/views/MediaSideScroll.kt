@@ -147,7 +147,7 @@ class MediaSideScroll(context: Context, attrs: AttributeSet) : RelativeLayout(co
     private fun getCurrentBrightness(): Int {
         return try {
             Settings.System.getInt(activity!!.contentResolver, Settings.System.SCREEN_BRIGHTNESS)
-        } catch (e: Settings.SettingNotFoundException) {
+        } catch (_: Settings.SettingNotFoundException) {
             70
         }
     }
@@ -162,7 +162,11 @@ class MediaSideScroll(context: Context, attrs: AttributeSet) : RelativeLayout(co
 
     private fun volumePercentChanged(percent: Int) {
         val stream = AudioManager.STREAM_MUSIC
-        val maxVolume = max(activity!!.audioManager.getStreamMaxVolume(stream), 1)
+        val maxVolume = try {
+            max(activity!!.audioManager.getStreamMaxVolume(stream), 1)
+        } catch (_: Exception) {
+            15
+        }
         val addPoints = ((percent / 100f) * maxVolume).toInt()
         val newVolume = (mTouchDownValue + addPoints).coerceIn(0, maxVolume)
         activity!!.audioManager.setStreamVolume(stream, newVolume, 0)
@@ -179,7 +183,7 @@ class MediaSideScroll(context: Context, attrs: AttributeSet) : RelativeLayout(co
     private fun brightnessPercentChanged(percent: Int) {
         val maxBrightness = 255f
         var newBrightness = (mTouchDownValue + 2.55 * percent).toFloat()
-        newBrightness = Math.min(maxBrightness, Math.max(0f, newBrightness))
+        newBrightness = maxBrightness.coerceAtMost(0f.coerceAtLeast(newBrightness))
         mTempBrightness = newBrightness.toInt()
 
         val absolutePercent = ((newBrightness / maxBrightness) * 100).toInt()

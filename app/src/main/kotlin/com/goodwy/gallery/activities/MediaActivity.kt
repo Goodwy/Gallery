@@ -44,6 +44,7 @@ import com.goodwy.gallery.models.ThumbnailItem
 import com.goodwy.gallery.models.ThumbnailSection
 import java.io.File
 import java.io.IOException
+import kotlin.math.abs
 
 class MediaActivity : SimpleActivity(), MediaOperationsListener {
     private val LAST_MEDIA_CHECK_PERIOD = 3000L
@@ -444,7 +445,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                     handleGridSpacing(grouped)
                     getMediaAdapter()?.updateMedia(grouped)
                 }
-            } catch (ignored: Exception) {
+            } catch (_: Exception) {
             }
         }
     }
@@ -546,7 +547,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                 super.onScrolled(recyclerView, dx, dy)
 
                 // Ignore minor movements
-                if (Math.abs(dy) < SCROLL_THRESHOLD) return
+                if (abs(dy) < SCROLL_THRESHOLD) return
 
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
@@ -627,7 +628,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     }
 
     private fun showSortingDialog() {
-        ChangeSortingDialog(this, false, true, mPath) {
+        ChangeSortingDialog(this, isDirectorySorting = false, showFolderCheckbox = true, path = mPath) {
             mLoadedInitialPhotos = false
             binding.mediaGrid.adapter = null
             getMedia()
@@ -707,7 +708,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
             if (!fileDirItem.isDownloadsFolder() && fileDirItem.isDirectory) {
                 ensureBackgroundThread {
                     if (fileDirItem.getProperFileCount(this, true) == 0) {
-                        tryDeleteFileDirItem(fileDirItem, true, true)
+                        tryDeleteFileDirItem(fileDirItem, allowDeleteFolder = true, deleteFromDatabase = true)
                     }
                 }
             }
@@ -770,7 +771,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                                 mediaDB.deleteMediumPath(it.path)
                             }
                         }
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }
@@ -809,7 +810,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         ensureBackgroundThread {
             try {
                 directoryDB.deleteDirPath(mPath)
-            } catch (ignored: Exception) {
+            } catch (_: Exception) {
             }
         }
     }
@@ -1015,7 +1016,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                         try {
                             WallpaperManager.getInstance(applicationContext).setBitmap(resource)
                             setResult(RESULT_OK)
-                        } catch (ignored: IOException) {
+                        } catch (_: IOException) {
                         }
 
                         finish()
@@ -1070,7 +1071,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                 binding.mediaEmptyTextPlaceholder.text = getString(R.string.no_media_with_filters)
             }
             binding.mediaFastscroller.beVisibleIf(binding.mediaEmptyTextPlaceholder.isGone())
-            setupAdapter()
+            if (!isFromCache) setupAdapter()
         }
 
         mLatestMediaId = getLatestMediaId()
@@ -1081,7 +1082,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
             Thread {
                 try {
                     mediaDB.insertAll(mediaToInsert)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }.start()
         }
@@ -1290,28 +1291,33 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     }
 
     private fun getTabGroupBy(position: Int, tabType: Int): Int {
-        val stringId = if (tabType == 1) {
-            when (position) {
-                0 -> GROUP_BY_LAST_MODIFIED_YEARLY
-                1 -> GROUP_BY_LAST_MODIFIED_MONTHLY
-                2 -> GROUP_BY_LAST_MODIFIED_DAILY
-                else -> GROUP_BY_LAST_MODIFIED_NONE
+        val stringId = when (tabType) {
+            1 -> {
+                when (position) {
+                    0 -> GROUP_BY_LAST_MODIFIED_YEARLY
+                    1 -> GROUP_BY_LAST_MODIFIED_MONTHLY
+                    2 -> GROUP_BY_LAST_MODIFIED_DAILY
+                    else -> GROUP_BY_LAST_MODIFIED_NONE
+                }
             }
-        } else if (tabType == 2) {
-            when (position) {
-                0 -> GROUP_BY_DATE_TAKEN_YEARLY
-                1 -> GROUP_BY_DATE_TAKEN_MONTHLY
-                2 -> GROUP_BY_DATE_TAKEN_DAILY
-                else -> GROUP_BY_DATE_TAKEN_NONE
+            2 -> {
+                when (position) {
+                    0 -> GROUP_BY_DATE_TAKEN_YEARLY
+                    1 -> GROUP_BY_DATE_TAKEN_MONTHLY
+                    2 -> GROUP_BY_DATE_TAKEN_DAILY
+                    else -> GROUP_BY_DATE_TAKEN_NONE
+                }
             }
-        } else if (tabType == 3)  {
-            when (position) {
-                0 -> GROUP_BY_FILE_TYPE
-                1 -> GROUP_BY_EXTENSION
-                2 -> GROUP_BY_FOLDER
-                else -> GROUP_BY_OTHER_NONE
+            3 -> {
+                when (position) {
+                    0 -> GROUP_BY_FILE_TYPE
+                    1 -> GROUP_BY_EXTENSION
+                    2 -> GROUP_BY_FOLDER
+                    else -> GROUP_BY_OTHER_NONE
+                }
             }
-        } else GROUP_BY_NONE
+            else -> GROUP_BY_NONE
+        }
 
         return stringId
     }

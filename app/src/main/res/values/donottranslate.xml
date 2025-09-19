@@ -6,6 +6,9 @@
     <string name="package_name">com.goodwy.gallery</string>
 
     <!-- Release notes -->
+    <string name="release_651">
+        Improved performance, bug fixes
+    </string>
     <string name="release_650">
         Added ‘Hide the grouping bar when scrolling‘ option\n
         Added ‘Font size‘ option\n

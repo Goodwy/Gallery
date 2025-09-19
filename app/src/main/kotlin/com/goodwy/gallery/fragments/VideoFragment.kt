@@ -61,6 +61,7 @@ import com.goodwy.gallery.views.MediaSideScroll
 import java.io.File
 import java.io.FileInputStream
 import java.text.DecimalFormat
+import androidx.core.net.toUri
 
 @UnstableApi
 class VideoFragment : ViewPagerFragment(), TextureView.SurfaceTextureListener,
@@ -439,7 +440,7 @@ class VideoFragment : ViewPagerFragment(), TextureView.SurfaceTextureListener,
         }
 
         val isContentUri = mMedium.path.startsWith("content://")
-        val uri = if (isContentUri) Uri.parse(mMedium.path) else Uri.fromFile(File(mMedium.path))
+        val uri = if (isContentUri) mMedium.path.toUri() else Uri.fromFile(File(mMedium.path))
         val dataSpec = DataSpec(uri)
         val fileDataSource = if (isContentUri) {
             ContentDataSource(requireContext())
@@ -611,8 +612,8 @@ class VideoFragment : ViewPagerFragment(), TextureView.SurfaceTextureListener,
                     mIsPanorama = true
                 }
             }
-        } catch (ignored: Exception) {
-        } catch (ignored: OutOfMemoryError) {
+        } catch (_: Exception) {
+        } catch (_: OutOfMemoryError) {
         }
     }
 

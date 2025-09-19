@@ -20,6 +20,7 @@ import com.goodwy.gallery.models.ThumbnailSection
 import java.io.File
 import java.util.Calendar
 import java.util.Locale
+import kotlin.math.roundToInt
 
 class MediaFetcher(val context: Context) {
     var shouldStop = false
@@ -131,7 +132,7 @@ class MediaFetcher(val context: Context) {
                     folderNoMediaStatuses[path] = hasNoMedia
                 }
             }.toMutableList() as ArrayList<String>
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             ArrayList()
         }
     }
@@ -178,7 +179,7 @@ class MediaFetcher(val context: Context) {
     private fun getSelectionQuery(filterMedia: Int): String {
         val query = StringBuilder()
         if (filterMedia and TYPE_IMAGES != 0) {
-            photoExtensions.forEach {
+            photoExtensions.forEach { _ ->
                 query.append("${Images.Media.DATA} LIKE ? OR ")
             }
         }
@@ -189,7 +190,7 @@ class MediaFetcher(val context: Context) {
         }
 
         if (filterMedia and TYPE_VIDEOS != 0) {
-            videoExtensions.forEach {
+            videoExtensions.forEach { _ ->
                 query.append("${Images.Media.DATA} LIKE ? OR ")
             }
         }
@@ -199,7 +200,7 @@ class MediaFetcher(val context: Context) {
         }
 
         if (filterMedia and TYPE_RAWS != 0) {
-            rawExtensions.forEach {
+            rawExtensions.forEach { _ ->
                 query.append("${Images.Media.DATA} LIKE ? OR ")
             }
         }
@@ -519,7 +520,7 @@ class MediaFetcher(val context: Context) {
                     dateTaken = lastModified
                 }
 
-                val videoDuration = Math.round(cursor.getIntValue(MediaStore.MediaColumns.DURATION) / 1000.toDouble()).toInt()
+                val videoDuration = (cursor.getIntValue(MediaStore.MediaColumns.DURATION) / 1000.toDouble()).roundToInt()
                 val isFavorite = favoritePaths.contains(path)
                 val medium =
                     Medium(null, filename, path, path.getParentPath(), lastModified, dateTaken, size, type, videoDuration, isFavorite, 0L, mediaStoreId)
@@ -530,7 +531,7 @@ class MediaFetcher(val context: Context) {
                 }
 
                 media[parent]?.add(medium)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
 
@@ -626,7 +627,7 @@ class MediaFetcher(val context: Context) {
                         val name = cursor.getStringValue(Images.Media.DISPLAY_NAME)
                         dateTakens["$folder/$name"] = dateTaken
                     }
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }
@@ -637,7 +638,7 @@ class MediaFetcher(val context: Context) {
             } else {
                 context.dateTakensDB.getDateTakensFromPath(folder)
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             return dateTakens
         }
 
@@ -665,7 +666,7 @@ class MediaFetcher(val context: Context) {
                         val path = cursor.getStringValue(Images.Media.DATA)
                         dateTakens[path] = dateTaken
                     }
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
 
@@ -674,7 +675,7 @@ class MediaFetcher(val context: Context) {
             dateTakenValues.forEach {
                 dateTakens[it.fullPath] = it.taken
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
         }
 
         return dateTakens
@@ -699,7 +700,7 @@ class MediaFetcher(val context: Context) {
                         val name = cursor.getStringValue(Images.Media.DISPLAY_NAME)
                         lastModifieds["$folder/$name"] = lastModified
                     }
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }
@@ -724,10 +725,10 @@ class MediaFetcher(val context: Context) {
                         val path = cursor.getStringValue(Images.Media.DATA)
                         lastModifieds[path] = lastModified
                     }
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
         }
 
         return lastModifieds
@@ -752,7 +753,7 @@ class MediaFetcher(val context: Context) {
                         val name = cursor.getStringValue(Images.Media.DISPLAY_NAME)
                         sizes["$folder/$name"] = size
                     }
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }
@@ -799,7 +800,7 @@ class MediaFetcher(val context: Context) {
     }
 
     fun groupMedia(media: ArrayList<Medium>, path: String): ArrayList<ThumbnailItem> {
-        val pathToCheck = if (path.isEmpty()) SHOW_ALL else path
+        val pathToCheck = path.ifEmpty { SHOW_ALL }
         val currentGrouping = context.config.getFolderGrouping(pathToCheck)
         if (currentGrouping and GROUP_BY_NONE != 0 || currentGrouping and GROUP_BY_LAST_MODIFIED_NONE != 0 ||
             currentGrouping and GROUP_BY_DATE_TAKEN_NONE != 0 || currentGrouping and GROUP_BY_OTHER_NONE != 0) {

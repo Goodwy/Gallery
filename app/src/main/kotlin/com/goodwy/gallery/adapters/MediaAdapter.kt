@@ -72,6 +72,8 @@ class MediaAdapter(
     var timeFormat = activity.getTimeFormat()
     var actModeCallbacks = actModeCallback
 
+    private val keyToPositionCache = mutableMapOf<Int, Int>()
+
     init {
         setupDragListener(true)
     }
@@ -187,7 +189,10 @@ class MediaAdapter(
 
     override fun getItemSelectionKey(position: Int) = (media.getOrNull(position) as? Medium)?.path?.hashCode()
 
-    override fun getItemKeyPosition(key: Int) = media.indexOfFirst { (it as? Medium)?.path?.hashCode() == key }
+//    override fun getItemKeyPosition(key: Int) = media.indexOfFirst { (it as? Medium)?.path?.hashCode() == key }
+    override fun getItemKeyPosition(key: Int): Int {
+        return keyToPositionCache[key] ?: media.indexOfFirst { (it as? Medium)?.path?.hashCode() == key }
+    }
 
     override fun onActionModeCreated() {
         swipeRefreshLayout?.isRefreshing = false
@@ -584,6 +589,12 @@ class MediaAdapter(
             media = thumbnailItems
             notifyDataSetChanged()
             finishActMode()
+        }
+        keyToPositionCache.clear()
+        newMedia.forEachIndexed { index, item ->
+            if (item is Medium) {
+                keyToPositionCache[item.path.hashCode()] = index
+            }
         }
     }
 

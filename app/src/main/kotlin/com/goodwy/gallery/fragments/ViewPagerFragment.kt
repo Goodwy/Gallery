@@ -11,6 +11,7 @@ import com.goodwy.gallery.extensions.config
 import com.goodwy.gallery.helpers.*
 import com.goodwy.gallery.models.Medium
 import java.io.File
+import kotlin.math.abs
 
 abstract class ViewPagerFragment : Fragment() {
     var listener: FragmentListener? = null
@@ -45,10 +46,10 @@ abstract class ViewPagerFragment : Fragment() {
             return ""
         }
 
-        val path = "${file.parent.trimEnd('/')}/"
+        val path = "${file.parent?.trimEnd('/')}/"
         val exif = try {
             ExifInterface(medium.path)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             return ""
         }
 
@@ -115,7 +116,7 @@ abstract class ViewPagerFragment : Fragment() {
         var result = ""
         val exif = try {
             ExifInterface(path)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             return ""
         }
 
@@ -147,7 +148,7 @@ abstract class ViewPagerFragment : Fragment() {
                 val diffY = mTouchDownY - event.rawY
 
                 val downGestureDuration = System.currentTimeMillis() - mTouchDownTime
-                if (!mIgnoreCloseDown && (Math.abs(diffY) > Math.abs(diffX)) && (diffY < -mCloseDownThreshold) && downGestureDuration < MAX_CLOSE_DOWN_GESTURE_DURATION && context?.config?.allowDownGesture == true) {
+                if (!mIgnoreCloseDown && (abs(diffY) > abs(diffX)) && (diffY < -mCloseDownThreshold) && downGestureDuration < MAX_CLOSE_DOWN_GESTURE_DURATION && context?.config?.allowDownGesture == true) {
                     activity?.finish()
                     activity?.overridePendingTransition(0, com.goodwy.commons.R.anim.slide_down)
                 }

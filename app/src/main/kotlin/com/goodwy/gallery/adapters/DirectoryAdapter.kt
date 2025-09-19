@@ -1,5 +1,6 @@
 package com.goodwy.gallery.adapters
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
@@ -79,6 +80,8 @@ class DirectoryAdapter(
     var timeFormat = activity.getTimeFormat()
     private val fontSizeDir = config.fontSizeDir
 
+    private val keyToPositionCache = mutableMapOf<Int, Int>()
+
     init {
         setupDragListener(true)
         fillLockedFolders()
@@ -96,7 +99,7 @@ class DirectoryAdapter(
         return createViewHolder(binding.root)
     }
 
-    override fun onBindViewHolder(holder: MyRecyclerViewAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val dir = dirs.getOrNull(position) ?: return
         holder.bindView(dir, true, !isPickIntent) { itemView, adapterPosition ->
             setupView(itemView, dir, holder)
@@ -169,7 +172,10 @@ class DirectoryAdapter(
 
     override fun getItemSelectionKey(position: Int) = dirs.getOrNull(position)?.path?.hashCode()
 
-    override fun getItemKeyPosition(key: Int) = dirs.indexOfFirst { it.path.hashCode() == key }
+//    override fun getItemKeyPosition(key: Int) = dirs.indexOfFirst { it.path.hashCode() == key }
+    override fun getItemKeyPosition(key: Int): Int {
+        return keyToPositionCache[key] ?: dirs.indexOfFirst { (it as? Directory)?.path?.hashCode() == key }
+    }
 
     override fun onActionModeCreated() {
         swipeRefreshLayout?.isRefreshing = false
@@ -211,7 +217,7 @@ class DirectoryAdapter(
     }
 
     private fun moveSelectedItemsToTop() {
-        selectedKeys.reversed().forEach { key ->
+        selectedKeys.toList().reversed().forEach { key ->
             val position = dirs.indexOfFirst { it.path.hashCode() == key }
             val tempItem = dirs[position]
             dirs.removeAt(position)
@@ -763,6 +769,10 @@ class DirectoryAdapter(
             notifyDataSetChanged()
             finishActMode()
         }
+        keyToPositionCache.clear()
+        newDirs.forEachIndexed { index, item ->
+            keyToPositionCache[item.path.hashCode()] = index
+        }
     }
 
     fun updateAnimateGifs(animateGifs: Boolean) {
@@ -775,6 +785,7 @@ class DirectoryAdapter(
         notifyDataSetChanged()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupView(view: View, directory: Directory, holder: ViewHolder) {
         val isSelected = selectedKeys.contains(directory.path.hashCode())
         bindItem(view).apply {

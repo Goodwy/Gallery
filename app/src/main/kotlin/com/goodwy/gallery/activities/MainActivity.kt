@@ -1318,7 +1318,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
 
         mLoadedInitialPhotos = true
         if (config.appRunCount > 1) {
-            checkLastMediaChanged()
+            checkLastMediaChanged(true)
         }
 
         runOnUiThread {
@@ -1558,7 +1558,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
         }
     }
 
-    private fun checkLastMediaChanged() {
+    private fun checkLastMediaChanged(first: Boolean = false) {
         if (isDestroyed) {
             return
         }
@@ -1570,7 +1570,8 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
                 if (mLatestMediaId != mediaId || mLatestMediaDateId != mediaDateId) {
                     mLatestMediaId = mediaId
                     mLatestMediaDateId = mediaDateId
-                    runOnUiThread {
+                    //We do not update the adapter on first launch to avoid double loading of the adapter
+                    if (!first) runOnUiThread {
                         getDirectories()
                     }
                 } else {
@@ -1694,6 +1695,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             add(Release(601, R.string.release_601))
             add(Release(610, R.string.release_610))
             add(Release(650, R.string.release_650))
+            add(Release(651, R.string.release_651))
             checkWhatsNew(this, BuildConfig.VERSION_CODE)
         }
     }

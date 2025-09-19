@@ -1,5 +1,6 @@
 package com.goodwy.gallery.fragments
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -65,6 +66,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.util.Locale
 import kotlin.math.ceil
+import androidx.core.net.toUri
+import androidx.core.graphics.drawable.toDrawable
+import kotlin.math.abs
 
 class PhotoFragment : ViewPagerFragment() {
     private val DEFAULT_DOUBLE_TAP_ZOOM = 2f
@@ -104,6 +108,7 @@ class PhotoFragment : ViewPagerFragment() {
     private lateinit var binding: PagerPhotoItemBinding
     private lateinit var mMedium: Medium
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val context = requireContext()
         val activity = requireActivity()
@@ -158,7 +163,7 @@ class PhotoFragment : ViewPagerFragment() {
 
                 gesturesView.setOnTouchListener { v, event ->
                     mIsTouched = true
-                    if (Math.abs(mCurrentGestureViewZoom - mInitialZoom) < MAX_ZOOM_EQUALITY_TOLERANCE) {
+                    if (abs(mCurrentGestureViewZoom - mInitialZoom) < MAX_ZOOM_EQUALITY_TOLERANCE) {
                         handleEvent(event)
                     }
                     false
@@ -180,7 +185,7 @@ class PhotoFragment : ViewPagerFragment() {
         }
 
         if (mMedium.path.startsWith("content://") && !mMedium.path.startsWith("content://mms/")) {
-            mMedium.path = requireContext().getRealPathFromURI(Uri.parse(mOriginalPath)) ?: mMedium.path
+            mMedium.path = requireContext().getRealPathFromURI(mOriginalPath.toUri()) ?: mMedium.path
             if (isRPlus() && !isExternalStorageManager() && mMedium.path.startsWith("/storage/") && mMedium.isHidden()) {
                 mMedium.path = mOriginalPath
             }
@@ -188,22 +193,22 @@ class PhotoFragment : ViewPagerFragment() {
             if (mMedium.path.isEmpty()) {
                 var out: FileOutputStream? = null
                 try {
-                    var inputStream = requireContext().contentResolver.openInputStream(Uri.parse(mOriginalPath))
+                    var inputStream = requireContext().contentResolver.openInputStream(mOriginalPath.toUri())
                     val exif = ExifInterface()
                     exif.readExif(inputStream, ExifInterface.Options.OPTION_ALL)
                     val tag = exif.getTag(ExifInterface.TAG_ORIENTATION)
                     val orientation = tag?.getValueAsInt(-1) ?: -1
-                    inputStream = requireContext().contentResolver.openInputStream(Uri.parse(mOriginalPath))
+                    inputStream = requireContext().contentResolver.openInputStream(mOriginalPath.toUri())
                     val original = BitmapFactory.decodeStream(inputStream)
                     val rotated = rotateViaMatrix(original, orientation)
                     exif.setTagValue(ExifInterface.TAG_ORIENTATION, 1)
                     exif.removeCompressedThumbnail()
 
-                    val file = File(requireContext().externalCacheDir, Uri.parse(mOriginalPath).lastPathSegment)
+                    val file = File(requireContext().externalCacheDir, mOriginalPath.toUri().lastPathSegment ?: "")
                     out = FileOutputStream(file)
                     rotated.compress(Bitmap.CompressFormat.JPEG, 100, out)
                     mMedium.path = file.absolutePath
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     requireActivity().toast(com.goodwy.commons.R.string.unknown_error_occurred)
                     return mView
                 } finally {
@@ -280,7 +285,7 @@ class PhotoFragment : ViewPagerFragment() {
                 if (context != null) {
                     Glide.with(requireContext()).clear(binding.gesturesView)
                 }
-            } catch (ignored: Exception) {
+            } catch (_: Exception) {
             }
         }
 
@@ -403,7 +408,7 @@ class PhotoFragment : ViewPagerFragment() {
         try {
             val pathToLoad = getPathToLoad(mMedium)
             val source = if (pathToLoad.startsWith("content://") || pathToLoad.startsWith("file://")) {
-                InputSource.UriSource(requireContext().contentResolver, Uri.parse(pathToLoad))
+                InputSource.UriSource(requireContext().contentResolver, pathToLoad.toUri())
             } else {
                 InputSource.FileSource(pathToLoad)
             }
@@ -415,9 +420,9 @@ class PhotoFragment : ViewPagerFragment() {
                     gifView.setInputSource(source)
                 }
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             loadBitmap()
-        } catch (e: OutOfMemoryError) {
+        } catch (_: OutOfMemoryError) {
             loadBitmap()
         }
     }
@@ -550,7 +555,7 @@ class PhotoFragment : ViewPagerFragment() {
                     }
                 }
             })
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
         }
     }
 
@@ -646,6 +651,7 @@ class PhotoFragment : ViewPagerFragment() {
         return coverIndex
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupStripeUpListener(adapter: PortraitPhotosAdapter, screenWidth: Int, itemWidth: Int) {
         binding.photoPortraitStripe.setOnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
@@ -653,7 +659,7 @@ class PhotoFragment : ViewPagerFragment() {
                 var closestDistance = Integer.MAX_VALUE
                 val center = screenWidth / 2
                 for ((key, value) in adapter.views) {
-                    val distance = Math.abs(value.x.toInt() + itemWidth / 2 - center)
+                    val distance = abs(value.x.toInt() + itemWidth / 2 - center)
                     if (distance < closestDistance) {
                         closestDistance = distance
                         closestIndex = key
@@ -668,7 +674,13 @@ class PhotoFragment : ViewPagerFragment() {
         }
     }
 
-    private fun getFilePathToShow() = if (mMedium.isPortrait()) mCurrentPortraitPhotoPath else getPathToLoad(mMedium)
+//    private fun getFilePathToShow() = if (mMedium.isPortrait()) mCurrentPortraitPhotoPath else getPathToLoad(mMedium)
+    private fun getFilePathToShow(): String {
+        if (!::mMedium.isInitialized) {
+            return ""
+        }
+        return if (mMedium.isPortrait()) mCurrentPortraitPhotoPath else getPathToLoad(mMedium)
+    }
 
     private fun openPanorama() {
         TODO("Panorama is not yet implemented.")
@@ -706,7 +718,7 @@ class PhotoFragment : ViewPagerFragment() {
         binding.subsamplingView.apply {
             setMaxTileSize(if (showHighestQuality) Integer.MAX_VALUE else 4096)
             setMinimumTileDpi(minTileDpi)
-            background = ColorDrawable(Color.TRANSPARENT)
+            background = Color.TRANSPARENT.toDrawable()
             bitmapDecoderFactory = bitmapDecoder
             regionDecoderFactory = regionDecoder
             maxScale = 10f
@@ -718,13 +730,11 @@ class PhotoFragment : ViewPagerFragment() {
 
             onImageEventListener = object : SubsamplingScaleImageView.OnImageEventListener {
                 override fun onReady() {
-                    background = ColorDrawable(
-                        if (config.blackBackground) {
-                            Color.BLACK
-                        } else {
-                            context.getProperBackgroundColor()
-                        }
-                    )
+                    background = if (config.blackBackground) {
+                        Color.BLACK
+                    } else {
+                        context.getProperBackgroundColor()
+                    }.toDrawable()
 
                     val useWidth = if (mImageOrientation == ORIENTATION_ROTATE_90 || mImageOrientation == ORIENTATION_ROTATE_270) sHeight else sWidth
                     val useHeight = if (mImageOrientation == ORIENTATION_ROTATE_90 || mImageOrientation == ORIENTATION_ROTATE_270) sWidth else sHeight
@@ -733,7 +743,7 @@ class PhotoFragment : ViewPagerFragment() {
 
                 override fun onImageLoadError(e: Exception) {
                     binding.gesturesView.controller.settings.isZoomEnabled = true
-                    background = ColorDrawable(Color.TRANSPARENT)
+                    background = Color.TRANSPARENT.toDrawable()
                     mIsSubsamplingVisible = false
                     beGone()
                 }
@@ -773,7 +783,7 @@ class PhotoFragment : ViewPagerFragment() {
     private fun checkIfPanorama() {
         mIsPanorama = try {
             if (mMedium.path.startsWith("content:/")) {
-                requireContext().contentResolver.openInputStream(Uri.parse(mMedium.path))
+                requireContext().contentResolver.openInputStream(mMedium.path.toUri())
             } else {
                 File(mMedium.path).inputStream()
             }.use {
@@ -783,9 +793,9 @@ class PhotoFragment : ViewPagerFragment() {
                     imageParser.contains("GPano:FullPanoWidthPixels=") ||
                     imageParser.contains("GPano:ProjectionType>Equirectangular")
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
-        } catch (e: OutOfMemoryError) {
+        } catch (_: OutOfMemoryError) {
             false
         }
 
@@ -804,7 +814,7 @@ class PhotoFragment : ViewPagerFragment() {
         try {
             val path = getFilePathToShow()
             orient = if (path.startsWith("content:/")) {
-                val inputStream = requireContext().contentResolver.openInputStream(Uri.parse(path))
+                val inputStream = requireContext().contentResolver.openInputStream(path.toUri())
                 val exif = ExifInterface()
                 exif.readExif(inputStream, ExifInterface.Options.OPTION_ALL)
                 val tag = exif.getTag(ExifInterface.TAG_ORIENTATION)
@@ -815,14 +825,14 @@ class PhotoFragment : ViewPagerFragment() {
             }
 
             if (orient == defaultOrientation || requireContext().isPathOnOTG(getFilePathToShow())) {
-                val uri = if (path.startsWith("content:/")) Uri.parse(path) else Uri.fromFile(File(path))
+                val uri = if (path.startsWith("content:/")) path.toUri() else Uri.fromFile(File(path))
                 val inputStream = requireContext().contentResolver.openInputStream(uri)
                 val exif2 = ExifInterface()
                 exif2.readExif(inputStream, ExifInterface.Options.OPTION_ALL)
                 orient = exif2.getTag(ExifInterface.TAG_ORIENTATION)?.getValueAsInt(defaultOrientation) ?: defaultOrientation
             }
-        } catch (ignored: Exception) {
-        } catch (ignored: OutOfMemoryError) {
+        } catch (_: Exception) {
+        } catch (_: OutOfMemoryError) {
         }
         return orient
     }
@@ -831,7 +841,7 @@ class PhotoFragment : ViewPagerFragment() {
         val bitmapAspectRatio = height / width.toFloat()
         val screenAspectRatio = mScreenHeight / mScreenWidth.toFloat()
 
-        return if (context == null || Math.abs(bitmapAspectRatio - screenAspectRatio) < SAME_ASPECT_RATIO_THRESHOLD) {
+        return if (context == null || abs(bitmapAspectRatio - screenAspectRatio) < SAME_ASPECT_RATIO_THRESHOLD) {
             DEFAULT_DOUBLE_TAP_ZOOM
         } else if (requireContext().portrait && bitmapAspectRatio <= screenAspectRatio) {
             mScreenHeight / height.toFloat()
