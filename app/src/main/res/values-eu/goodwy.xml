@@ -20,6 +20,7 @@
     <string name="by_date_taken_yearly_g">Ateratze-data (urtero)</string>
 
     <string name="hide_grouping_button">Ezkutatu taldearen botoia</string>
+    <string name="hide_grouping_bar_when_scrolling">Ezkutatu taldekatze-barra mugitzean</string>
     <string name="eraser">Ezabagailua</string>
     <string name="eyedropper">Konttatakoa</string>
     <string name="hide_grouping_bar">Ezkutatu taldekatze panela</string>

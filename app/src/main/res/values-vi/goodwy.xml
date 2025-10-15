@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Ngày chụp (hàng năm)</string>
 
     <string name="hide_grouping_button">Nút ẩn nhóm</string>
+    <string name="hide_grouping_bar_when_scrolling">Ẩn thanh nhóm khi cuộn</string>
     <string name="eraser">Cục tẩy</string>
     <string name="eyedropper">ống nhỏ mắt</string>
     <string name="hide_grouping_bar">Ẩn bảng nhóm</string>

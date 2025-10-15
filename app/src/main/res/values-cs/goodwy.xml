@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Data pořízení (roční)</string>
 
     <string name="hide_grouping_button">Skrýt tlačítko seskupení</string>
+    <string name="hide_grouping_bar_when_scrolling">Při posouvání skrýt lištu seskupení</string>
     <string name="eraser">Guma</string>
     <string name="eyedropper">Kapátko</string>
     <string name="hide_grouping_bar">Skrýt panel Seskupení</string>

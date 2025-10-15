@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Ημερομ. λήψης (ετήσια)</string>
 
     <string name="hide_grouping_button">Κουμπί απόκρυψης ομαδοποίησης</string>
+    <string name="hide_grouping_bar_when_scrolling">Απόκρυψη της γραμμής ομαδοποίησης κατά την κύλιση</string>
     <string name="eraser">Γόμα</string>
     <string name="eyedropper">Σταγονόμετρο</string>
     <string name="hide_grouping_bar">Απόκρυψη πίνακα ομαδοποίησης</string>

@@ -20,6 +20,7 @@
     <string name="by_date_taken_yearly_g">Дата на заснемане (годишно)</string>
 
     <string name="hide_grouping_button">Скриване на бутона за групиране</string>
+    <string name="hide_grouping_bar_when_scrolling">Скриване на лентата за групиране при превъртане</string>
     <string name="eraser">Гумичка</string>
     <string name="eyedropper">Пипетка за очи</string>
     <string name="hide_grouping_bar">Скриване на панела за групиране</string>

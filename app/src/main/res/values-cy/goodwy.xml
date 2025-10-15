@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Oriel Dde</string>
+    <string name="app_launcher_name_g">Oriel</string>
+    <string name="exclude_folder_description_g">Bydd hyn yn eithrio\'r detholiad ynghyd â\'i is-ffolderi o Oriel Dde yn unig. Gallwch reoli ffolderi sydd wedi\'u heithrio yn y Gosodiadau.</string>
+    <string name="excluded_activity_placeholder_g">Bydd eithrio ffolderi yn eu gwneud ynghyd â\'u his-ffolderi wedi\'u cuddio yn Oriel y Dde yn unig, byddant yn dal i fod yn weladwy mewn cymwysiadau eraill.\n\nOs ydych chi am eu cuddio rhag apiau eraill hefyd, defnyddiwch y swyddogaeth Cuddio.</string>
+    <string name="faq_1_title_g">Sut alla i wneud Oriel y Dde yn oriel ddiofyn y ddyfais?</string>
+    <string name="faq_1_text_g">Yn gyntaf mae\'n rhaid i chi ddod o hyd i\'r oriel ddiofyn gyfredol yn adran Apiau gosodiadau eich dyfais, chwilio am fotwm sy\'n dweud rhywbeth fel \"Agor yn ddiofyn\", cliciwch arno, yna dewiswch \"Clirio rhagosodiadau\".
+Y tro nesaf y byddwch chi\'n ceisio agor delwedd neu fideo, dylech chi weld dewiswr apiau, lle gallwch chi ddewis Oriel y Dde a\'i wneud yn ap diofyn.</string>
+    <string name="faq_5_text_g">Mae eithrio yn atal dangos y ffolder yn Oriel y Dde yn unig, tra bod Cuddio yn gweithio o ran y system ac yn cuddio\'r ffolder rhag orielau eraill hefyd. Mae\'n gweithio trwy greu ffeil wag \\.nomedia\\ yn y ffolder penodol, y gallwch ei thynnu wedyn gydag unrhyw reolwr ffeiliau hefyd. Sylwch nad yw rhai dyfeisiau\'n caniatáu cuddio ffolderi fel Camera, Cipluniau a Lawrlwythiadau.</string>
+
+    <string name="years">Blynyddoedd</string>
+    <string name="months">Misoedd</string>
+    <string name="days">Dyddiau</string>
+    <string name="all_photos">Pob Llun</string>
+    <string name="by_last_modified_yearly_g">Newidiwyd ddiwethaf (bob blwyddyn)</string>
+    <string name="by_date_taken_yearly_g">Dyddiad tynnu (bob blwyddyn)</string>
+    <string name="hide_grouping_bar">Cuddio\'r bar grwpio</string>
+    <string name="hide_grouping_button">Cuddio\'r botwm grwpio</string>
+    <string name="hide_grouping_bar_when_scrolling">Cuddio\'r bar grwpio wrth sgrolio</string>
+
+    <string name="eraser">Rhwbiwr</string>
+    <string name="eyedropper">Pipiwr</string>
+</resources>

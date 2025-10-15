@@ -9,6 +9,7 @@ import android.os.Handler
 import android.provider.MediaStore
 import android.provider.MediaStore.Images
 import android.provider.MediaStore.Video
+import android.speech.RecognizerIntent
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.Toast
@@ -43,6 +44,7 @@ import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.InputStream
 import java.io.OutputStream
+import java.util.Objects
 
 class MainActivity : SimpleActivity(), DirectoryOperationsListener {
     companion object {
@@ -89,6 +91,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
     private var mStoredPrimaryColor = 0
     private var mStoredStyleString = ""
     private var mStoredHideTopBarWhenScroll = false
+    private var isSpeechToTextAvailable = false
 
     private val binding by viewBinding(ActivityMainBinding::inflate)
 
@@ -258,7 +261,8 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             setupAdapter(mDirs, forceRecreate = true)
         }
 
-        binding.directoriesFastscroller.updateColors(primaryColor)
+        val accentColor = getProperAccentColor()
+        binding.directoriesFastscroller.updateColors(accentColor)
         binding.directoriesRefreshLayout.isEnabled = config.enablePullToRefresh
         getRecyclerAdapter()?.apply {
             dateFormat = config.dateFormat
@@ -371,6 +375,16 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             } else if (requestCode == PICK_WALLPAPER) {
                 setResult(RESULT_OK)
                 finish()
+            } else if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
+                if (resultData != null) {
+                    val res: ArrayList<String> =
+                        resultData.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS) as ArrayList<String>
+
+                    val speechToText =  Objects.requireNonNull(res)[0]
+                    if (speechToText.isNotEmpty()) {
+                        binding.mainMenu.setText(speechToText)
+                    }
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, resultData)
@@ -404,6 +418,11 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             R.menu.menu_main
         }
 
+        if (baseConfig.useSpeechToText) {
+            isSpeechToTextAvailable = isSpeechToTextAvailable()
+            binding.mainMenu.showSpeechToText = isSpeechToTextAvailable
+        }
+
         binding.mainMenu.getToolbar().inflateMenu(menuId)
         binding.mainMenu.toggleHideOnScroll(!config.scrollHorizontally && config.hideTopBarWhenScroll)
         binding.mainMenu.setupMenu()
@@ -412,6 +431,10 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             if (config.searchAllFilesByDefault) {
                 launchSearchActivity()
             }
+        }
+
+        binding.mainMenu.onSpeechToTextClickListener = {
+            speechToText()
         }
 
         binding.mainMenu.onSearchTextChangedListener = { text ->
@@ -1696,6 +1719,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             add(Release(610, R.string.release_610))
             add(Release(650, R.string.release_650))
             add(Release(651, R.string.release_651))
+            add(Release(690, R.string.release_690))
             checkWhatsNew(this, BuildConfig.VERSION_CODE)
         }
     }

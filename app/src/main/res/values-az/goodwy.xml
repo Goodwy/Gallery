@@ -18,6 +18,7 @@
     <string name="by_date_taken_yearly_g">Date taken (yearly)</string>
 
     <string name="hide_grouping_button">Qrup düyməsini gizlədin</string>
+    <string name="hide_grouping_bar_when_scrolling">Sürüşdürərkən qruplaşdırma panelini gizlədin</string>
     <string name="eraser">Silgi</string>
     <string name="eyedropper">Damcılıq</string>
     <string name="hide_grouping_bar">Qruplaşdırma panelini gizlədin</string>

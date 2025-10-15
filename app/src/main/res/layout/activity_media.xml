@@ -67,7 +67,7 @@
                 app:supportSwipeToRefresh="true">
 
                 <com.goodwy.commons.views.MyRecyclerView
-                    android:id="@+id/media_grid"
+                    android:id="@+id/mediaGrid"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
@@ -97,21 +97,21 @@
 
             <ImageView
                 android:id="@+id/groupButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
                 android:layout_alignTop="@+id/main_top_tabs_background"
                 android:layout_alignBottom="@+id/main_top_tabs_background"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/circle_tab_background"
                 android:contentDescription="@string/group_by"
                 android:tooltipText="@string/group_by"
-                android:padding="@dimen/ten_dpi"
+                android:padding="@dimen/normal_margin"
                 android:src="@drawable/ic_arrow_top_down"/>
 
             <LinearLayout
                 android:id="@+id/main_top_tabs_background"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="46dp"
                 android:layout_alignStart="@+id/main_top_tabs_holder"
                 android:layout_alignTop="@+id/main_top_tabs_holder"
                 android:layout_alignEnd="@+id/main_top_tabs_holder"
@@ -126,7 +126,7 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/main_top_tabs_holder"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="38dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="16dp"

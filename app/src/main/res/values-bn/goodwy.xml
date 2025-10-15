@@ -16,6 +16,9 @@
     <string name="all_photos">সমস্ত ফটো</string>
     <string name="by_last_modified_yearly_g">শেষ পরিবর্তন (বার্ষিক)</string>
     <string name="by_date_taken_yearly_g">তোলার তারিখ (বার্ষিক)</string>
+    <string name="hide_grouping_bar">গ্রুপিং বার লুকান</string>
+    <string name="hide_grouping_button">গ্রুপিং বোতামটি লুকান</string>
+    <string name="hide_grouping_bar_when_scrolling">স্ক্রোল করার সময় গ্রুপিং বার লুকান</string>
 
     <string name="eraser">ইরেজার</string>
     <string name="eyedropper">আইড্রপার</string>

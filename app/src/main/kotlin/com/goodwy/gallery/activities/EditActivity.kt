@@ -12,6 +12,7 @@ import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageView
@@ -236,7 +237,32 @@ class EditActivity : SimpleActivity(), CanvasListener {
         binding.bottomAspectRatios.root.beVisible()
     }
 
+    private fun isUriValid(uri: Uri?): Boolean {
+        if (uri == null) return false
+
+        return try {
+            when (uri.scheme) {
+                "file" -> {
+                    val file = File(uri.path ?: "")
+                    file.exists() && file.isFile && file.length() > 0
+                }
+                "content" -> {
+                    contentResolver.openInputStream(uri)?.use { true } ?: false
+                }
+                else -> false
+            }
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     private fun loadDefaultImageView() {
+        if (!isUriValid(uri)) {
+            showErrorToast(getString(R.string.invalid_image_path))
+            finish()
+            return
+        }
+
         binding.defaultImageView.beVisible()
         binding.cropImageView.beGone()
         binding.editorDrawCanvas.beGone()
@@ -255,9 +281,10 @@ class EditActivity : SimpleActivity(), CanvasListener {
                     ColorModeHelper.resetColorMode(this@EditActivity)
                     if (uri != originalUri) {
                         uri = originalUri
-                        Handler().post {
+                        // Fix: java.lang.IllegalStateException Exception O3.c: Unexpected exception thrown by non-Glide code
+                        Handler(Looper.getMainLooper()).postDelayed({
                             loadDefaultImageView()
-                        }
+                        }, 100)
                     }
                     return false
                 }
@@ -340,6 +367,13 @@ class EditActivity : SimpleActivity(), CanvasListener {
             .fitCenter()
 
         try {
+            if (!isUriValid(uri)) {
+                runOnUiThread {
+                    showErrorToast(getString(R.string.failed_to_load_image_for_drawing))
+                }
+                return
+            }
+
             val builder = Glide.with(applicationContext)
                 .asBitmap()
                 .load(uri)
@@ -358,6 +392,9 @@ class EditActivity : SimpleActivity(), CanvasListener {
             }
         } catch (e: Exception) {
             showErrorToast(e)
+            runOnUiThread {
+                showErrorToast(getString(R.string.failed_to_load_image_for_drawing))
+            }
         }
     }
 
@@ -715,59 +752,67 @@ class EditActivity : SimpleActivity(), CanvasListener {
 
         if (currPrimaryAction == PRIMARY_ACTION_FILTER && binding.bottomEditorFilterActions.bottomActionsFilterList.adapter == null) {
             ensureBackgroundThread {
-                val thumbnailSize = resources.getDimension(R.dimen.bottom_filters_thumbnail_size).toInt()
+                try {
+                    val thumbnailSize = resources.getDimension(R.dimen.bottom_filters_thumbnail_size).toInt()
 
-                val bitmap = try {
-                    Glide.with(this)
-                        .asBitmap()
-                        .load(uri).listener(object : RequestListener<Bitmap> {
-                            override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>, isFirstResource: Boolean): Boolean {
-                                showErrorToast(e.toString())
-                                return false
+                    val bitmap = try {
+                        Glide.with(this)
+                            .asBitmap()
+                            .load(uri)
+                            .listener(object : RequestListener<Bitmap> {
+                                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>, isFirstResource: Boolean): Boolean {
+                                    showErrorToast(e?.toString() ?: "Failed to load image")
+                                    return false
+                                }
+
+                                override fun onResourceReady(
+                                    resource: Bitmap,
+                                    model: Any,
+                                    target: Target<Bitmap>,
+                                    dataSource: DataSource,
+                                    isFirstResource: Boolean
+                                ) = false
+                            })
+                            .submit(thumbnailSize, thumbnailSize)
+                            .get()
+                    } catch (e: Exception) {
+                        // Если не удалось загрузить уменьшенное изображение, попробуем загрузить оригинальное
+                        try {
+                            Glide.with(this)
+                                .asBitmap()
+                                .load(uri)
+                                .submit()
+                                .get()
+                                .scale(thumbnailSize, thumbnailSize, true)
+                        } catch (e2: Exception) {
+                            runOnUiThread {
+                                showErrorToast(getString(R.string.failed_to_load_image_for_filters))
+                                currPrimaryAction = PRIMARY_ACTION_NONE
+                                updatePrimaryActionButtons()
                             }
-
-                            override fun onResourceReady(
-                                resource: Bitmap,
-                                model: Any,
-                                target: Target<Bitmap>,
-                                dataSource: DataSource,
-                                isFirstResource: Boolean
-                            ) = false
-                        })
-                        .submit(thumbnailSize, thumbnailSize)
-                        .get()
-                } catch (e: GlideException) {
-                    showErrorToast(e)
-                    finish()
-                    return@ensureBackgroundThread
-                }
-
-                runOnUiThread {
-                    val filterThumbnailsManager = FilterThumbnailsManager()
-                    filterThumbnailsManager.clearThumbs()
-
-                    val noFilter = Filter(getString(com.goodwy.commons.R.string.none))
-                    filterThumbnailsManager.addThumb(FilterItem(bitmap, noFilter))
-
-                    FilterPack.getFilterPack(this).forEach {
-                        val filterItem = FilterItem(bitmap, it)
-                        filterThumbnailsManager.addThumb(filterItem)
-                    }
-
-                    val filterItems = filterThumbnailsManager.processThumbs()
-                    val adapter = FiltersAdapter(applicationContext, filterItems) {
-                        val layoutManager = binding.bottomEditorFilterActions.bottomActionsFilterList.layoutManager as LinearLayoutManager
-                        applyFilter(filterItems[it])
-
-                        if (it == layoutManager.findLastCompletelyVisibleItemPosition() || it == layoutManager.findLastVisibleItemPosition()) {
-                            binding.bottomEditorFilterActions.bottomActionsFilterList.smoothScrollBy(thumbnailSize, 0)
-                        } else if (it == layoutManager.findFirstCompletelyVisibleItemPosition() || it == layoutManager.findFirstVisibleItemPosition()) {
-                            binding.bottomEditorFilterActions.bottomActionsFilterList.smoothScrollBy(-thumbnailSize, 0)
+                            return@ensureBackgroundThread
                         }
                     }
 
-                    binding.bottomEditorFilterActions.bottomActionsFilterList.adapter = adapter
-                    adapter.notifyDataSetChanged()
+                    // Проверяем, что bitmap валиден
+                    if (bitmap.isRecycled || bitmap.width <= 0 || bitmap.height <= 0) {
+                        runOnUiThread {
+                            showErrorToast(getString(R.string.invalid_image_for_filters))
+                            currPrimaryAction = PRIMARY_ACTION_NONE
+                            updatePrimaryActionButtons()
+                        }
+                        return@ensureBackgroundThread
+                    }
+
+                    runOnUiThread {
+                        setupFiltersAdapter(bitmap)
+                    }
+                } catch (e: Exception) {
+                    runOnUiThread {
+                        showErrorToast("${getString(R.string.failed_to_load_filters)}: ${e.message}")
+                        currPrimaryAction = PRIMARY_ACTION_NONE
+                        updatePrimaryActionButtons()
+                    }
                 }
             }
         }
@@ -777,6 +822,36 @@ class EditActivity : SimpleActivity(), CanvasListener {
             currCropRotateAction = CROP_ROTATE_NONE
         }
         updateCropRotateActionButtons()
+    }
+
+    private fun setupFiltersAdapter(bitmap: Bitmap) {
+        val filterThumbnailsManager = FilterThumbnailsManager()
+        filterThumbnailsManager.clearThumbs()
+
+        val noFilter = Filter(getString(com.goodwy.commons.R.string.none))
+        filterThumbnailsManager.addThumb(FilterItem(bitmap, noFilter))
+
+        FilterPack.getFilterPack(this).forEach {
+            val filterItem = FilterItem(bitmap, it)
+            filterThumbnailsManager.addThumb(filterItem)
+        }
+
+        val filterItems = filterThumbnailsManager.processThumbs()
+        val adapter = FiltersAdapter(applicationContext, filterItems) {
+            val layoutManager = binding.bottomEditorFilterActions.bottomActionsFilterList.layoutManager as LinearLayoutManager
+            applyFilter(filterItems[it])
+
+            if (it == layoutManager.findLastCompletelyVisibleItemPosition() || it == layoutManager.findLastVisibleItemPosition()) {
+                val thumbnailSize = resources.getDimension(R.dimen.bottom_filters_thumbnail_size).toInt()
+                binding.bottomEditorFilterActions.bottomActionsFilterList.smoothScrollBy(thumbnailSize, 0)
+            } else if (it == layoutManager.findFirstCompletelyVisibleItemPosition() || it == layoutManager.findFirstVisibleItemPosition()) {
+                val thumbnailSize = resources.getDimension(R.dimen.bottom_filters_thumbnail_size).toInt()
+                binding.bottomEditorFilterActions.bottomActionsFilterList.smoothScrollBy(-thumbnailSize, 0)
+            }
+        }
+
+        binding.bottomEditorFilterActions.bottomActionsFilterList.adapter = adapter
+        adapter.notifyDataSetChanged()
     }
 
     private fun applyFilter(filterItem: FilterItem) {

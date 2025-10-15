@@ -17,6 +17,7 @@
     <string name="by_date_taken_yearly_g">Date taken (yearly)</string>
 
     <string name="hide_grouping_button">Grupavimo slėpimo mygtukas</string>
+    <string name="hide_grouping_bar_when_scrolling">Slenkant paslėpti grupavimo juostą</string>
     <string name="eraser">Trintukas</string>
     <string name="eyedropper">Akių lašintuvas</string>
     <string name="hide_grouping_bar">Slėpti grupavimo skydą</string>

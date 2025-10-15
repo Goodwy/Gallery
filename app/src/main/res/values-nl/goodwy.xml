@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Opnamedatum (jaarlijks)</string>
 
     <string name="hide_grouping_button">Knop Groeperen verbergen</string>
+    <string name="hide_grouping_bar_when_scrolling">Verberg de groeperingsbalk tijdens het scrollen</string>
     <string name="eraser">Gom</string>
     <string name="eyedropper">Pipet</string>
     <string name="hide_grouping_bar">Groeperingspaneel verbergen</string>

@@ -30,7 +30,7 @@
             android:orientation="vertical">
 
             <com.goodwy.commons.views.PurchaseThankYouItem
-                android:id="@+id/settings_purchase_thank_you_holder"
+                android:id="@+id/settingsPurchaseThankYouHolder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/medium_margin"/>
@@ -211,6 +211,18 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/settingsUseSpeechToTextHolder"
+                        style="@style/SettingsHolderSwitchStyle">
+
+                        <com.goodwy.commons.views.MyMaterialSwitch
+                            android:id="@+id/settingsUseSpeechToText"
+                            style="@style/SettingsSwitchStyle"
+                            android:text="@string/voice_input"
+                            app:switchPadding="@dimen/bigger_margin" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
                         android:id="@+id/settings_hide_grouping_bar_holder"
                         style="@style/SettingsHolderSwitchStyle">
 
@@ -276,7 +288,6 @@
                             android:layout_alignParentEnd="true"
                             android:layout_marginEnd="@dimen/settings_margin"
                             tools:text="@string/compromise" />
-
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -295,10 +306,10 @@
                             android:id="@+id/settings_change_date_time_format"
                             style="@style/SettingsTextValueStyle"
                             android:maxWidth="@dimen/settings_value_width_long"
+                            android:layout_marginStart="@dimen/settings_margin"
                             android:layout_alignParentEnd="true"
                             android:layout_marginEnd="@dimen/settings_margin"
                             tools:text="01.01.2025 08:30" />
-
                     </RelativeLayout>
 
                     <RelativeLayout

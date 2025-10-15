@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">ਗexclude_folder_description_g">ਇਹ ਵਿਸ਼ੇਸ਼ਤਾ ਸਿਰਫ਼ Right Gallery ਲਈ ਚੁਣੇ ਹੋਏ ਫੋਲਡਰਾਂ ਅਤੇ ਉਹਨਾਂ ਦੇ ਸਬਫੋਲਡਰਾਂ ਨੂੰ ਬਾਹਰ ਕੱਢ ਦੇਵੇਗੀ। ਤੁਸੀਂ ਸੈਟਿੰਗਾਂ ਵਿੱਚ ਬਾਹਰ ਕੱਢੇ ਗਏ ਫੋਲਡਰਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰ ਸਕਦੇ ਹੋ।</string>
+    <string name="exclude_folder_description_g">ਇਹ ਚੋਣ ਨੂੰ ਇਸਦੇ ਸਬਫੋਲਡਰਾਂ ਸਮੇਤ ਸਿਰਫ਼ ਸੱਜੇ ਗੈਲਰੀ ਤੋਂ ਬਾਹਰ ਕਰ ਦੇਵੇਗਾ। ਤੁਸੀਂ ਸੈਟਿੰਗਾਂ ਵਿੱਚ ਬਾਹਰ ਕੱਢੇ ਗਏ ਫੋਲਡਰਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰ ਸਕਦੇ ਹੋ।.</string>
+    <string name="excluded_activity_placeholder_g">ਫੋਲਡਰਾਂ ਨੂੰ ਬਾਹਰ ਕੱਢਣ ਨਾਲ ਉਹਨਾਂ ਨੂੰ ਅਤੇ ਉਹਨਾਂ ਦੇ ਸਬਫੋਲਡਰਾਂ ਨੂੰ Right Gallery ਵਿੱਚ ਲੁਕਾ ਦਿੱਤਾ ਜਾਵੇਗਾ, ਪਰ ਉਹ ਹੋਰ ਐਪਾਂ ਵਿੱਚ ਦਿਖਾਈ ਦੇਣਗੇ।
+
+ਜੇਕਰ ਤੁਸੀਂ ਉਹਨਾਂ ਨੂੰ ਹੋਰ ਐਪਾਂ ਵਿੱਚ ਵੀ ਲੁਕਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ, ਤਾਂ "ਲੁਕਾਓ" ਵਿਸ਼ੇਸ਼ਤਾ ਦੀ ਵਰਤੋਂ ਕਰੋ।</string>
+    <string name="faq_1_title_g">ਮੈਂ Right Gallery ਨੂੰ ਆਪਣੀ ਡਿਫਾਲਟ ਗੈਲਰੀ ਕਿਵੇਂ ਬਣਾਵਾਂ?</string>
+    <string name="faq_1_text_g">ਪਹਿਲਾਂ, ਤੁਹਾਨੂੰ ਆਪਣੀ ਡਿਵਾਈਸ ਦੀਆਂ ਸੈਟਿੰਗਾਂ ਦੇ "ਐਪਲੀਕੇਸ਼ਨਾਂ" ਭਾਗ ਵਿੱਚ ਡਿਫਾਲਟ ਗੈਲਰੀ ਲੱਭਣੀ ਚਾਹੀਦੀ ਹੈ; "ਡਿਫਾਲਟ ਦੁਆਰਾ ਖੋਲ੍ਹੋ" ਲੇਬਲ ਵਾਲਾ ਬਟਨ ਲੱਭੋ, ਫਿਰ ਇਸ \'ਤੇ ਕਲਿੱਕ ਕਰੋ ਅਤੇ "ਡਿਫਾਲਟ ਸਾਫ਼ ਕਰੋ" ਚੁਣੋ। ਅਗਲੀ ਵਾਰ ਜਦੋਂ ਤੁਸੀਂ ਕੋਈ ਚਿੱਤਰ ਜਾਂ ਵੀਡੀਓ ਖੋਲ੍ਹਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰੋਗੇ, ਤਾਂ ਤੁਹਾਨੂੰ ਇੱਕ ਐਪ ਚੋਣਕਾਰ ਦਿਖਾਈ ਦੇਵੇਗਾ ਜਿੱਥੇ ਤੁਸੀਂ Right Gallery ਚੁਣ ਸਕਦੇ ਹੋ ਅਤੇ ਇਸਨੂੰ ਆਪਣੀ ਡਿਫੌਲਟ ਐਪ ਬਣਾ ਸਕਦੇ ਹੋ। </string>
+    <string name="faq_5_text_g">ਫੋਲਡਰ ਨੂੰ ਬਾਹਰ ਕੱਢਣਾ ਇਸਨੂੰ ਸਿਰਫ਼ Right Gallery ਵਿੱਚ ਦਿਖਾਈ ਦੇਣ ਤੋਂ ਰੋਕਦਾ ਹੈ, ਜਦੋਂ ਕਿ ਇਸਨੂੰ ਲੁਕਾਉਣਾ ਸਿਸਟਮ-ਵਿਆਪੀ ਕੰਮ ਕਰਦਾ ਹੈ ਅਤੇ ਫੋਲਡਰ ਨੂੰ ਹੋਰ ਗੈਲਰੀਆਂ ਤੋਂ ਲੁਕਾਉਂਦਾ ਹੈ। ਇਹ ਫੋਲਡਰ ਵਿੱਚ "".nomedia" ਨਾਮ ਦੀ ਇੱਕ ਖਾਲੀ ਫਾਈਲ ਬਣਾ ਕੇ ਪ੍ਰਾਪਤ ਕੀਤਾ ਜਾਂਦਾ ਹੈ, ਜਿਸਨੂੰ ਫਿਰ ਕਿਸੇ ਵੀ ਫਾਈਲ ਮੈਨੇਜਰ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਮਿਟਾ ਦਿੱਤਾ ਜਾ ਸਕਦਾ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਧਿਆਨ ਦਿਓ ਕਿ ਕੁਝ ਡਿਵਾਈਸਾਂ ਤੁਹਾਨੂੰ \"ਕੈਮਰਾ\" , \"ਸਕ੍ਰੀਨਸ਼ਾਟ\" , ਅਤੇ \"ਡਾਊਨਲੋਡ\" ਵਰਗੇ ਫੋਲਡਰਾਂ ਨੂੰ ਲੁਕਾਉਣ ਦੀ ਆਗਿਆ ਨਹੀਂ ਦਿੰਦੀਆਂ।</string>
+
+    <string name="years">ਸਾਲ</string>
+    <string name="months">ਮਹੀਨੇ</string>
+    <string name="days">ਦਿਨ</string>
+    <string name="all_photos">ਸਾਰੀਆਂ ਫੋਟੋਆਂ</string>
+    <string name="by_last_modified_yearly_g">ਆਖਰੀ ਵਾਰ ਸੋਧਿਆ ਗਿਆ (ਸਾਲ)</string>
+    <string name="by_date_taken_yearly_g">ਲਿਖੀ ਗਈ ਮਿਤੀ (ਸਾਲ)</string>
+    <string name="hide_grouping_bar">ਗਰੁੱਪਿੰਗ ਬਾਰ ਲੁਕਾਓ</string>
+    <string name="hide_grouping_button">ਗਰੁੱਪਿੰਗ ਬਟਨ ਲੁਕਾਓ</string>
+    <string name="hide_grouping_bar_when_scrolling">ਸਕ੍ਰੌਲ ਕਰਨ ਵੇਲੇ ਗਰੁੱਪਿੰਗ ਪੱਟੀ ਨੂੰ ਲੁਕਾਓ</string>
+
+    <string name="eraser">ਇਰੇਜ਼ਰ</string>
+    <string name="eyedropper">ਆਈਡ੍ਰੌਪਰ</string>
+</resources>

@@ -18,6 +18,7 @@
     <string name="by_date_taken_yearly_g">Data da foto (anual)</string>
 
     <string name="hide_grouping_button">Ocultar botão de agrupamento</string>
+    <string name="hide_grouping_bar_when_scrolling">Ocultar a barra de agrupamento ao rolar</string>
     <string name="eraser">Apagador</string>
     <string name="eyedropper">Conta-gotas</string>
     <string name="hide_grouping_bar">Ocultar o painel de agrupamento</string>

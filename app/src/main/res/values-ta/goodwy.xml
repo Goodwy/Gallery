@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">எடுத்த தேதி (ஆண்டுதோறும்)</string>
 
     <string name="hide_grouping_button">குழு பொத்தானை மறை</string>
+    <string name="hide_grouping_bar_when_scrolling">உருட்டும் போது குழுவாக்கப் பட்டியை மறை.</string>
     <string name="eraser">அழிப்பான்</string>
     <string name="eyedropper">கண்துடைப்பான்</string>
     <string name="hide_grouping_bar">குழுவாக்கும் பேனலை மறை</string>

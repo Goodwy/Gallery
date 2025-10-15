@@ -20,6 +20,7 @@
     <string name="hide_grouping_bar">Сакриј таблу за груписање</string>
     <string name="hide_grouping_button">Сакриј дугме груписање</string>
 
+    <string name="hide_grouping_bar_when_scrolling">Сакриј траку за груписање приликом скроловања</string>
     <string name="eraser">Гумица за брисање</string>
     <string name="eyedropper">Пипета</string>
 </resources>

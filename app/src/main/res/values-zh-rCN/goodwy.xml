@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">拍摄时间 (每年)</string>
 
     <string name="hide_grouping_button">隐藏分组按钮</string>
+    <string name="hide_grouping_bar_when_scrolling">滚动时隐藏分组栏</string>
     <string name="eraser">橡皮</string>
     <string name="eyedropper">滴管</string>
     <string name="hide_grouping_bar">隐藏分组面板</string>

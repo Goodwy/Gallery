@@ -1,2 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="keep_screen_on_fullscreen_photos">Paturēt ekrānu ieslēgtu, kamēr attēli tiek apskatīti pilnekrānā</string>
+    <plurals name="restore_confirmation">
+        <item quantity="zero">Vai tiešām atjaunot %d datņu?</item>
+        <item quantity="one">Vai tiešām atjaunot %d datni?</item>
+        <item quantity="other">Vai tiešām atjaunot %d datnes?</item>
+    </plurals>
+    <plurals name="failed_to_resize_images">
+        <item quantity="zero">Neizdevās mainīt %d attēlu izmēru</item>
+        <item quantity="one">Neizdevās mainīt %d attēla izmēru</item>
+        <item quantity="other">Neizdevās mainīt %d attēlu izmēru</item>
+    </plurals>
+    <string name="faq_5_title">Kāda ir atšķirība starp mapes paslēpšanu un neiekļaušanu?</string>
+</resources>

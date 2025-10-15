@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Datum odvzema (letno)</string>
 
     <string name="hide_grouping_button">Gumb »Skrij združevanje«</string>
+    <string name="hide_grouping_bar_when_scrolling">Skrij skupinsko vrstico med pomikanjem</string>
     <string name="eraser">Radirka</string>
     <string name="eyedropper">Kapalka</string>
     <string name="hide_grouping_bar">Skrij ploščo za združevanje</string>

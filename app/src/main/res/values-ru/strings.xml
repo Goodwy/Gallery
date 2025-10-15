@@ -104,7 +104,7 @@
     <string name="other_aspect_ratio">Другое</string>
     <string name="set_as_wallpaper">Установить в качестве обоев</string>
     <string name="set_as_wallpaper_failed">Не удалось установить</string>
-    <string name="set_as_wallpaper_with">Установить в качестве обоев с помощью</string>
+    <string name="set_as_wallpaper_with">Установить в качестве обоев с помощью:</string>
     <string name="setting_wallpaper">Установка обоев…</string>
     <string name="wallpaper_set_successfully">Обои установлены</string>
     <string name="portrait_aspect_ratio">Портретная ориентация</string>
@@ -256,4 +256,15 @@
     <string name="playback_speed">Скорость воспроизведения</string>
     <string name="failed_to_load_media">Невозможно загрузить медиафайлы.</string>
     <string name="full_storage_permission_required">Fossify Gallery необходим полный доступ для отображения всех ваших фотографий и видео. Откройте \"Настройки\" → \"Разрешения\" → \"Фото и видео\" → \"Разрешить все\".</string>
+    <string name="unsupported_format">Неподдерживаемый формат.</string>
+    <string name="file_is_malformed_or_corrupted">Файл имеет неправильный формат или повреждён.</string>
+    <string name="media_exceeds_device_capabilities">Медиафайл превосходит возможности устройства.</string>
+    <string name="keep_screen_on_fullscreen_photos">Держать экран включённым при полноэкранном просмотре</string>
+    <plurals name="restore_confirmation">
+        <item quantity="one">Восстановить %d файл?</item>
+        <item quantity="few">Восстановить %d файла?</item>
+        <item quantity="many">Восстановить %d файлов?</item>
+        <item quantity="other">Восстановить %d файлов?</item>
+    </plurals>
+    <string name="force_landscape_reverse">Альбомная (обратная)</string>
 </resources>

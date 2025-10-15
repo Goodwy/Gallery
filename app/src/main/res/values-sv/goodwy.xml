@@ -20,6 +20,7 @@
     <string name="by_date_taken_yearly_g">Fotodatum (årlig)</string>
 
     <string name="hide_grouping_button">Knappen Dölj gruppering</string>
+    <string name="hide_grouping_bar_when_scrolling">Dölj grupperingsfältet när du rullar</string>
     <string name="eraser">Suddgummi</string>
     <string name="eyedropper">Ögon droppar</string>
     <string name="hide_grouping_bar">Dölj grupperingspanel</string>

@@ -20,7 +20,7 @@
     <string name="unlock_orientation">Atrakinti orientaciją</string>
     <string name="change_orientation">Keisti orientaciją</string>
     <string name="filter_media">Filtruoti mediją</string>
-    <string name="images">Paveikslai</string>
+    <string name="images">Vaizdai</string>
     <string name="videos">Vaizdo įrašai</string>
     <string name="gifs">GIF\'ai</string>
     <string name="no_media_with_filters">Su pasirinktais filtrais nerasta medijos bylų.</string>
@@ -117,4 +117,4 @@
     <string name="faq_18_text">Mūsų programos neturi jokių reklamų. Jei jas matote vaizdo įrašo peržiūros metu, tikriausiai naudojate kitą vaizdo įrašų leistuvę. Pabandykite rasti numatytąjį vaizdo įrašų leistuvę įrenginio nustatymuose, tada atlikite „Išvalyti numatytuosius“ veiksmą. Kitą kartą, kai paleisite vaizdo įrašą, pasirodys programos parinkiklio langas, kuriame galėsite pasirinkti norimą programą.</string>
     <string name="faq_18_title">Kodėl matau reklamas vaizdo įrašų peržiūros metu?</string>
     <string name="faq_17_text">Tai nustojo veikti dėl sistemos pakeitimų, kurie buvo padaryti su „Android 11“. Programa nebegali naršyti tikrų aplankų, ji remiasi vadinamuoju „MediaStore“, kad gautų duomenis.</string>
-    </resources>
+</resources>

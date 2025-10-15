@@ -20,6 +20,7 @@
     <string name="by_date_taken_yearly_g">찍은 날짜 (매년)</string>
 
     <string name="hide_grouping_button">그룹화 단추 숨기기</string>
+    <string name="hide_grouping_bar_when_scrolling">스크롤 시 그룹화 막대 숨기기</string>
     <string name="eraser">지우개</string>
     <string name="eyedropper">스포이드</string>
     <string name="hide_grouping_bar">그룹화 패널 숨기기</string>

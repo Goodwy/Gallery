@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Gailearaí</string>
+    <string name="exclude_folder_description_g">Eisiafaidh sé seo an rogha mar aon lena fhofhillteáin ó Ghailearaí na Deise amháin. Is féidir leat fillteáin eisiata a bhainistiú i Socruithe.</string>
+    <string name="excluded_activity_placeholder_g">Má eisiatar fillteáin, déanfar iad mar aon lena bhfofhillteáin a cheilt i Right Gallery amháin, beidh siad fós le feiceáil in aipeanna eile.\n\nMás mian leat iad a cheilt ó aipeanna eile freisin, bain úsáid as an bhfeidhm Folaigh.</string>
+    <string name="faq_1_title_g">Conas is féidir liom Right Gallery a dhéanamh mar ghailearaí réamhshocraithe an ghléis?</string>
+    <string name="faq_1_text_g">Ar dtús ní mór duit an gailearaí réamhshocraithe reatha a aimsiú i rannóg na nAipeanna de shocruithe do ghléis, cuardach a dhéanamh ar chnaipe a deir rud éigin cosúil le "Oscail de réir réamhshocraithe", cliceáil air, ansin roghnaigh "Glan réamhshocruithe". An chéad uair eile a dhéanfaidh tú iarracht íomhá nó físeán a oscailt, ba chóir duit roghnóir aipeanna a fheiceáil, áit ar féidir leat Gailearaí Deas a roghnú agus é a dhéanamh mar an aip réamhshocraithe.</string>
+    <string name="faq_5_text_g">Coscann Eisiamh an fillteán a thaispeáint i nGailearaí Deas amháin, ach oibríonn Folaigh ó thaobh an chórais de agus cuireann sé an fillteán i bhfolach ó ghailearaithe eile freisin. Oibríonn sé trí chomhad folamh ".nomedia" a chruthú sa fhillteán ar leith, agus is féidir leat é a bhaint ansin le haon bhainisteoir comhad freisin. Tabhair faoi deara nach gceadaíonn roinnt gléasanna fillteáin cosúil le Ceamara, Scáileáin agus Íoslódálacha a cheilt.</string>
+
+    <string name="years">Blianta</string>
+    <string name="months">Míonna</string>
+    <string name="days">Laethanta</string>
+    <string name="all_photos">Gach</string>
+    <string name="by_last_modified_yearly_g">Athraithe go deireanach (gach bliain)</string>
+    <string name="by_date_taken_yearly_g">Dáta tógtha (gach bliain)</string>
+    <string name="hide_grouping_bar">Folaigh an barra grúpála</string>
+    <string name="hide_grouping_button">Folaigh an cnaipe grúpála</string>
+    <string name="hide_grouping_bar_when_scrolling">Folaigh an barra grúpála agus tú ag scrollú</string>
+
+    <string name="eraser">Scriosán</string>
+    <string name="eyedropper">Pitéal Súile</string>
+</resources>

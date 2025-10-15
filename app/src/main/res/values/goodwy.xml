@@ -22,4 +22,10 @@
 
     <string name="eraser">Eraser</string>
     <string name="eyedropper">Eyedropper</string>
+
+    <!-- Errors -->
+    <string name="failed_to_load_image_for_filters" translatable="false">Failed to load image for filters</string>
+    <string name="invalid_image_for_filters" translatable="false">Invalid image for filters</string>
+    <string name="failed_to_load_filters" translatable="false">Failed to load filters</string>
+    <string name="failed_to_load_image_for_drawing" translatable="false">Failed to load image for drawing</string>
 </resources>

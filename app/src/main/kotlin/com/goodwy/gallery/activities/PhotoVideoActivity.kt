@@ -247,7 +247,7 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
         mIsVideo = type == TYPE_VIDEOS
         mMedium = Medium(null, filename, mUri.toString(), mUri!!.path!!.getParentPath(), 0, 0, file.length(), type, 0, false, 0L, 0)
         val primaryColor = getProperPrimaryColor()
-        val contrastColor = getBottomNavigationBackgroundColor().getContrastColor()
+        val contrastColor = getSurfaceColor().getContrastColor()
         val titleColor = if (baseConfig.topAppBarColorTitle) primaryColor else contrastColor
         binding.fragmentViewerToolbar.title = Html.fromHtml("<font color='${titleColor.toHex()}'>${mMedium!!.name}</font>")
         bundle.putSerializable(MEDIUM, mMedium)
@@ -393,7 +393,7 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
             it.beGone()
         }
 
-        val getBottomNavigationBackgroundColor = getBottomNavigationBackgroundColor()
+        val surfaceColor = getSurfaceColor()
         val iconColor = if (baseConfig.topAppBarColorIcon) getProperPrimaryColor() else Color.WHITE
         arrayListOf(
             binding.bottomActions.bottomShare, binding.bottomActions.bottomPlayPause,
@@ -402,8 +402,8 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
         ).forEach {
             it.applyColorFilter(iconColor)
         }
-        //binding.bottomActions.bottomActionsWrapper.background.applyColorFilter(getBottomNavigationBackgroundColor)
-        binding.topShadow.background.applyColorFilter(getBottomNavigationBackgroundColor)
+        //binding.bottomActions.bottomActionsWrapper.background.applyColorFilter(surfaceColor)
+        binding.topShadow.background.applyColorFilter(surfaceColor)
 
         val visibleBottomActions = if (config.bottomActions) config.visibleBottomActions else 0
         binding.bottomActions.bottomEdit.beVisibleIf(visibleBottomActions and BOTTOM_ACTION_EDIT != 0 && mMedium?.isImage() == true)

@@ -579,7 +579,13 @@ class MediaAdapter(
 
     private fun getFirstSelectedItemPath() = getItemWithKey(selectedKeys.first())?.path
 
-    private fun getItemWithKey(key: Int): Medium? = media.firstOrNull { (it as? Medium)?.path?.hashCode() == key } as? Medium
+//    private fun getItemWithKey(key: Int): Medium? = media.firstOrNull { (it as? Medium)?.path?.hashCode() == key } as? Medium
+    // Fix: at kotlin.collections.CollectionsKt___CollectionsKt.firstOrNull (CollectionsKt___Collections.kt:295)
+    private fun getItemWithKey(key: Int): Medium? {
+        return media.asSequence()
+            .filterIsInstance<Medium>()
+            .firstOrNull { it.path.hashCode() == key }
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateMedia(newMedia: ArrayList<ThumbnailItem>) {

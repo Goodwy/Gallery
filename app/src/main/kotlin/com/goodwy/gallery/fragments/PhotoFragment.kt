@@ -116,11 +116,17 @@ class PhotoFragment : ViewPagerFragment() {
 
         binding = PagerPhotoItemBinding.inflate(inflater, container, false)
         mView = binding.root
+
         if (!arguments.getBoolean(SHOULD_INIT_FRAGMENT, true)) {
             return mView
         }
 
-        mMedium = arguments.getSerializable(MEDIUM) as Medium
+        val medium = arguments.getSerializable(MEDIUM) as? Medium
+        if (medium == null) {
+            return mView
+        }
+
+        mMedium = medium
         mOriginalPath = mMedium.path
 
         binding.apply {
@@ -239,6 +245,10 @@ class PhotoFragment : ViewPagerFragment() {
 
     override fun onResume() {
         super.onResume()
+        if (!::mMedium.isInitialized) {
+            return
+        }
+
         val config = requireContext().config
         if (mWasInit && (config.showExtendedDetails != mStoredShowExtendedDetails || config.extendedDetails != mStoredExtendedDetails)) {
             initExtendedDetails()
@@ -447,12 +457,17 @@ class PhotoFragment : ViewPagerFragment() {
     private fun loadAVIF() {
         if (context != null) {
             val drawable = AVIFDrawable.fromFile(mMedium.path)
+            if (drawable.intrinsicWidth == 0 || drawable.intrinsicHeight == 0) {
+                loadBitmap()
+                return
+            }
+
             binding.gesturesView.setImageDrawable(drawable)
         }
     }
 
     private fun loadBitmap(addZoomableView: Boolean = true) {
-        if (context == null) {
+        if (context == null || !::mMedium.isInitialized) {
             return
         }
 
@@ -470,6 +485,10 @@ class PhotoFragment : ViewPagerFragment() {
     }
 
     private fun loadWithGlide(path: String, addZoomableView: Boolean) {
+        if (!::mMedium.isInitialized) {
+            return
+        }
+
         val priority = if (mIsFragmentVisible) Priority.IMMEDIATE else Priority.NORMAL
         val options = RequestOptions()
             .signature(mMedium.getKey())
@@ -477,11 +496,14 @@ class PhotoFragment : ViewPagerFragment() {
             .priority(priority)
             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
             .fitCenter()
-
-        if (mCurrentRotationDegrees != 0) {
-            options.transform(Rotate(mCurrentRotationDegrees))
-            options.diskCacheStrategy(DiskCacheStrategy.NONE)
-        }
+            .run {
+                if (mCurrentRotationDegrees != 0) {
+                    transform(Rotate(mCurrentRotationDegrees))
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                } else {
+                    this
+                }
+            }
 
         Glide.with(requireContext())
             .load(path)
@@ -560,6 +582,10 @@ class PhotoFragment : ViewPagerFragment() {
     }
 
     private fun showPortraitStripe() {
+        if (!::mMedium.isInitialized) {
+            return
+        }
+
         val files = File(mMedium.parentPath).listFiles()?.toMutableList() as? ArrayList<File>
         if (files != null) {
             val screenWidth = requireContext().realScreenSize.x
@@ -808,6 +834,10 @@ class PhotoFragment : ViewPagerFragment() {
     }
 
     private fun getImageOrientation(): Int {
+        if (!::mMedium.isInitialized) {
+            return -1
+        }
+
         val defaultOrientation = -1
         var orient = defaultOrientation
 
@@ -868,6 +898,10 @@ class PhotoFragment : ViewPagerFragment() {
     }
 
     private fun initExtendedDetails() {
+        if (!::mMedium.isInitialized) {
+            return
+        }
+
         if (requireContext().config.showExtendedDetails) {
             binding.photoDetails.apply {
                 beInvisible()   // make it invisible so we can measure it, but not show yet

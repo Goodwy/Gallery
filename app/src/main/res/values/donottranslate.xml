@@ -6,6 +6,11 @@
     <string name="package_name">com.goodwy.gallery</string>
 
     <!-- Release notes -->
+    <string name="release_690">
+        Changed the color scheme of the system theme\n
+        Added voice input for search\n
+        Fixed bugs, improved stability
+    </string>
     <string name="release_651">
         Improved performance, bug fixes
     </string>

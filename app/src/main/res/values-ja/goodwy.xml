@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">撮影日時 (毎年)</string>
 
     <string name="hide_grouping_button">グループ化ボタンを非表示にする</string>
+    <string name="hide_grouping_bar_when_scrolling">スクロール時にグループ化バーを非表示にする</string>
     <string name="eraser">消しゴム</string>
     <string name="eyedropper">スポイト</string>
     <string name="hide_grouping_bar">グループ化パネルを隠す</string>

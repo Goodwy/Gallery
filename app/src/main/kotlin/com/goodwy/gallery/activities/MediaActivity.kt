@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.speech.RecognizerIntent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -44,6 +45,7 @@ import com.goodwy.gallery.models.ThumbnailItem
 import com.goodwy.gallery.models.ThumbnailSection
 import java.io.File
 import java.io.IOException
+import java.util.Objects
 import kotlin.math.abs
 
 class MediaActivity : SimpleActivity(), MediaOperationsListener {
@@ -77,6 +79,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     private var mStoredPrimaryColor = 0
     private var mStoredThumbnailSpacing = 0
     private var mStoredHideTopBarWhenScroll = false
+    private var isSpeechToTextAvailable = false
 
     private val binding by viewBinding(ActivityMediaBinding::inflate)
 
@@ -141,8 +144,9 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                     binding.mainTopTabsContainer.setPadding(0, 0, 0, bottomNavigationBarSize)
                 } else {
                     val bottomBarSize = resources.getDimension(R.dimen.bottom_actions_height).toInt()
+                    val mediumMargin = resources.getDimension(com.goodwy.commons.R.dimen.medium_margin).toInt()
                     binding.mediaFastscroller.trackMarginEnd = bottomNavigationBarSize + bottomBarSize
-                    binding.mediaGrid.setPadding(0, 0, 0, bottomNavigationBarSize + bottomBarSize) // needed clipToPadding="false"
+                    binding.mediaGrid.setPadding(0, 0, 0, bottomNavigationBarSize + bottomBarSize + mediumMargin) // needed clipToPadding="false"
                 }
                 //updateNavigationBarColor(getProperBackgroundColor())
             }
@@ -206,7 +210,8 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 
         refreshMenuItems()
 
-        binding.mediaFastscroller.updateColors(primaryColor)
+        val accentColor = getProperAccentColor()
+        binding.mediaFastscroller.updateColors(accentColor)
         binding.mediaRefreshLayout.isEnabled = config.enablePullToRefresh
         getMediaAdapter()?.apply {
             dateFormat = config.dateFormat
@@ -295,6 +300,16 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                 mMedia.clear()
                 refreshItems()
             }
+        } else if (requestCode == REQUEST_CODE_SPEECH_INPUT && resultCode == RESULT_OK) {
+            if (resultData != null) {
+                val res: ArrayList<String> =
+                    resultData.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS) as ArrayList<String>
+
+                val speechToText =  Objects.requireNonNull(res)[0]
+                if (speechToText.isNotEmpty()) {
+                    binding.mediaMenu.setText(speechToText)
+                }
+            }
         }
         super.onActivityResult(requestCode, resultCode, resultData)
     }
@@ -339,8 +354,18 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                 super.onBackPressed()
             }
         }
+
+        if (baseConfig.useSpeechToText) {
+            isSpeechToTextAvailable = isSpeechToTextAvailable()
+            binding.mediaMenu.showSpeechToText = isSpeechToTextAvailable
+        }
+
         binding.mediaMenu.toggleHideOnScroll(!config.scrollHorizontally && config.hideTopBarWhenScroll)
         binding.mediaMenu.setupMenu()
+
+        binding.mediaMenu.onSpeechToTextClickListener = {
+            speechToText()
+        }
 
         binding.mediaMenu.onSearchTextChangedListener = { text ->
             mLastSearchedText = text
@@ -1196,10 +1221,12 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 
     private fun setupTabsColor() {
         val tabBackground = when {
+            isDynamicTheme() -> getSurfaceColor().adjustAlpha(0.95f)
             isLightTheme() -> resources.getColor(R.color.tab_background_light)
             isGrayTheme() -> resources.getColor(R.color.tab_background_gray)
+            isDarkTheme() -> resources.getColor(R.color.tab_background_dark)
             isBlackTheme() -> resources.getColor(R.color.tab_background_black)
-            else -> getBottomNavigationBackgroundColor().adjustAlpha(0.95f)
+            else -> getSurfaceColor().adjustAlpha(0.95f)
         }
         binding.mainTopTabsBackground.backgroundTintList = ColorStateList.valueOf(tabBackground)
         binding.groupButton.backgroundTintList = ColorStateList.valueOf(tabBackground)
@@ -1335,7 +1362,11 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         }
 
         mLoadedInitialPhotos = false
-        binding.mediaGrid.adapter = null
+//        binding.mediaGrid.adapter = null
         getMedia()
+
+        if (areSystemAnimationsEnabled) {
+            binding.mediaGrid.scheduleLayoutAnimation()
+        }
     }
 }

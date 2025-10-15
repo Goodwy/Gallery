@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Галерија</string>
+    <string name="exclude_folder_description_g">Оваа функција ќе ги исклучи избраните папки и нивните подпапки само за Right Gallery. Можете да управувате со исклучените папки во Поставки.</string>
+    <string name="excluded_activity_placeholder_g">Исклучувањето на папките ќе ги скрие нив и нивните подпапки во Right Gallery, но тие ќе останат видливи во други апликации.
+
+Ако сакате да ги скриете и во други апликации, користете ја функцијата „Сокриј“.</string>
+    <string name="faq_1_title_g">Како да ја направам Right Gallery моја стандардна галерија?</string>
+    <string name="faq_1_text_g">Прво, треба да ја пронајдете стандардната галерија во делот „Апликации“ во Поставките на вашиот уред; Пронајдете го копчето означено како „Отвори по стандард“, потоа кликнете на него и изберете „Избриши стандардни поставки“. Следниот пат кога ќе се обидете да отворите слика или видео, ќе видите изборник на апликации каде што можете да изберете Right Gallery и да ја направите вашата стандардна апликација. </string>
+    <string name="faq_5_text_g">Исклучувањето на папка спречува таа да се појавува само во Right Gallery, додека нејзиното криење работи на целиот систем и ја крие папката од другите галерии. Ова се постигнува со креирање празна датотека со име „“.nomedia“ во папката, која потоа може да се избрише со користење на кој било менаџер на датотеки. Забележете дека некои уреди не ви дозволуваат да ги скриете папките како што се „Камера“, „Слика од екранот“ и „Преземи“.</string>
+
+    <string name="years">Години</string>
+    <string name="months">Месеци</string>
+    <string name="days">Денови</string>
+    <string name="all_photos">Сите фотографии</string>
+    <string name="by_last_modified_yearly_g">Последна измена (година)</string>
+    <string name="by_date_taken_yearly_g">Датум на фотографирање (година)</string>
+    <string name="hide_grouping_bar">Сокриј лента за групирање</string>
+    <string name="hide_grouping_button">Сокриј копче за групирање</string>
+    <string name="hide_grouping_bar_when_scrolling">Сокријте ја лентата за групирање при лизгање</string>
+
+    <string name="eraser">Гума за бришење</string>
+    <string name="eyedropper">Пипелка</string>
+</resources>

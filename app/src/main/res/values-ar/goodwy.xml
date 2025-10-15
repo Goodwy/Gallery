@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">تاريخ الالتقاط (سنوي)</string>
 
     <string name="hide_grouping_button">زر إخفاء التجميع</string>
+    <string name="hide_grouping_bar_when_scrolling">إخفاء شريط التجميع عند التمرير</string>
     <string name="eraser">ممحاة</string>
     <string name="eyedropper">القطارة</string>
     <string name="hide_grouping_bar">إخفاء لوحة التجميع</string>

@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Data de captura (anualmente)</string>
 
     <string name="hide_grouping_button">Ocultar o botón do grupo</string>
+    <string name="hide_grouping_bar_when_scrolling">Oculta a barra de agrupación ao desprazarse</string>
     <string name="eraser">Borrador</string>
     <string name="eyedropper">Contagotas</string>
     <string name="hide_grouping_bar">Ocultar o panel de agrupación</string>

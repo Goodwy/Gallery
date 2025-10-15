@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Data creazione (annuale)</string>
 
     <string name="hide_grouping_button">Pulsante Nascondi raggruppamento</string>
+    <string name="hide_grouping_bar_when_scrolling">Nascondi la barra di raggruppamento durante lo scorrimento</string>
     <string name="eraser">Gomma per cancellare</string>
     <string name="eyedropper">Contagocce</string>
     <string name="hide_grouping_bar">Nascondi pannello di raggruppamento</string>

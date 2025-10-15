@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">แกลเลอรี่</string>
+    <string name="exclude_folder_description_g">ฟีเจอร์นี้จะยกเว้นโฟลเดอร์ที่เลือกและโฟลเดอร์ย่อยสำหรับ Right Gallery เท่านั้น คุณสามารถจัดการโฟลเดอร์ที่ยกเว้นได้ในการตั้งค่า</string>
+    <string name="excluded_activity_placeholder_g">การยกเว้นโฟลเดอร์จะซ่อนโฟลเดอร์และโฟลเดอร์ย่อยใน Right Gallery แต่จะยังคงมองเห็นได้ในแอปอื่นๆ
+
+หากคุณต้องการซ่อนโฟลเดอร์ในแอปอื่นๆ ด้วย ให้ใช้ฟีเจอร์ "ซ่อน"</string>
+    <string name="faq_1_title_g">ฉันจะทำให้ Right Gallery เป็นแกลเลอรีเริ่มต้นได้อย่างไร</string>
+    <string name="faq_1_text_g">ขั้นแรก คุณควรค้นหาแกลเลอรีเริ่มต้นในส่วน "แอปพลิเคชัน" ในการตั้งค่าอุปกรณ์ของคุณ ค้นหาปุ่มที่ระบุว่า "เปิดตามค่าเริ่มต้น" จากนั้นคลิกปุ่มนั้นและเลือก "ล้างค่าเริ่มต้น" ครั้งต่อไปที่คุณพยายามเปิดรูปภาพหรือวิดีโอ คุณจะเห็นตัวเลือกแอปที่คุณสามารถเลือก Right Gallery และกำหนดให้เป็นแอปเริ่มต้นของคุณได้ </string>
+    <string name="faq_5_text_g">การยกเว้นโฟลเดอร์จะป้องกันไม่ให้โฟลเดอร์นั้นปรากฏเฉพาะใน Right Gallery ในขณะที่การซ่อนโฟลเดอร์จะทำงานทั่วทั้งระบบและจะซ่อนโฟลเดอร์นั้นจากแกลเลอรีอื่นๆ วิธีนี้ทำได้โดยการสร้างไฟล์เปล่าชื่อ "".nomedia" ในโฟลเดอร์ ซึ่งสามารถลบได้โดยใช้ตัวจัดการไฟล์ใดๆ โปรดทราบว่าอุปกรณ์บางรุ่นไม่อนุญาตให้คุณซ่อนโฟลเดอร์ เช่น \"กล้อง\" \"ภาพหน้าจอ\" และ \"ดาวน์โหลด\"</string>
+
+    <string name="years">ปี</string>
+    <string name="months">เดือน</string>
+    <string name="days">วัน</string>
+    <string name="all_photos">รูปภาพทั้งหมด</string>
+    <string name="by_last_modified_yearly_g">แก้ไขล่าสุด (ปี)</string>
+    <string name="by_date_taken_yearly_g">วันที่ถ่าย (ปี)</string>
+    <string name="hide_grouping_bar">ซ่อนแถบการจัดกลุ่ม</string>
+    <string name="hide_grouping_button">ซ่อนปุ่มการจัดกลุ่ม</string>
+    <string name="hide_grouping_bar_when_scrolling">ซ่อนแถบการจัดกลุ่มเมื่อเลื่อน</string>
+
+    <string name="eraser">ยางลบ</string>
+    <string name="eyedropper">Eyedropper</string>
+</resources>

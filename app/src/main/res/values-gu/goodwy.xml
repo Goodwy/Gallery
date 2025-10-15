@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">ગેલેરી</string>
+    <string name="exclude_folder_description_g">આ સુવિધા ફક્ત Right Gallery માટે પસંદ કરેલા ફોલ્ડર્સ અને તેમના સબફોલ્ડર્સને બાકાત રાખશે. તમે સેટિંગ્સમાં બાકાત રાખેલા ફોલ્ડર્સનું સંચાલન કરી શકો છો.</string>
+    <string name="excluded_activity_placeholder_g">ફોલ્ડર્સને બાકાત રાખવાથી તેઓ અને તેમના સબફોલ્ડર્સ Right Galleryમાં છુપાઈ જશે, પરંતુ તેઓ અન્ય એપ્લિકેશનોમાં દૃશ્યમાન રહેશે.
+\n
+\nજો તમે તેમને અન્ય એપ્લિકેશનોમાં પણ છુપાવવા માંગતા હો, તો "છુપાવો" સુવિધાનો ઉપયોગ કરો.</string>
+    <string name="faq_1_title_g">હું રાઇટ ગેલેરીને મારી ડિફોલ્ટ ગેલેરી કેવી રીતે બનાવી શકું?</string>
+    <string name="faq_1_text_g">પહેલા, તમારે તમારા ઉપકરણની સેટિંગ્સના "એપ્લિકેશન્સ" વિભાગમાં ડિફોલ્ટ ગેલેરી શોધવાની જરૂર છે. "ડિફોલ્ટ દ્વારા ખોલો" લેબલવાળા બટનને શોધો, પછી તેને ટેપ કરો અને "ડિફોલ્ટ સાફ કરો" પસંદ કરો. આગલી વખતે જ્યારે તમે કોઈ છબી અથવા વિડિઓ ખોલવાનો પ્રયાસ કરો છો, ત્યારે તમને એક એપ્લિકેશન પસંદકર્તા દેખાશે જ્યાં તમે રાઇટ ગેલેરી પસંદ કરી શકો છો અને તેને તમારી ડિફોલ્ટ એપ્લિકેશન બનાવી શકો છો.</string>
+    <string name="faq_5_text_g">બાકાત રાખવાથી ફોલ્ડર ફક્ત રાઇટ ગેલેરીમાં જ દેખાતું નથી, જ્યારે છુપાવવું સિસ્ટમવ્યાપી કાર્ય કરે છે અને ફોલ્ડરને અન્ય ગેલેરીઓથી છુપાવે છે. આ ફોલ્ડરમાં ".nomedia" નામની ખાલી ફાઇલ બનાવીને આ પ્રાપ્ત થાય છે, જેને પછી કોઈપણ ફાઇલ મેનેજરનો ઉપયોગ કરીને કાઢી શકાય છે. કૃપા કરીને નોંધ કરો કે કેટલાક ઉપકરણો તમને "કેમેરા", "સ્ક્રીનશોટ" અને "ડાઉનલોડ" જેવા ફોલ્ડર્સ છુપાવવાની મંજૂરી આપતા નથી.</string>
+
+    <string name="years">વર્ષો</string>
+    <string name="months">મહિનાઓ</string>
+    <string name="days">દિવસો</string>
+    <string name="all_photos">બધા ફોટા</string>
+    <string name="by_last_modified_yearly_g">છેલ્લે ફેરફાર (વર્ષ)</string>
+
+    <string name="by_date_taken_yearly_g">લેવામાં આવેલી તારીખ (વર્ષ)</string>
+
+    <string name="hide_grouping_bar">જૂથીકરણ બાર છુપાવો</string>
+    <string name="hide_grouping_button">જૂથીકરણ બટન છુપાવો</string>
+    <string name="hide_grouping_bar_when_scrolling">સ્ક્રોલ કરતી વખતે ગ્રૂપિંગ બારને છુપાવો</string>
+
+    <string name="eraser">ઇરેઝર</string>
+    <string name="eyedropper">આઇડ્રોપર</string>
+</resources>

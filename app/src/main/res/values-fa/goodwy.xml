@@ -17,6 +17,7 @@
     <string name="by_date_taken_yearly_g">تاریخ اخذ (سالانه)</string>
 
     <string name="hide_grouping_button">دکمه مخفی کردن گروه بندی</string>
+    <string name="hide_grouping_bar_when_scrolling">هنگام پیمایش نوار گروه بندی را مخفی کنید</string>
     <string name="eraser">پاک کن</string>
     <string name="eyedropper">قطره چشم</string>
     <string name="hide_grouping_bar">پنهان کردن پنل گروه بندی</string>

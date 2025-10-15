@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Kuvanottopäivämäärä (vuosittain)</string>
 
     <string name="hide_grouping_button">Piilota ryhmittely -painike</string>
+    <string name="hide_grouping_bar_when_scrolling">Piilota ryhmittelypalkki vierittäessäsi</string>
     <string name="eraser">Pyyhekumi</string>
     <string name="eyedropper">Pipetti</string>
     <string name="hide_grouping_bar">Piilota ryhmittelypaneeli</string>

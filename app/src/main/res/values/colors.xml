@@ -5,9 +5,10 @@
 
     <color name="tab_background_light">#F2E1E0E4</color>
     <color name="tab_background_gray">#FFFFFFFF</color>
+    <color name="tab_background_dark">#FF3C3C3E</color>
     <color name="tab_background_black">#F21E1E1E</color>
     <color name="tab_indicator_light">#FFB6B6B6</color>
     <color name="tab_indicator_gray">#FFB6B6B6</color>
-    <color name="tab_indicator_dark">#FF515151</color>
+    <color name="tab_indicator_dark">#FF706A6D</color>
     <color name="tab_indicator_black">#FF515151</color>
 </resources>

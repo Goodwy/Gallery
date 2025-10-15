@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Dátumu vytvorenia (ročne)</string>
 
     <string name="hide_grouping_button">Skryť tlačidlo zoskupenia</string>
+    <string name="hide_grouping_bar_when_scrolling">Pri posúvaní skryť panel zoskupenia</string>
     <string name="eraser">Guma</string>
     <string name="eyedropper">Kvapkadlo</string>
     <string name="hide_grouping_bar">Skryť panel zoskupenia</string>

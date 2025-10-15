@@ -10,7 +10,7 @@
     <string name="pin_to_the_top">Bovenaan vastzetten</string>
     <string name="show_all">Inhoud van alle mappen tonen</string>
     <string name="all_folders">Alle mappen</string>
-    <string name="folder_view">Mapweergave</string>
+    <string name="folder_view">Overschakelen naar mapweergave</string>
     <string name="other_folder">Andere map</string>
     <string name="show_on_map">Op kaart tonen</string>
     <string name="unknown_location">Onbekende locatie</string>
@@ -254,4 +254,13 @@
     <string name="full_storage_permission_required">Fossify Galerij heeft volledige toegang nodig al je foto\'s en video\'s te kunnen tonen. Ga naar de app-instellingen &gt; Rechten &gt; Foto\'s en video\'s &gt; Alles toestaan.</string>
     <string name="playback_speed">Afspeelsnelheid</string>
     <string name="failed_to_load_media">Fout bij het laden van het bestand.</string>
+    <string name="file_is_malformed_or_corrupted">Bestand is onvolledig of beschadigd.</string>
+    <string name="unsupported_format">Niet-ondersteund formaat.</string>
+    <string name="media_exceeds_device_capabilities">Dit apparaat kan deze video niet afspelen.</string>
+    <string name="keep_screen_on_fullscreen_photos">Scherm ingeschakeld houden bij weergave in volledig scherm</string>
+    <plurals name="restore_confirmation">
+        <item quantity="one">%d bestand herstellen?</item>
+        <item quantity="other">%d bestanden herstellen?</item>
+    </plurals>
+    <string name="force_landscape_reverse">Landschapsmodus forceren (omgedraaid)</string>
 </resources>

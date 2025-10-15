@@ -7,7 +7,11 @@ import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
-import android.content.pm.ActivityInfo
+import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
+import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR
+import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
 import android.content.res.Configuration
@@ -228,7 +232,6 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
                 findItem(R.id.menu_restore_file).isVisible = currentMedium.path.startsWith(recycleBinPath)
                 findItem(R.id.menu_create_shortcut).isVisible = true
                 findItem(R.id.menu_change_orientation).isVisible = rotationDegrees == 0 && visibleBottomActions and BOTTOM_ACTION_CHANGE_ORIENTATION == 0
-                findItem(R.id.menu_change_orientation).icon = resources.getDrawable(getChangeOrientationIcon())
                 findItem(R.id.menu_rotate).setShowAsAction(
                     if (rotationDegrees != 0) {
                         MenuItem.SHOW_AS_ACTION_ALWAYS
@@ -285,9 +288,10 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
                 R.id.menu_add_to_favorites -> toggleFavorite()
                 R.id.menu_remove_from_favorites -> toggleFavorite()
                 R.id.menu_restore_file -> restoreFile()
-                R.id.menu_force_portrait -> toggleOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-                R.id.menu_force_landscape -> toggleOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
-                R.id.menu_default_orientation -> toggleOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                R.id.menu_force_portrait -> toggleOrientation(SCREEN_ORIENTATION_PORTRAIT)
+                R.id.menu_force_landscape -> toggleOrientation(SCREEN_ORIENTATION_LANDSCAPE)
+                R.id.menu_force_landscape_reverse -> toggleOrientation(SCREEN_ORIENTATION_REVERSE_LANDSCAPE)
+                R.id.menu_default_orientation -> toggleOrientation(SCREEN_ORIENTATION_UNSPECIFIED)
                 R.id.menu_save_as -> saveImageAs()
                 R.id.menu_create_shortcut -> createShortcut()
                 R.id.menu_resize -> resizeImage()
@@ -502,9 +506,9 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
     private fun setupOrientation() {
         if (!mIsOrientationLocked) {
             if (config.screenRotation == ROTATE_BY_DEVICE_ROTATION) {
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+                requestedOrientation = SCREEN_ORIENTATION_SENSOR
             } else if (config.screenRotation == ROTATE_BY_SYSTEM_SETTING) {
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                requestedOrientation = SCREEN_ORIENTATION_UNSPECIFIED
             }
         }
     }
@@ -652,6 +656,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         }
     }
 
+    @OptIn(UnstableApi::class)
     private fun scheduleSwipe() {
         mSlideshowHandler.removeCallbacksAndMessages(null)
         if (mIsSlideshowActive) {
@@ -768,13 +773,13 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
 
     private fun toggleOrientation(orientation: Int) {
         requestedOrientation = orientation
-        mIsOrientationLocked = orientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        mIsOrientationLocked = orientation != SCREEN_ORIENTATION_UNSPECIFIED
         refreshMenuItems()
     }
 
     private fun getChangeOrientationIcon(): Int {
         return if (mIsOrientationLocked) {
-            if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+            if (requestedOrientation == SCREEN_ORIENTATION_PORTRAIT) {
                 R.drawable.ic_orientation_portrait_vector
             } else {
                 R.drawable.ic_orientation_landscape_vector
@@ -881,6 +886,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         }
     }
 
+    @OptIn(UnstableApi::class)
     private fun initBottomActionButtons() {
         val iconColor = if (baseConfig.topAppBarColorIcon) getProperPrimaryColor() else Color.WHITE
         arrayListOf(
@@ -938,11 +944,12 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         binding.bottomActions.bottomChangeOrientation.setOnLongClickListener { toast(R.string.change_orientation); true }
         binding.bottomActions.bottomChangeOrientation.setOnClickListener {
             requestedOrientation = when (requestedOrientation) {
-                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT -> ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE -> ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-                else -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                SCREEN_ORIENTATION_PORTRAIT -> SCREEN_ORIENTATION_LANDSCAPE
+                SCREEN_ORIENTATION_LANDSCAPE -> SCREEN_ORIENTATION_REVERSE_LANDSCAPE
+                SCREEN_ORIENTATION_REVERSE_LANDSCAPE -> SCREEN_ORIENTATION_UNSPECIFIED
+                else -> SCREEN_ORIENTATION_PORTRAIT
             }
-            mIsOrientationLocked = requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+            mIsOrientationLocked = requestedOrientation != SCREEN_ORIENTATION_UNSPECIFIED
             updateBottomActionIcons(currentMedium)
         }
 
@@ -1065,7 +1072,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
     private fun sendPrintIntent(path: String) {
         val printHelper = PrintHelper(this)
         printHelper.scaleMode = PrintHelper.SCALE_MODE_FIT
-        printHelper.orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        printHelper.orientation = SCREEN_ORIENTATION_PORTRAIT
 
         try {
             val resolution = path.getImageResolution(this)
@@ -1298,6 +1305,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         }
     }
 
+    @OptIn(UnstableApi::class)
     private fun gotMedia(thumbnailItems: ArrayList<ThumbnailItem>, ignorePlayingVideos: Boolean = false, refetchViewPagerPosition: Boolean = false) {
         val media = thumbnailItems.asSequence().filter {
             it is Medium && !mIgnoredPaths.contains(it.path)
@@ -1383,9 +1391,9 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
             val width = if (flipSides) resolution.y else resolution.x
             val height = if (flipSides) resolution.x else resolution.y
             if (width > height) {
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                requestedOrientation = SCREEN_ORIENTATION_LANDSCAPE
             } else if (width < height) {
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                requestedOrientation = SCREEN_ORIENTATION_PORTRAIT
             }
         }
     }

@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Tanggal diambil (tahunan)</string>
 
     <string name="hide_grouping_button">Sembunyikan tombol grup</string>
+    <string name="hide_grouping_bar_when_scrolling">Sembunyikan bilah pengelompokan saat menggulir</string>
     <string name="eraser">Penghapus</string>
     <string name="eyedropper">Penitis mata</string>
     <string name="hide_grouping_bar">Sembunyikan panel pengelompokan</string>

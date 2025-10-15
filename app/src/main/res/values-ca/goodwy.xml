@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Data de presa (anualment)</string>
 
     <string name="hide_grouping_button">Botó Amaga l\'agrupació</string>
+    <string name="hide_grouping_bar_when_scrolling">Amaga la barra d\'agrupació en desplaçar-te</string>
     <string name="eraser">Goma d\'esborrar</string>
     <string name="eyedropper">Comptagotes</string>
     <string name="hide_grouping_bar">Amaga el tauler d\'agrupació</string>

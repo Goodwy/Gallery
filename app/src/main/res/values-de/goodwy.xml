@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Aufnahmedatum (jährlich)</string>
 
     <string name="hide_grouping_button">Schaltfläche \"Gruppierung ausblenden\"</string>
+    <string name="hide_grouping_bar_when_scrolling">Gruppierungsleiste beim Scrollen ausblenden</string>
     <string name="eraser">Radiergummi</string>
     <string name="eyedropper">Pipette</string>
     <string name="hide_grouping_bar">Gruppierungsfeld ausblenden</string>

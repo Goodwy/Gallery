@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Data wykonania (rocznie)</string>
 
     <string name="hide_grouping_button">Ukryj przycisk grupowania</string>
+    <string name="hide_grouping_bar_when_scrolling">Ukryj pasek grupowania podczas przewijania</string>
     <string name="eraser">Gumka do mazania</string>
     <string name="eyedropper">Zakraplacz</string>
     <string name="hide_grouping_bar">Ukryj panel grupowania</string>

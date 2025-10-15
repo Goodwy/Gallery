@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Dato tatt (årlig)</string>
 
     <string name="hide_grouping_button">Skjul gruppering-knapp</string>
+    <string name="hide_grouping_bar_when_scrolling">Skjul grupperingslinjen når du ruller</string>
     <string name="eraser">Viskelær</string>
     <string name="eyedropper">Pipette</string>
     <string name="hide_grouping_bar">Skjul grupperingspanel</string>

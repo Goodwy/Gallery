@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Çekildiği tarih (yıllık)</string>
 
     <string name="hide_grouping_button">Gruplandırmayı gizle düğmesi</string>
+    <string name="hide_grouping_bar_when_scrolling">Kaydırırken gruplama çubuğunu gizle</string>
     <string name="eraser">Silgi</string>
     <string name="eyedropper">Damlalık</string>
     <string name="hide_grouping_bar">Gruplandırma panelini gizle</string>

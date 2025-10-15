@@ -20,6 +20,7 @@
     <string name="hide_grouping_bar">Приховати панель групування</string>
     <string name="hide_grouping_button">Приховати кнопку групування</string>
 
+    <string name="hide_grouping_bar_when_scrolling">Приховати панель групування під час прокручування</string>
     <string name="eraser">Гумка</string>
     <string name="eyedropper">Піпетка</string>
 </resources>

@@ -20,6 +20,7 @@
     <string name="hide_grouping_bar">Схаваць панэль групоўкі</string>
     <string name="hide_grouping_button">Схаваць кнопку групоўкі</string>
 
+    <string name="hide_grouping_bar_when_scrolling">Схаваць панэль групоўкі пры прагортцы</string>
     <string name="eraser">Ласцік</string>
     <string name="eyedropper">Піпетка</string>
 </resources>

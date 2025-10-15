@@ -62,6 +62,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.text.DecimalFormat
 import androidx.core.net.toUri
+import kotlin.math.max
 
 @UnstableApi
 class VideoFragment : ViewPagerFragment(), TextureView.SurfaceTextureListener,
@@ -112,6 +113,7 @@ class VideoFragment : ViewPagerFragment(), TextureView.SurfaceTextureListener,
     private var mVolumeController: VolumeController? = null
     private var mMuteInit: Boolean = false
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -354,6 +356,7 @@ class VideoFragment : ViewPagerFragment(), TextureView.SurfaceTextureListener,
         if (activity?.isChangingConfigurations == false) {
             cleanup()
         }
+        mVolumeSideScroll.cleanup()
     }
 
     override fun setMenuVisibility(menuVisible: Boolean) {
@@ -703,7 +706,16 @@ class VideoFragment : ViewPagerFragment(), TextureView.SurfaceTextureListener,
         val curr = mExoPlayer!!.currentPosition
         var newPosition =
             if (forward) curr + FAST_FORWARD_VIDEO_MS else curr - FAST_FORWARD_VIDEO_MS
-        newPosition = newPosition.coerceIn(0, mExoPlayer!!.duration)
+
+        // Fix: Exception java.lang.IllegalArgumentException: Cannot coerce value to an empty range: maximum -9223372036854775807 is less than minimum 0.
+        val duration = mExoPlayer!!.duration
+        newPosition = if (duration > 0) {
+            newPosition.coerceIn(0, duration)
+        } else {
+            // If the duration is unknown, we limit only from below
+            max(0, newPosition)
+        }
+
         setPosition(newPosition)
         if (!mIsPlaying) {
             togglePlayPause()

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">गैलरी</string>
+    <string name="exclude_folder_description_g">यह सुविधा केवल Right Gallery के लिए चुने गए फ़ोल्डर और उनके सबफ़ोल्डर को बाहर रखेगी। आप सेटिंग में बहिष्कृत फ़ोल्डर प्रबंधित कर सकते हैं।</string>
+    <string name="excluded_activity_placeholder_g">फ़ोल्डर को बाहर रखने से वे और उनके सबफ़ोल्डर Right Gallery में छिप जाएँगे, लेकिन वे अन्य ऐप्स में दिखाई देते रहेंगे।
+\n
+\nअगर आप इन्हें दूसरे ऐप्स में भी छिपाना चाहते हैं, तो "छिपाएँ" सुविधा का इस्तेमाल करें।</string>
+    <string name="faq_1_title_g">मैं राइट गैलरी को अपनी डिफ़ॉल्ट गैलरी कैसे बनाऊँ?</string>
+    <string name="faq_1_text_g">सबसे पहले, आपको अपने डिवाइस की सेटिंग के "एप्लिकेशन" सेक्शन में डिफ़ॉल्ट गैलरी ढूंढनी होगी। "डिफ़ॉल्ट रूप से खोलें" लेबल वाला बटन देखें, फिर उस पर टैप करें और "डिफ़ॉल्ट साफ़ करें" चुनें। अगली बार जब आप कोई इमेज या वीडियो खोलने की कोशिश करेंगे, तो आपको एक ऐप चॉइसर दिखाई देगा जहाँ आप राइट गैलरी चुनकर उसे अपना डिफ़ॉल्ट ऐप बना सकते हैं।</string>
+    <string name="faq_5_text_g">छोड़ने से फ़ोल्डर सिर्फ़ राइट गैलरी में दिखाई नहीं देता, जबकि छिपाने से फ़ोल्डर पूरे सिस्टम में काम करता है और दूसरी गैलरी से छिप जाता है। यह इस फ़ोल्डर में "".nomedia" नाम की एक खाली फ़ाइल बनाकर किया जाता है, जिसे किसी भी फ़ाइल मैनेजर का उपयोग करके हटाया जा सकता है। कृपया ध्यान दें कि कुछ डिवाइस आपको "कैमरा", "स्क्रीनशॉट" और "डाउनलोड" जैसे फ़ोल्डर छिपाने की अनुमति नहीं देते हैं।</string>
+
+    <string name="years">वर्ष</string>
+    <string name="months">महीने</string>
+    <string name="days">दिन</string>
+    <string name="all_photos">सभी फ़ोटो</string>
+    <string name="by_last_modified_yearly_g">अंतिम संशोधन (वर्ष)</string>
+    <string name="by_date_taken_yearly_g">लिया गया दिनांक (वर्ष)</string>
+    <string name="hide_grouping_bar">समूहीकरण बार छिपाएँ</string>
+    <string name="hide_grouping_button">समूहीकरण छिपाएँ बटन</string>
+    <string name="hide_grouping_bar_when_scrolling">स्क्रॉल करते समय ग्रुपिंग बार छिपाएँ</string>
+
+    <string name="eraser">इरेज़र</string>
+    <string name="eyedropper">आईड्रॉपर</string>
+</resources>

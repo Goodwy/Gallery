@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Fecha de creación (anual)</string>
 
     <string name="hide_grouping_button">Botón Ocultar agrupación</string>
+    <string name="hide_grouping_bar_when_scrolling">Ocultar la barra de agrupación al desplazarse</string>
     <string name="eraser">Borrador</string>
     <string name="eyedropper">Cuentagotas</string>
     <string name="hide_grouping_bar">Ocultar panel de agrupación</string>

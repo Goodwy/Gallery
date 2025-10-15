@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Galerija</string>
+    <string name="exclude_folder_description_g">Ova funkcija će isključiti odabrane mape i njihove podmape samo za Right Gallery. Isključenim mapama možete upravljati u Postavkama.</string>
+    <string name="excluded_activity_placeholder_g">Isključivanje mapa će ih i njihove podmape sakriti u Right Gallery, ali će ostati vidljive u drugim aplikacijama.
+\n
+\nAko ih želite sakriti i u drugim aplikacijama, koristite funkciju "Sakrij".</string>
+    <string name="faq_1_title_g">Kako da Right Gallery bude moja zadana galerija?</string>
+    <string name="faq_1_text_g">Prvo, morate pronaći zadanu galeriju u odjeljku "Aplikacije" u postavkama vašeg uređaja. Potražite dugme s oznakom "Otvori prema zadanim postavkama", zatim ga dodirnite i odaberite "Poništi zadane postavke". Sljedeći put kada pokušate otvoriti sliku ili video, vidjet ćete birač aplikacija gdje možete odabrati Desnu galeriju i postaviti je kao zadanu aplikaciju.</string>
+    <string name="faq_5_text_g">Isključivanje sprječava da se mapa pojavi samo u Right Gallery, dok skrivanje funkcionira na nivou cijelog sistema i skriva mapu iz drugih galerija. Ovo se postiže kreiranjem prazne datoteke pod nazivom "".nomedia" u ovoj mapi, koja se zatim može izbrisati pomoću bilo kojeg upravitelja datoteka. Imajte na umu da neki uređaji ne dozvoljavaju skrivanje mapa kao što su "Kamera", "Snimak ekrana" i "Preuzimanje".</string>
+
+    <!-- Grupiranje na sličicama medija -->
+    <string name="years">Godine</string>
+    <string name="months">Mjeseci</string>
+    <string name="days">Dani</string>
+    <string name="all_photos">Sve fotografije</string>
+    <string name="by_last_modified_yearly_g">Posljednja izmjena (godina)</string>
+    <string name="by_date_taken_yearly_g">Datum snimanja (godina)</string>
+    <string name="hide_grouping_bar">Sakrij traku za grupiranje</string>
+    <string name="hide_grouping_button">Sakrij dugme za grupiranje</string>
+    <string name="hide_grouping_bar_when_scrolling">Sakrijte traku za grupisanje prilikom pomicanja</string>
+
+    <string name="eraser">Gumica</string>
+    <string name="eyedropper">Kapaljka</string>
+</resources>

@@ -19,6 +19,7 @@
     <string name="by_date_taken_yearly_g">Võetud kuupäev (igal aastal)</string>
 
     <string name="hide_grouping_button">Peida rühmitamisnupp</string>
+    <string name="hide_grouping_bar_when_scrolling">Peida kerimisel rühmitusriba</string>
     <string name="eraser">Kustutuskumm</string>
     <string name="eyedropper">Pipetti</string>
     <string name="hide_grouping_bar">Peida rühmitamispaneel</string>

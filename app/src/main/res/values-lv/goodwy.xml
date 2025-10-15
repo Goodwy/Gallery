@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_g">Right Gallery</string>
+    <string name="app_launcher_name_g">Galerija</string>
+    <string name="exclude_folder_description_g">Šī funkcija izslēgs atlasītās mapes un to apakšmapes tikai Right Gallery. Izslēgtās mapes var pārvaldīt iestatījumos.</string>
+    <string name="excluded_activity_placeholder_g">Mapju izslēgšana tās un to apakšmapes paslēps Right Gallery, taču tās paliks redzamas citās lietotnēs.
+
+Ja vēlaties tās paslēpt arī citās lietotnēs, izmantojiet funkciju "Paslēpt".</string>
+    <string name="faq_1_title_g">Kā iestatīt labo galeriju kā manu noklusējuma galeriju?</string>
+    <string name="faq_1_text_g">Vispirms ierīces iestatījumu sadaļā "Lietojumprogrammas" jāatrod noklusējuma galerija; atrodiet pogu ar nosaukumu "Atvērt pēc noklusējuma", pēc tam noklikšķiniet uz tās un atlasiet "Notīrīt noklusējuma iestatījumus". Nākamreiz, kad mēģināsiet atvērt attēlu vai videoklipu, redzēsiet lietotņu atlasītāju, kurā varēsiet atlasīt labo galeriju un padarīt to par savu noklusējuma lietotni. </string>
+    <string name="faq_5_text_g">Mapes izslēgšana neļauj tai parādīties tikai Right Gallery, savukārt tās paslēpšana darbojas visā sistēmā un paslēpj mapi no citām galerijām. To var panākt, mapē izveidojot tukšu failu ar nosaukumu ".nomedia", kuru pēc tam var izdzēst, izmantojot jebkuru failu pārvaldnieku. Lūdzu, ņemiet vērā, ka dažas ierīces neļauj paslēpt mapes, piemēram, \"Kamera\", \"Ekrānuzņēmums\" un \"Lejupielāde\".</string>
+
+    <string name="years">Gadi</string>
+    <string name="months">Mēneši</string>
+    <string name="days">Dienas</string>
+    <string name="all_photos">Visi fotoattēli</string>
+    <string name="by_last_modified_yearly_g">Pēdējā modificēšana (gads)</string>
+    <string name="by_date_taken_yearly_g">Uzņemšanas datums (gads)</string>
+    <string name="hide_grouping_bar">Paslēpt grupēšanas joslu</string>
+    <string name="hide_grouping_button">Paslēpt grupēšanas pogu</string>
+    <string name="hide_grouping_bar_when_scrolling">Ritināšanas laikā paslēpiet grupēšanas joslu</string>
+
+    <string name="eraser">Dzēšgumija</string>
+    <string name="eyedropper">Pipete</string>
+</resources>
