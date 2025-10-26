@@ -6,8 +6,9 @@
     <string name="package_name">com.goodwy.gallery</string>
 
     <!-- Release notes -->
-    <string name="release_690">
-        Changed the color scheme of the system theme\n
+    <string name="release_700">
+        Changed color schemes and theme behavior\n
+        Added an auto dark/light theme\n
         Added voice input for search\n
         Fixed bugs, improved stability
     </string>

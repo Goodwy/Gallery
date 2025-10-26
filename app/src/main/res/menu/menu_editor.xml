@@ -20,13 +20,18 @@
         android:enabled="false"
         app:showAsAction="always" />
     <item
+        android:id="@+id/overwrite_original"
+        android:icon="@drawable/ic_check_vector"
+        android:title="@string/overwrite_original"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/edit"
         android:icon="@drawable/ic_edit_with"
         android:title="@string/edit_with"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/share"
         android:icon="@drawable/ic_share_vector"
         android:title="@string/share"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 </menu>

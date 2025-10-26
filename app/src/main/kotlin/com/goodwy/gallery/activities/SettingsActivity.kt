@@ -473,7 +473,7 @@ class SettingsActivity : SimpleActivity() {
         settingsUseSpeechToTextHolder.setOnClickListener {
             settingsUseSpeechToText.toggle()
             config.useSpeechToText = settingsUseSpeechToText.isChecked
-            config.tabsChanged = true
+            config.needRestart = true
         }
     }
 
@@ -483,7 +483,7 @@ class SettingsActivity : SimpleActivity() {
             binding.settingsHideGroupingBar.toggle()
             config.hideGroupingBar = binding.settingsHideGroupingBar.isChecked
             binding.settingsHideGroupingButtonHolder.beGoneIf(config.hideGroupingBar)
-            config.tabsChanged = true
+            config.needRestart = true
         }
     }
 
@@ -493,7 +493,7 @@ class SettingsActivity : SimpleActivity() {
         binding.settingsHideGroupingButtonHolder.setOnClickListener {
             binding.settingsHideGroupingButton.toggle()
             config.hideGroupingButton = binding.settingsHideGroupingButton.isChecked
-            config.tabsChanged = true
+            config.needRestart = true
         }
     }
 
@@ -640,7 +640,7 @@ class SettingsActivity : SimpleActivity() {
             settingsChangeColourTopBarHolder.setOnClickListener {
                 settingsChangeColourTopBar.toggle()
                 config.changeColourTopBar = settingsChangeColourTopBar.isChecked
-                config.tabsChanged = true
+                config.needRestart = true
             }
         }
     }
@@ -1433,7 +1433,7 @@ class SettingsActivity : SimpleActivity() {
     private fun setupTipJar() = binding.apply {
         settingsTipJarHolder.apply {
             beVisibleIf(isPro())
-            background.applyColorFilter(getSurfaceColor().lightenColor(4))
+            background.applyColorFilter(getColoredMaterialStatusBarColor())
             setOnClickListener {
                 launchPurchase()
             }

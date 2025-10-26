@@ -2,7 +2,7 @@
 #jetbrains
 kotlin = "2.2.20"
 #KSP
-ksp = "2.2.20-2.0.3"
+ksp = "2.2.20-2.0.4"
 #Detekt
 detekt = "1.23.8"
 detektCompose = "0.4.27"
@@ -12,12 +12,14 @@ androidx-constraintlayout = "2.2.1"
 #exif
 exif = "1.0.1"
 #Room
-room = "2.8.1"
+room = "2.8.2"
 #Goodwy
-right-commons = "42f22c9fa3"
+right-commons = "d3ba8fa979"
 behavioRule = "1.0.1"
 rxAnimation = "2.1.1"
 androidx-lifecycleprocess = "2.8.7"
+print = "1.1.0"
+documentfile = "1.1.0"
 #Gradle
 gradlePlugins-agp = "8.11.1"
 #Other
@@ -33,7 +35,7 @@ androidphotofilters = "193f2ae509"
 sanselan = "0.97-incubator"
 media3Exoplayer = "1.4.1"
 okhttp = "4.10.0" #4.10.0 not conflicts with maven { setUrl("https://artifactory-external.vkpartner.ru/artifactory/maven") }
-okio = "3.16.0"
+okio = "3.16.2"
 picasso = "2.71828"
 subsamplingScaleImageView = "ca5f76adc0"
 #build
@@ -79,6 +81,8 @@ zjupure-webpdecoder = { module = "com.github.zjupure:webpdecoder", version.ref =
 picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
 avif-integration = { group = "com.github.bumptech.glide", name = "avif-integration", version.ref = "glideCompiler" }
 jxl-integration = { group = "io.github.awxkee", name = "jxl-coder-glide", version.ref = "jxlDecoder" }
+androidx-print = { group = "androidx.print", name = "print", version.ref = "print" }
+androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "documentfile" }
 [bundles]
 room = [
     "androidx-room-ktx",

@@ -332,11 +332,22 @@ class VideoFragment : ViewPagerFragment(), TextureView.SurfaceTextureListener,
             val textColor = this.requireContext().getProperTextColor()
             arrayListOf(
                 binding.bottomVideoTimeHolder.videoDuration,
-                binding.bottomVideoTimeHolder.videoCurrTime
+                binding.bottomVideoTimeHolder.videoCurrTime,
+                binding.bottomVideoTimeHolder.videoPlaybackSpeed
             ).forEach {
                 it.apply {
                     setTextColor(textColor)
                     setShadowLayer(2f, 0f, 0f, textColor.getContrastColor())
+                }
+            }
+            arrayListOf(
+                binding.bottomVideoTimeHolder.videoPrevFile,
+                binding.bottomVideoTimeHolder.videoTogglePlayPause,
+                binding.bottomVideoTimeHolder.videoNextFile,
+                binding.bottomVideoTimeHolder.videoToggleMute
+            ).forEach {
+                it.apply {
+                    setColorFilter(textColor)
                 }
             }
         }

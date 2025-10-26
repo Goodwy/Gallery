@@ -174,7 +174,7 @@ class ChangeFolderThumbnailStyleDialog(val activity: BaseSimpleActivity, val cal
         config.showFolderMediaCount = count
         config.limitFolderTitle = binding.dialogFolderLimitTitle.isChecked
         if (config.fontSizeDir != fontSizeDir) {
-            config.tabsChanged = true
+            config.needRestart = true
             config.fontSizeDir = fontSizeDir
         }
         callback()

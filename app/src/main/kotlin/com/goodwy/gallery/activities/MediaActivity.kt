@@ -119,7 +119,14 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
             useTransparentNavigation = false, //!config.scrollHorizontally,
             useTopSearchMenu = true
         )
-        if (config.changeColourTopBar) setupSearchMenuScrollListener(binding.mediaGrid, binding.mediaMenu)
+        if (config.changeColourTopBar) {
+            val useSurfaceColor = isDynamicTheme() && !isSystemInDarkMode()
+            setupSearchMenuScrollListener(
+                scrollingView = binding.mediaGrid,
+                searchMenu = binding.mediaMenu,
+                surfaceColor = useSurfaceColor
+            )
+        }
 
 
         if (mShowAll) {
@@ -163,7 +170,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         updateMenuColors()
         setupTabsColor()
 
-        if (config.tabsChanged || mStoredHideTopBarWhenScroll != config.hideTopBarWhenScroll) {
+        if (config.needRestart || mStoredHideTopBarWhenScroll != config.hideTopBarWhenScroll) {
             finish()
             startActivity(intent)
             return
@@ -206,6 +213,10 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         ) {
             binding.mediaGrid.adapter = null
             setupAdapter()
+        }
+
+        if (isDynamicTheme() && !isSystemInDarkMode()) {
+            binding.mediaGrid.setBackgroundColor(getSurfaceColor())
         }
 
         refreshMenuItems()
@@ -417,14 +428,17 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     }
 
     private fun updateMenuColors() {
-        updateStatusbarColor(getProperBackgroundColor())
+        val useSurfaceColor = isDynamicTheme() && !isSystemInDarkMode()
+        val backgroundColor = if (useSurfaceColor) getSurfaceColor() else getProperBackgroundColor()
+        updateStatusbarColor(backgroundColor)
         binding.mediaMenu.updateColors(getStartRequiredStatusBarColor(), scrollingView?.computeVerticalScrollOffset() ?: 0)
     }
 
     private fun getStartRequiredStatusBarColor(): Int {
         val scrollingViewOffset = scrollingView?.computeVerticalScrollOffset() ?: 0
         return if (scrollingViewOffset == 0) {
-            getProperBackgroundColor()
+            val useSurfaceColor = isDynamicTheme() && !isSystemInDarkMode()
+            if (useSurfaceColor) getSurfaceColor() else getProperBackgroundColor()
         } else {
             getColoredMaterialStatusBarColor()
         }
@@ -443,7 +457,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
             mStoredRoundedCorners = fileRoundedCorners
             mShowAll = showAll && mPath != RECYCLE_BIN
             mStoredHideTopBarWhenScroll = hideTopBarWhenScroll
-            tabsChanged = false
+            needRestart = false
         }
     }
 
@@ -1221,7 +1235,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 
     private fun setupTabsColor() {
         val tabBackground = when {
-            isDynamicTheme() -> getSurfaceColor().adjustAlpha(0.95f)
+            isDynamicTheme() && !isSystemInDarkMode() -> getProperBackgroundColor()
             isLightTheme() -> resources.getColor(R.color.tab_background_light)
             isGrayTheme() -> resources.getColor(R.color.tab_background_gray)
             isDarkTheme() -> resources.getColor(R.color.tab_background_dark)
@@ -1231,7 +1245,10 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         binding.mainTopTabsBackground.backgroundTintList = ColorStateList.valueOf(tabBackground)
         binding.groupButton.backgroundTintList = ColorStateList.valueOf(tabBackground)
         binding.groupButton.setColorFilter(getProperTextColor())
-        binding.mainTopTabsHolder.setSelectedTabIndicatorColor(getProperBackgroundColor())
+
+        val useSurfaceColor = isDynamicTheme() && !isSystemInDarkMode()
+        val backgroundColor = if (useSurfaceColor) getSurfaceColor() else getProperBackgroundColor()
+        binding.mainTopTabsHolder.setSelectedTabIndicatorColor(backgroundColor)
         binding.mainTopTabsHolder.setTabTextColors(getProperTextColor(), getProperPrimaryColor())
     }
 

@@ -137,7 +137,14 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             useTransparentNavigation = true, //!config.scrollHorizontally,
             useTopSearchMenu = true
         )
-        if (config.changeColourTopBar) setupSearchMenuScrollListener(binding.directoriesGrid, binding.mainMenu)
+        if (config.changeColourTopBar) {
+            val useSurfaceColor = isDynamicTheme() && !isSystemInDarkMode()
+            setupSearchMenuScrollListener(
+                scrollingView = binding.directoriesGrid,
+                searchMenu = binding.mainMenu,
+                surfaceColor = useSurfaceColor
+            )
+        }
 
         binding.directoriesRefreshLayout.setOnRefreshListener { getDirectories() }
         storeStateVariables()
@@ -203,7 +210,9 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
                     val topPadding = resources.getDimension(com.goodwy.commons.R.dimen.small_margin).toInt()
                     binding.directoriesGrid.setPadding(0, topPadding, 0, bottomNavigationBarSize) // needed clipToPadding="false"
                 }
-                updateNavigationBarColor(getProperBackgroundColor())
+//                val useSurfaceColor = isDynamicTheme() && !isSystemInDarkMode()
+//                val backgroundColor = if (useSurfaceColor) getSurfaceColor() else getProperBackgroundColor()
+//                updateNavigationBarColor(backgroundColor)
             }
         }
     }
@@ -223,7 +232,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
 
         refreshMenuItems()
 
-        if (config.tabsChanged || mStoredHideTopBarWhenScroll != config.hideTopBarWhenScroll) {
+        if (config.needRestart || mStoredHideTopBarWhenScroll != config.hideTopBarWhenScroll) {
             finish()
             startActivity(intent)
             return
@@ -259,6 +268,10 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             "${config.folderStyle}${config.showFolderMediaCount}${config.limitFolderTitle}"
         if (mStoredStyleString != styleString) {
             setupAdapter(mDirs, forceRecreate = true)
+        }
+
+        if (isDynamicTheme() && !isSystemInDarkMode()) {
+            binding.directoriesGrid.setBackgroundColor(getSurfaceColor())
         }
 
         val accentColor = getProperAccentColor()
@@ -470,14 +483,17 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
     }
 
     private fun updateMenuColors() {
-        updateStatusbarColor(getProperBackgroundColor())
+        val useSurfaceColor = isDynamicTheme() && !isSystemInDarkMode()
+        val backgroundColor = if (useSurfaceColor) getSurfaceColor() else getProperBackgroundColor()
+        updateStatusbarColor(backgroundColor)
         binding.mainMenu.updateColors(getStartRequiredStatusBarColor(), scrollingView?.computeVerticalScrollOffset() ?: 0)
     }
 
     private fun getStartRequiredStatusBarColor(): Int {
         val scrollingViewOffset = scrollingView?.computeVerticalScrollOffset() ?: 0
         return if (scrollingViewOffset == 0) {
-            getProperBackgroundColor()
+            val useSurfaceColor = isDynamicTheme() && !isSystemInDarkMode()
+            if (useSurfaceColor) getSurfaceColor() else getProperBackgroundColor()
         } else {
             getColoredMaterialStatusBarColor()
         }
@@ -494,7 +510,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             mStoredScrollHorizontally = scrollHorizontally
             mStoredStyleString = "$folderStyle$showFolderMediaCount$limitFolderTitle"
             mStoredHideTopBarWhenScroll = hideTopBarWhenScroll
-            tabsChanged = false
+            needRestart = false
         }
     }
 
@@ -1719,7 +1735,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             add(Release(610, R.string.release_610))
             add(Release(650, R.string.release_650))
             add(Release(651, R.string.release_651))
-            add(Release(690, R.string.release_690))
+            add(Release(700, R.string.release_700))
             checkWhatsNew(this, BuildConfig.VERSION_CODE)
         }
     }

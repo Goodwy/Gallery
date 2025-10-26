@@ -7,13 +7,17 @@ import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.Bitmap.CompressFormat
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.PictureDrawable
 import android.media.AudioManager
+import android.net.Uri
 import android.os.Process
 import android.provider.MediaStore.Files
 import android.provider.MediaStore.Images
 import android.widget.ImageView
+import androidx.core.net.toUri
+import androidx.documentfile.provider.DocumentFile
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.integration.webp.WebpBitmapFactory
@@ -909,7 +913,7 @@ fun Context.getCachedMedia(
             }
         }) as ArrayList<Medium>
 
-        val pathToUse = if (path.isEmpty()) SHOW_ALL else path
+        val pathToUse = path.ifEmpty { SHOW_ALL }
         mediaFetcher.sortMedia(media, config.getFolderSorting(pathToUse))
         val grouped = mediaFetcher.groupMedia(media, pathToUse)
         callback(grouped.clone() as ArrayList<ThumbnailItem>)
@@ -1335,6 +1339,28 @@ fun Context.getFileDateTaken(path: String): Long {
     }
 
     return 0L
+}
+
+fun Context.getCompressionFormatFromUri(uri: Uri): CompressFormat {
+    val type = getMimeTypeFromUri(uri)
+    return when {
+        type.equals("image/png", true) -> CompressFormat.PNG
+        type.equals("image/webp", true) -> CompressFormat.WEBP
+        else -> CompressFormat.JPEG
+    }
+}
+
+fun Context.resolveUriScheme(
+    uri: Uri,
+    onPath: (String) -> Unit,
+    onContentUri: (Uri) -> Unit,
+    onUnknown: () -> Unit = { toast(R.string.unknown_file_location) }
+) {
+    when (uri.scheme) {
+        "file" -> onPath(uri.path!!)
+        "content" -> onContentUri(uri)
+        else -> onUnknown()
+    }
 }
 
 fun Context.getTextSizeDir(fontSizeDir: Int = config.fontSizeDir) = when (fontSizeDir) {
