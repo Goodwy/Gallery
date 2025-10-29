@@ -367,7 +367,10 @@ class VideoFragment : ViewPagerFragment(), TextureView.SurfaceTextureListener,
         if (activity?.isChangingConfigurations == false) {
             cleanup()
         }
-        mVolumeSideScroll.cleanup()
+
+        if (::mVolumeSideScroll.isInitialized) {
+            mVolumeSideScroll.cleanup()
+        }
     }
 
     override fun setMenuVisibility(menuVisible: Boolean) {

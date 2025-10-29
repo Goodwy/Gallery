@@ -14,7 +14,7 @@ exif = "1.0.1"
 #Room
 room = "2.8.2"
 #Goodwy
-right-commons = "d3ba8fa979"
+right-commons = "70aad40568"
 behavioRule = "1.0.1"
 rxAnimation = "2.1.1"
 androidx-lifecycleprocess = "2.8.7"
