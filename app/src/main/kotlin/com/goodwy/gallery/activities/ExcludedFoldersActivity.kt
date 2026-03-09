@@ -10,6 +10,7 @@ import com.goodwy.gallery.R
 import com.goodwy.gallery.adapters.ManageFoldersAdapter
 import com.goodwy.gallery.databinding.ActivityManageFoldersBinding
 import com.goodwy.gallery.extensions.config
+import com.goodwy.gallery.extensions.evictFoldersFromCache
 
 class ExcludedFoldersActivity : SimpleActivity(), RefreshRecyclerViewListener {
 
@@ -77,6 +78,7 @@ class ExcludedFoldersActivity : SimpleActivity(), RefreshRecyclerViewListener {
         ) {
             config.lastFilepickerPath = it
             config.addExcludedFolder(it)
+            applicationContext.evictFoldersFromCache(listOf(it))
             updateFolders()
         }
     }

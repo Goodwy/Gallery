@@ -73,6 +73,7 @@ const val SHOW_RECYCLE_BIN_LAST = "show_recycle_bin_last"
 const val ALLOW_ZOOMING_IMAGES = "allow_zooming_images"
 const val WAS_SVG_SHOWING_HANDLED = "was_svg_showing_handled"
 const val LAST_BIN_CHECK = "last_bin_check"
+const val LAST_MEDIA_DB_MAINTENANCE = "last_media_db_maintenance"
 const val SHOW_HIGHEST_QUALITY = "show_highest_quality"
 const val ALLOW_DOWN_GESTURE = "allow_down_gesture"
 const val LAST_EDITOR_CROP_ASPECT_RATIO = "last_editor_crop_aspect_ratio"
@@ -109,6 +110,12 @@ const val HIDE_GROUPING_BAR = "hide_grouping_bar"
 const val HIDE_GROUPING_BUTTON = "hide_grouping_button"
 const val HIDE_GROUPING_BAR_WHEN_SCROLLING = "hide_grouping_bar_when_scrolling"
 const val FONT_SIZE_DIR = "font_size_dir"
+
+// disk cache
+const val DEFAULT_DISK_CACHE_SIZE_MB = 512
+const val MIN_DISK_CACHE_SIZE_MB = 100
+const val MAX_DISK_CACHE_SIZE_MB = 2048
+const val DISK_CACHE_SIZE_MB = "disk_cache_size_mb"
 
 // slideshow
 const val SLIDESHOW_INTERVAL = "slideshow_interval"

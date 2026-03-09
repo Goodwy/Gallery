@@ -1,5 +1,8 @@
 package com.goodwy.gallery
 
+import android.content.ComponentCallbacks2
+import com.bumptech.glide.Glide
+import com.bumptech.glide.MemoryCategory
 import com.github.ajalt.reprint.core.Reprint
 import com.goodwy.commons.RightApp
 import com.goodwy.commons.extensions.isRuStoreInstalled
@@ -22,5 +25,18 @@ class App : RightApp() {
 
             override fun shutdown() {}
         }).build())
+    }
+
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        if (level >= ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
+            Glide.get(this).setMemoryCategory(MemoryCategory.LOW)
+        }
+        Glide.get(this).trimMemory(level)
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        Glide.get(this).clearMemory()
     }
 }

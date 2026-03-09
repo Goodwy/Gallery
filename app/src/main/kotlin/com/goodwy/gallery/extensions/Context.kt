@@ -12,15 +12,18 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.PictureDrawable
 import android.media.AudioManager
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.os.Process
+import android.os.SystemClock
 import android.provider.MediaStore.Files
 import android.provider.MediaStore.Images
+import android.util.Log
 import android.widget.ImageView
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
-import com.bumptech.glide.integration.webp.WebpBitmapFactory
 import com.bumptech.glide.integration.webp.decoder.WebpDownsampler
 import com.bumptech.glide.integration.webp.decoder.WebpDrawable
 import com.bumptech.glide.integration.webp.decoder.WebpDrawableTransformation
@@ -56,6 +59,81 @@ import kotlin.math.max
 import kotlin.math.min
 
 val Context.audioManager get() = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
+private const val MEDIA_DB_MAINTENANCE_LOG_TAG = "MediaDbMaintenance"
+private const val MEDIA_DB_MAINTENANCE_INTERVAL_MS = 6 * 60 * 60 * 1000L
+private const val MEDIA_DB_MAINTENANCE_MAX_DURATION_MS = 250L
+private const val MEDIA_DB_MAINTENANCE_BATCH_SIZE = 100
+private const val INCLUDED_FOLDER_THUMBNAIL_SIZE = 640
+private const val INCLUDED_MEDIA_THUMBNAIL_SIZE = 384
+private const val INCLUDED_MEDIA_CACHE_WARMUP_LIMIT = 120
+
+fun Context.maybeRunMediaDbMaintenance(force: Boolean = false) {
+    val now = System.currentTimeMillis()
+    val elapsedSinceLastRun = now - config.lastMediaDbMaintenance
+    if (!force && elapsedSinceLastRun in 0 until MEDIA_DB_MAINTENANCE_INTERVAL_MS) {
+        return
+    }
+
+    config.lastMediaDbMaintenance = now
+    Thread { runMediaDbMaintenance() }.start()
+}
+
+private fun Context.runMediaDbMaintenance(maxDurationMs: Long = MEDIA_DB_MAINTENANCE_MAX_DURATION_MS) {
+    try {
+        val startTs = SystemClock.elapsedRealtime()
+        val beforeTotal = mediaDB.getTotalRowCount()
+        val beforeByFolder = mediaDB.getRowCountByFolder()
+
+        var deletedRows = 0
+        var deletedFavoriteRows = 0
+        var lastId = 0L
+        val otgPath = config.OTGPath
+
+        while (SystemClock.elapsedRealtime() - startTs < maxDurationMs) {
+            val candidates = mediaDB.getCleanupCandidates(lastId, MEDIA_DB_MAINTENANCE_BATCH_SIZE)
+            if (candidates.isEmpty()) {
+                break
+            }
+
+            lastId = candidates.last().id
+            val staleCandidates = candidates.filter { candidate ->
+                val dbPath = candidate.path
+                val pathToCheck = if (candidate.deletedTS != 0L && dbPath.startsWith(RECYCLE_BIN)) {
+                    File(recycleBinPath, dbPath.removePrefix(RECYCLE_BIN)).toString()
+                } else {
+                    dbPath
+                }
+
+                !getDoesFilePathExist(pathToCheck, otgPath)
+            }
+
+            if (staleCandidates.isEmpty()) {
+                continue
+            }
+
+            val staleIds = staleCandidates.map { it.id }
+            deletedRows += mediaDB.deleteByIds(staleIds)
+
+            staleCandidates.filter { it.isFavorite && it.deletedTS == 0L }.forEach { staleCandidate ->
+                favoritesDB.deleteFavoritePath(staleCandidate.path)
+                deletedFavoriteRows++
+            }
+        }
+
+        val afterTotal = mediaDB.getTotalRowCount()
+        val afterByFolder = mediaDB.getRowCountByFolder()
+        val beforeFolderSummary = beforeByFolder.sortedByDescending { it.rowCount }.take(5).joinToString { "${it.parentPath}:${it.rowCount}" }
+        val afterFolderSummary = afterByFolder.sortedByDescending { it.rowCount }.take(5).joinToString { "${it.parentPath}:${it.rowCount}" }
+
+        Log.i(
+            MEDIA_DB_MAINTENANCE_LOG_TAG,
+            "DB maintenance before=$beforeTotal after=$afterTotal deleted=$deletedRows deletedFavorites=$deletedFavoriteRows beforeFolders=${beforeByFolder.size}[$beforeFolderSummary] afterFolders=${afterByFolder.size}[$afterFolderSummary]"
+        )
+    } catch (e: Exception) {
+        Log.w(MEDIA_DB_MAINTENANCE_LOG_TAG, "Failed to run media DB maintenance", e)
+    }
+}
 
 fun Context.getHumanizedFilename(path: String): String {
     val humanized = humanizePath(path)
@@ -494,6 +572,130 @@ fun Context.rescanFolderMediaSync(path: String) {
     }
 }
 
+fun Context.evictFoldersFromCache(paths: Collection<String>) {
+    ensureBackgroundThread {
+        evictFoldersFromCacheSync(paths)
+    }
+}
+
+fun Context.evictFoldersFromCacheSync(paths: Collection<String>) {
+    val normalizedPaths = paths.map { it.trimEnd('/') }
+        .filter { it.isNotEmpty() }
+        .distinct()
+
+    if (normalizedPaths.isEmpty()) {
+        return
+    }
+
+    normalizedPaths.forEach { path ->
+        val childPathPattern = "$path/%"
+        try {
+            directoryDB.deleteDirPathWithChildren(path, childPathPattern)
+            mediaDB.deleteMediaByParentPathWithChildren(path, childPathPattern)
+            favoritesDB.deleteFavoritesByParentPathWithChildren(path, childPathPattern)
+            dateTakensDB.deleteDateTakensByParentPathWithChildren(path, childPathPattern)
+        } catch (ignored: Exception) {
+        }
+    }
+
+    val everShownFolders = HashSet(config.everShownFolders)
+    if (everShownFolders.removeAll { shownPath ->
+            normalizedPaths.any { path ->
+                shownPath.equals(path, true) || shownPath.startsWith("$path/", true)
+            }
+        }) {
+        config.everShownFolders = everShownFolders
+    }
+
+    clearThumbnailCaches()
+}
+
+fun Context.warmIncludedFolderCaches(path: String) {
+    ensureBackgroundThread {
+        warmIncludedFolderCachesSync(path)
+    }
+}
+
+fun Context.warmIncludedFolderCachesSync(path: String) {
+    val rootPath = path.trimEnd('/')
+    if (rootPath.isEmpty() || !getDoesFilePathExist(rootPath, config.OTGPath)) {
+        return
+    }
+
+    val mediaFetcher = MediaFetcher(this)
+    val hiddenString = getString(R.string.hidden)
+    val includedFolders = config.includedFolders
+    val albumCovers = config.parseAlbumCovers()
+    val favoritePaths = getFavoritePaths()
+    val noMediaFolders = getNoMediaFoldersSync()
+    val getProperFileSize = config.directorySorting and SORT_BY_SIZE != 0
+    val lastModifieds = mediaFetcher.getLastModifieds()
+    val dateTakens = mediaFetcher.getDateTakens()
+    val foldersToWarm = mediaFetcher.getFoldersToScan().filter {
+        it.equals(rootPath, true) || it.startsWith("$rootPath/", true)
+    }.distinct()
+
+    var warmedMediaCount = 0
+    for (folder in foldersToWarm) {
+        val media = mediaFetcher.getFilesFrom(
+            curPath = folder,
+            isPickImage = false,
+            isPickVideo = false,
+            getProperDateTaken = false,
+            getProperLastModified = false,
+            getProperFileSize = getProperFileSize,
+            favoritePaths = favoritePaths,
+            getVideoDurations = false,
+            lastModifieds = HashMap(lastModifieds),
+            dateTakens = HashMap(dateTakens),
+            android11Files = null
+        )
+
+        if (media.isEmpty()) {
+            continue
+        }
+
+        val directory = createDirectoryFromMedia(
+            path = folder,
+            curMedia = media,
+            albumCovers = albumCovers,
+            hiddenString = hiddenString,
+            includedFolders = includedFolders,
+            getProperFileSize = getProperFileSize,
+            noMediaFolders = noMediaFolders
+        )
+
+        try {
+            directoryDB.insert(directory)
+            mediaDB.insertAll(media)
+        } catch (ignored: Exception) {
+        }
+
+        warmThumbnailIntoCache(
+            path = directory.tmb,
+            signature = directory.getKey(),
+            cropThumbnails = config.cropThumbnails,
+            roundCorners = if (config.folderStyle == FOLDER_STYLE_SQUARE) ROUNDED_CORNERS_NONE else ROUNDED_CORNERS_SMALL,
+            thumbnailSize = INCLUDED_FOLDER_THUMBNAIL_SIZE
+        )
+
+        for (medium in media) {
+            if (warmedMediaCount >= INCLUDED_MEDIA_CACHE_WARMUP_LIMIT) {
+                return
+            }
+
+            warmThumbnailIntoCache(
+                path = medium.path,
+                signature = medium.getKey(),
+                cropThumbnails = config.cropThumbnails,
+                roundCorners = if (config.fileRoundedCorners) ROUNDED_CORNERS_BIG else ROUNDED_CORNERS_NONE,
+                thumbnailSize = INCLUDED_MEDIA_THUMBNAIL_SIZE
+            )
+            warmedMediaCount++
+        }
+    }
+}
+
 fun Context.storeDirectoryItems(items: ArrayList<Directory>) {
     ensureBackgroundThread {
         directoryDB.insertAll(items)
@@ -542,7 +744,10 @@ fun Context.loadImage(
     cropThumbnails: Boolean,
     roundCorners: Int,
     signature: ObjectKey,
+    highPriority: Boolean = false,
     skipMemoryCacheAtPaths: ArrayList<String>? = null,
+    loadHighPriority: Boolean = false,
+    thumbnailSize: Int = 0,
     onError: (() -> Unit)? = null
 ) {
     target.isHorizontalScrolling = horizontalScroll
@@ -561,9 +766,12 @@ fun Context.loadImage(
             cropThumbnails = cropThumbnails,
             roundCorners = roundCorners,
             signature = signature,
+            highPriority = highPriority,
             skipMemoryCacheAtPaths = skipMemoryCacheAtPaths,
             animate = animateGifs,
             tryLoadingWithPicasso = type == TYPE_IMAGES && path.isPng(),
+            loadHighPriority = loadHighPriority,
+            thumbnailSize = thumbnailSize,
             onError = onError
         )
     }
@@ -609,18 +817,31 @@ fun Context.loadImageBase(
     cropThumbnails: Boolean,
     roundCorners: Int,
     signature: ObjectKey,
+    highPriority: Boolean = false,
     skipMemoryCacheAtPaths: ArrayList<String>? = null,
     animate: Boolean = false,
     tryLoadingWithPicasso: Boolean = false,
     crossFadeDuration: Int = THUMBNAIL_FADE_DURATION_MS,
+    loadHighPriority: Boolean = false,
+    thumbnailSize: Int = 0,
     onError: (() -> Unit)? = null
 ) {
+    val priority = when {
+        loadHighPriority -> Priority.IMMEDIATE
+        highPriority -> Priority.HIGH
+        else -> Priority.NORMAL
+    }
+
     val options = RequestOptions()
         .signature(signature)
         .skipMemoryCache(skipMemoryCacheAtPaths?.contains(path) == true)
-        .priority(Priority.LOW)
+        .priority(priority)
         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
         .format(DecodeFormat.PREFER_ARGB_8888)
+
+    if (thumbnailSize > 0) {
+        options.override(thumbnailSize)
+    }
 
     if (cropThumbnails) {
         options.optionalTransform(CenterCrop())
@@ -658,7 +879,6 @@ fun Context.loadImageBase(
         )
     }
 
-    WebpBitmapFactory.sUseSystemDecoder = false // CVE-2023-4863
     var builder = Glide.with(applicationContext)
         .load(path)
         .apply(options)
@@ -691,6 +911,104 @@ fun Context.loadImageBase(
     })
 
     builder.into(target)
+}
+
+fun Context.preloadImageBase(
+    path: String,
+    cropThumbnails: Boolean,
+    roundCorners: Int,
+    signature: ObjectKey,
+    highPriority: Boolean = false,
+    skipMemoryCache: Boolean = false,
+    thumbnailSize: Int = 0,
+): Target<Drawable> {
+    val options = RequestOptions()
+        .signature(signature)
+        .skipMemoryCache(skipMemoryCache)
+        .priority(if (highPriority) Priority.HIGH else Priority.NORMAL)
+        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+        .format(DecodeFormat.PREFER_ARGB_8888)
+        .dontAnimate()
+        .decode(Bitmap::class.java)
+
+    if (thumbnailSize > 0) {
+        options.override(thumbnailSize)
+    }
+
+    if (cropThumbnails) {
+        options.optionalTransform(CenterCrop())
+        options.optionalTransform(
+            WebpDrawable::class.java,
+            WebpDrawableTransformation(CenterCrop())
+        )
+    } else {
+        options.optionalTransform(FitCenter())
+        options.optionalTransform(WebpDrawable::class.java, WebpDrawableTransformation(FitCenter()))
+    }
+
+    if (roundCorners != ROUNDED_CORNERS_NONE) {
+        val cornerSize =
+            if (roundCorners == ROUNDED_CORNERS_SMALL) com.goodwy.commons.R.dimen.rounded_corner_radius_big else com.goodwy.commons.R.dimen.dialog_corner_radius
+        val cornerRadius = resources.getDimension(cornerSize).toInt()
+        val roundedCornersTransform = RoundedCorners(cornerRadius)
+        options.optionalTransform(MultiTransformation(CenterCrop(), roundedCornersTransform))
+        options.optionalTransform(
+            WebpDrawable::class.java,
+            MultiTransformation(
+                WebpDrawableTransformation(CenterCrop()),
+                WebpDrawableTransformation(roundedCornersTransform)
+            )
+        )
+    }
+
+    return Glide.with(applicationContext)
+        .load(path)
+        .apply(options)
+        .set(WebpDownsampler.USE_SYSTEM_DECODER, false) // CVE-2023-4863
+        .preload()
+}
+
+private fun Context.warmThumbnailIntoCache(
+    path: String,
+    signature: ObjectKey,
+    cropThumbnails: Boolean,
+    roundCorners: Int,
+    thumbnailSize: Int,
+) {
+    if (path.isEmpty() || path.isSvg()) {
+        return
+    }
+
+    var pathToLoad = path
+    if (config.OTGPath.isNotEmpty() && isPathOnOTG(pathToLoad)) {
+        pathToLoad = pathToLoad.getOTGPublicPath(applicationContext)
+    }
+
+    try {
+        preloadImageBase(
+            path = pathToLoad,
+            cropThumbnails = cropThumbnails,
+            roundCorners = roundCorners,
+            signature = signature,
+            highPriority = true,
+            thumbnailSize = thumbnailSize
+        )
+    } catch (ignored: Exception) {
+    }
+}
+
+private fun Context.clearThumbnailCaches() {
+    try {
+        val glide = Glide.get(applicationContext)
+        glide.clearDiskCache()
+        Handler(Looper.getMainLooper()).post {
+            try {
+                glide.clearMemory()
+            } catch (ignored: Exception) {
+            }
+        }
+    } catch (ignored: Exception) {
+    }
 }
 
 fun Context.loadSVG(

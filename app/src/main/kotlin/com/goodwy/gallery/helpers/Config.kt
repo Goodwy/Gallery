@@ -477,6 +477,10 @@ class Config(context: Context) : BaseConfig(context) {
         get() = prefs.getLong(LAST_BIN_CHECK, 0L)
         set(lastBinCheck) = prefs.edit().putLong(LAST_BIN_CHECK, lastBinCheck).apply()
 
+    var lastMediaDbMaintenance: Long
+        get() = prefs.getLong(LAST_MEDIA_DB_MAINTENANCE, 0L)
+        set(lastMaintenance) = prefs.edit().putLong(LAST_MEDIA_DB_MAINTENANCE, lastMaintenance).apply()
+
     var showHighestQuality: Boolean
         get() = prefs.getBoolean(SHOW_HIGHEST_QUALITY, false)
         set(showHighestQuality) = prefs.edit().putBoolean(SHOW_HIGHEST_QUALITY, showHighestQuality).apply()
@@ -609,4 +613,8 @@ class Config(context: Context) : BaseConfig(context) {
     var fontSizeDir: Int
         get() = prefs.getInt(FONT_SIZE_DIR, FONT_SIZE_MEDIUM)
         set(size) = prefs.edit { putInt(FONT_SIZE_DIR, size) }
+
+    var diskCacheSizeMB: Int
+        get() = prefs.getInt(DISK_CACHE_SIZE_MB, DEFAULT_DISK_CACHE_SIZE_MB).coerceIn(MIN_DISK_CACHE_SIZE_MB, MAX_DISK_CACHE_SIZE_MB)
+        set(value) = prefs.edit().putInt(DISK_CACHE_SIZE_MB, value.coerceIn(MIN_DISK_CACHE_SIZE_MB, MAX_DISK_CACHE_SIZE_MB)).apply()
 }

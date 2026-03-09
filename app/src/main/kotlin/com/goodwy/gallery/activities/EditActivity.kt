@@ -47,6 +47,7 @@ import com.goodwy.gallery.extensions.getCompressionFormatFromUri
 import com.goodwy.gallery.extensions.readExif
 import com.goodwy.gallery.extensions.proposeNewFilePath
 import com.goodwy.gallery.extensions.resolveUriScheme
+import com.goodwy.gallery.extensions.rescanFolderMediaSync
 import com.goodwy.gallery.extensions.showContentDescriptionOnLongClick
 import com.goodwy.gallery.extensions.writeBitmapToCache
 import com.goodwy.gallery.extensions.fixDateTaken
@@ -1017,13 +1018,67 @@ class EditActivity : SimpleActivity(), CanvasListener {
         }
     }
 
-    private fun finishCropResultForContent(uri: Uri) {
-        val result = Intent().apply {
-            data = uri
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    private fun getPathFromUri(uri: Uri?): String? {
+        if (uri == null) {
+            return null
         }
-        setResult(RESULT_OK, result)
-        finish()
+
+        return when (uri.scheme) {
+            "file" -> uri.path
+            else -> getRealPathFromURI(uri)
+        }?.takeIf { it.isNotEmpty() }
+    }
+
+    private fun getFoldersToResync(savedPaths: Collection<String>): ArrayList<String> {
+        val folders = linkedSetOf<String>()
+
+        savedPaths.map { it.trim() }
+            .filter { it.isNotEmpty() }
+            .forEach { path ->
+                folders.add(path.getParentPath())
+            }
+
+        arrayOf(uri, saveUri, originalUri).forEach { currentUri ->
+            getPathFromUri(currentUri)?.getParentPath()?.let(folders::add)
+        }
+
+        return folders.filter { it.isNotEmpty() } as ArrayList<String>
+    }
+
+    private fun finalizeEditedMedia(
+        savedPaths: Collection<String>,
+        resultIntent: Intent,
+        completion: () -> Unit,
+    ) {
+        val pathsToScan = savedPaths.map { it.trim() }
+            .filter { it.isNotEmpty() }
+            .distinct() as ArrayList<String>
+        val foldersToResync = getFoldersToResync(pathsToScan)
+
+        val completeOnUi = {
+            runOnUiThread {
+                setResult(RESULT_OK, resultIntent)
+                completion()
+            }
+        }
+
+        val resyncFolders = {
+            ensureBackgroundThread {
+                foldersToResync.forEach { folderPath ->
+                    applicationContext.rescanFolderMediaSync(folderPath)
+                }
+                completeOnUi()
+            }
+        }
+
+        if (pathsToScan.isNotEmpty()) {
+            rescanPaths(pathsToScan) {
+                fixDateTaken(pathsToScan, false)
+                resyncFolders()
+            }
+        } else {
+            resyncFolders()
+        }
     }
 
     private fun freeMemory() {
@@ -1087,8 +1142,10 @@ class EditActivity : SimpleActivity(), CanvasListener {
         }
 
         writeExif(oldExif, file.toUri())
-        setResult(RESULT_OK, intent)
-        scanFinalPath(file.absolutePath)
+        finalizeEditedMedia(arrayListOf(file.absolutePath), intent) {
+            toast(com.goodwy.commons.R.string.file_saved)
+            finish()
+        }
     }
 
     private fun saveBitmapToContentUri(
@@ -1121,11 +1178,21 @@ class EditActivity : SimpleActivity(), CanvasListener {
                 out.flush()
                 writeExif(oldExif, uri)
 
-                runOnUiThread {
+                val realPath = getPathFromUri(uri)
+                val savedPaths = listOfNotNull(realPath)
+                val resultIntent = if (isCropCommit) {
+                    Intent().apply {
+                        data = uri
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
+                } else {
+                    intent
+                }
+
+                finalizeEditedMedia(savedPaths, resultIntent) {
                     if (isCropCommit) {
-                        finishCropResultForContent(uri)
+                        finish()
                     } else {
-                        setResult(RESULT_OK, intent)
                         toast(com.goodwy.commons.R.string.file_saved)
                         finish()
                     }
@@ -1141,16 +1208,6 @@ class EditActivity : SimpleActivity(), CanvasListener {
     private fun editWith() {
         openEditor(uri.toString(), true)
         isEditingWithThirdParty = true
-    }
-
-    private fun scanFinalPath(path: String) {
-        val paths = arrayListOf(path)
-        rescanPaths(paths) {
-            fixDateTaken(paths, false)
-            setResult(RESULT_OK, intent)
-            toast(com.goodwy.commons.R.string.file_saved)
-            finish()
-        }
     }
 
     override fun toggleUndoVisibility(visible: Boolean) {

@@ -175,6 +175,8 @@
     <string name="remember_last_video_position">Remember last video playback position</string>
     <string name="loop_videos">Loop videos</string>
     <string name="animate_gifs">Animate GIFs at thumbnails</string>
+    <string name="thumbnail_cache_size">Thumbnail cache size</string>
+    <string name="thumbnail_cache_size_restart">Restart the app to apply the new cache size</string>
     <string name="max_brightness">Max brightness when viewing fullscreen media</string>
     <string name="crop_thumbnails">Crop thumbnails into squares</string>
     <string name="show_thumbnail_video_duration">Show video durations</string>
