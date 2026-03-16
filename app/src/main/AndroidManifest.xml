@@ -34,6 +34,19 @@
         tools:node="remove" />
 
     <queries>
+        <package android:name="dev.goodwy.phone.debug" />
+        <package android:name="dev.goodwy.phone" />
+        <package android:name="dev.goodwy.messages.debug" />
+        <package android:name="dev.goodwy.messages" />
+        <package android:name="dev.goodwy.contacts.debug" />
+        <package android:name="dev.goodwy.contacts" />
+        <package android:name="dev.goodwy.gallery.debug" />
+        <package android:name="dev.goodwy.gallery" />
+        <package android:name="dev.goodwy.math.debug" />
+        <package android:name="dev.goodwy.math" />
+        <package android:name="dev.goodwy.filemanager.debug" />
+        <package android:name="dev.goodwy.filemanager" />
+
         <package android:name="com.goodwy.dialer.debug" />
         <package android:name="com.goodwy.dialer" />
         <package android:name="com.goodwy.contacts.debug" />
@@ -42,10 +55,15 @@
         <package android:name="com.goodwy.smsmessenger" />
         <package android:name="com.goodwy.voicerecorder.debug" />
         <package android:name="com.goodwy.voicerecorder" />
+        <package android:name="com.goodwy.voicerecorderfree.debug" />
+        <package android:name="com.goodwy.voicerecorderfree" />
         <package android:name="com.goodwy.gallery.debug" />
         <package android:name="com.goodwy.gallery" />
         <package android:name="com.goodwy.filemanager.debug" />
         <package android:name="com.goodwy.filemanager" />
+        <package android:name="com.goodwy.calendar" />
+        <package android:name="com.goodwy.calendar.debug" />
+        <package android:name="com.goodwy.audiobook" />
         <package android:name="com.goodwy.audiobooklite" />
         <package android:name="com.goodwy.keyboard" />
     </queries>
