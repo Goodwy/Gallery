@@ -2,8 +2,7 @@ package com.goodwy.gallery
 
 import com.github.ajalt.reprint.core.Reprint
 import com.goodwy.commons.RightApp
-import com.goodwy.commons.extensions.isRuStoreInstalled
-import com.goodwy.commons.helpers.rustore.RuStoreModule
+import com.goodwy.commons.helpers.PurchaseHelper
 import com.squareup.picasso.Downloader
 import com.squareup.picasso.Picasso
 import okhttp3.Request
@@ -15,7 +14,7 @@ class App : RightApp() {
 
     override fun onCreate() {
         super.onCreate()
-        if (isRuStoreInstalled()) RuStoreModule.install(this, "1504831423") //TODO rustore
+        PurchaseHelper().initPurchaseIfNeed(this, "1504831423")
         Reprint.initialize(this)
         Picasso.setSingletonInstance(Picasso.Builder(this).downloader(object : Downloader {
             override fun load(request: Request) = Response.Builder().build()

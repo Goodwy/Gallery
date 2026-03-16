@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name_g">Right Gallery</string>
-    <string name="app_launcher_name_g">Galéria</string> <!--Not used-->
+    <!--Not used-->
     <string name="exclude_folder_description_g">Táto funkcia vylúči výber a jeho podpriečinky iba z Right Gallery. Spravovať vylúčené priečinky je možné v nastaveniach.</string>
     <string name="excluded_activity_placeholder_g">Vylúčené priečinky budú spolu s podpriečinkami ukryté iba pred Right Gallery, ostatné aplikácie ich budú stále vidieť.
 \n

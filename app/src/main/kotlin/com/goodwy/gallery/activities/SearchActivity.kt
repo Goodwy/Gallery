@@ -9,13 +9,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.goodwy.commons.extensions.*
 import com.goodwy.commons.helpers.REQUEST_CODE_SPEECH_INPUT
-import com.goodwy.commons.helpers.REQUEST_EDIT_IMAGE
 import com.goodwy.commons.helpers.VIEW_TYPE_GRID
 import com.goodwy.commons.helpers.ensureBackgroundThread
 import com.goodwy.commons.models.FileDirItem
 import com.goodwy.commons.views.MyGridLayoutManager
 import com.goodwy.gallery.R
-import com.goodwy.gallery.activities.MediaActivity.Companion.mMedia
 import com.goodwy.gallery.adapters.MediaAdapter
 import com.goodwy.gallery.asynctasks.GetMediaAsynctask
 import com.goodwy.gallery.databinding.ActivitySearchBinding
@@ -24,6 +22,8 @@ import com.goodwy.gallery.helpers.GridSpacingItemDecoration
 import com.goodwy.gallery.helpers.MediaFetcher
 import com.goodwy.gallery.helpers.PATH
 import com.goodwy.gallery.helpers.SHOW_ALL
+import com.goodwy.gallery.helpers.VIDEO_PLAYER_APP
+import com.goodwy.gallery.helpers.VIDEO_PLAYER_SYSTEM
 import com.goodwy.gallery.interfaces.MediaOperationsListener
 import com.goodwy.gallery.models.Medium
 import com.goodwy.gallery.models.ThumbnailItem
@@ -31,23 +31,33 @@ import java.io.File
 import java.util.Objects
 
 class SearchActivity : SimpleActivity(), MediaOperationsListener {
+    override var isSearchBarEnabled = true
+
     private var mLastSearchedText = ""
 
     private var mCurrAsyncTask: GetMediaAsynctask? = null
     private var mAllMedia = ArrayList<ThumbnailItem>()
     private var isSpeechToTextAvailable = false
+    private var wasKeyboardVisible = false
 
     private val binding by viewBinding(ActivitySearchBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        isMaterialActivity = true
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setupOptionsMenu()
-        updateMaterialActivityViews(binding.searchCoordinator, binding.searchGrid, useTransparentNavigation = true, useTopSearchMenu = true)
+
+        val scrollHorizontally = config.scrollHorizontally
+        val view = if (scrollHorizontally) binding.searchFastscroller else binding.searchGrid
+        setupEdgeToEdge(
+            padTopSystem = listOf(binding.searchMenu),
+            padBottomImeAndSystem = listOf(view)
+        )
         binding.searchEmptyTextPlaceholder.setTextColor(getProperTextColor())
         getAllMedia()
         binding.searchFastscroller.updateColors(getProperPrimaryColor())
+
+        if (scrollHorizontally) setupKeyboardListener()
     }
 
     override fun onResume() {
@@ -76,7 +86,7 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
     }
 
     private fun setupOptionsMenu() {
-        binding.searchMenu.getToolbar().inflateMenu(R.menu.menu_search)
+        binding.searchMenu.requireToolbar().inflateMenu(R.menu.menu_search)
         binding.searchMenu.toggleHideOnScroll(config.hideTopBarWhenScroll)
 
         if (baseConfig.useSpeechToText) {
@@ -107,7 +117,7 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
             binding.searchMenu.clearSearch()
         }
 
-        binding.searchMenu.getToolbar().setOnMenuItemClickListener { menuItem ->
+        binding.searchMenu.requireToolbar().setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.toggle_filename -> toggleFilenameVisibility()
                 else -> return@setOnMenuItemClickListener false
@@ -117,7 +127,6 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
     }
 
     private fun updateMenuColors() {
-        updateStatusbarColor(getProperBackgroundColor())
         binding.searchMenu.updateColors()
     }
 
@@ -187,15 +196,23 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
     }
 
     private fun itemClicked(path: String) {
-        val isVideo = path.isVideoFast()
-        if (isVideo) {
-            openPath(path, false)
-        } else {
-            Intent(this, ViewPagerActivity::class.java).apply {
-                putExtra(PATH, path)
-                putExtra(SHOW_ALL, false)
-                startActivity(this)
-            }
+        if (!path.isVideoFast()) {
+            openInViewPager(path)
+            return
+        }
+
+        when (config.videoPlayerType) {
+            VIDEO_PLAYER_SYSTEM -> openPath(path = path, forceChooser = false)
+            VIDEO_PLAYER_APP -> if (config.gestureVideoPlayer) launchGesturePlayer(path) else openInViewPager(path)
+            else -> openInViewPager(path) // unreachable by design
+        }
+    }
+
+    private fun openInViewPager(path: String) {
+        Intent(this, ViewPagerActivity::class.java).apply {
+            putExtra(PATH, path)
+            putExtra(SHOW_ALL, false)
+            startActivity(this)
         }
     }
 
@@ -318,4 +335,55 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
     override fun selectedPaths(paths: ArrayList<String>) {}
 
     override fun updateMediaGridDecoration(media: ArrayList<ThumbnailItem>) {}
+
+    // Goodwy
+    private fun setupKeyboardListener() {
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
+            val rootView = binding.root
+            val displayMetrics = resources.displayMetrics
+            val screenHeight = displayMetrics.heightPixels
+
+            // We obtain the height of the visible area
+            val rect = android.graphics.Rect()
+            rootView.getWindowVisibleDisplayFrame(rect)
+
+            // Calculate the height of the invisible area (potentially the keyboard)
+            val heightDiff = screenHeight - rect.bottom
+
+            val isKeyboardVisible = heightDiff > 200.dpToPx(this)
+
+            if (wasKeyboardVisible && !isKeyboardVisible) {
+                // The keyboard has just disappeared.
+                onKeyboardHidden()
+            }
+
+            wasKeyboardVisible = isKeyboardVisible
+        }
+    }
+
+    private fun onKeyboardHidden() {
+        if (config.scrollHorizontally) {
+            recreateLayoutManager()
+        }
+    }
+
+    private fun recreateLayoutManager() {
+        if (config.scrollHorizontally) {
+            val oldAdapter = binding.searchGrid.adapter
+            val scrollPosition = (binding.searchGrid.layoutManager as? GridLayoutManager)?.findFirstVisibleItemPosition() ?: 0
+
+            // Save the adapter
+            binding.searchGrid.adapter = null
+
+            // Creating a new layoutManager
+            val newLayoutManager = MyGridLayoutManager(this, config.mediaColumnCnt).apply {
+                orientation = RecyclerView.HORIZONTAL
+                spanCount = config.mediaColumnCnt
+            }
+
+            binding.searchGrid.layoutManager = newLayoutManager
+            binding.searchGrid.adapter = oldAdapter
+            binding.searchGrid.scrollToPosition(scrollPosition)
+        }
+    }
 }

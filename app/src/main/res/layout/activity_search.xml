@@ -39,6 +39,7 @@
                 android:id="@+id/search_grid"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:clipToPadding="false"
                 android:scrollbars="none"
                 app:layoutManager="com.goodwy.commons.views.MyGridLayoutManager"
                 app:spanCount="@integer/media_columns_vertical_scroll" />

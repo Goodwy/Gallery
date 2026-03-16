@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name_g">Oriel Dde</string>
-    <string name="app_launcher_name_g">Oriel</string>
     <string name="exclude_folder_description_g">Bydd hyn yn eithrio\'r detholiad ynghyd â\'i is-ffolderi o Oriel Dde yn unig. Gallwch reoli ffolderi sydd wedi\'u heithrio yn y Gosodiadau.</string>
     <string name="excluded_activity_placeholder_g">Bydd eithrio ffolderi yn eu gwneud ynghyd â\'u his-ffolderi wedi\'u cuddio yn Oriel y Dde yn unig, byddant yn dal i fod yn weladwy mewn cymwysiadau eraill.\n\nOs ydych chi am eu cuddio rhag apiau eraill hefyd, defnyddiwch y swyddogaeth Cuddio.</string>
     <string name="faq_1_title_g">Sut alla i wneud Oriel y Dde yn oriel ddiofyn y ddyfais?</string>

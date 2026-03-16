@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name_g">Right Gallery</string>
-    <string name="app_launcher_name_g">Galeria</string> <!--Not used-->
+    <!--Not used-->
     <string name="exclude_folder_description_g">Spowoduje to wykluczenie wybranego folderu i jego podfolderów z Right Gallery. Możesz zarządzać wykluczonymi folderami w Ustawieniach.</string>
     <string name="excluded_activity_placeholder_g">Wykluczenie folderów spowoduje ukrycie ich wraz z podfolderami tylko w Right Gallery, w innych aplikacjach będą nadal widoczne.
 \n

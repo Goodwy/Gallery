@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--TODO Edit-->
     <string name="app_launcher_name">Галерея</string>
     <string name="edit">Редактировать</string>
     <string name="open_camera">Камера</string>
@@ -154,7 +155,7 @@
     <string name="screen_rotation_system_setting">Системные настройки</string>
     <string name="screen_rotation_device_rotation">При повороте устройства</string>
     <string name="screen_rotation_aspect_ratio">По размеру изображения</string>
-    <string name="black_background_at_fullscreen">Чёрные фон и строка состояния при просмотре изображения</string>
+    <string name="black_background_at_fullscreen">Чёрные фон при просмотре изображения</string>
     <string name="scroll_thumbnails_horizontally">Прокрутка миниатюр по горизонтали</string>
     <string name="hide_system_ui_at_fullscreen">Автоматически скрывать системный интерфейс при просмотре изображения</string>
     <string name="delete_empty_folders">Удалять пустые папки после удаления их содержимого</string>
@@ -267,4 +268,10 @@
         <item quantity="other">Восстановить %d файлов?</item>
     </plurals>
     <string name="force_landscape_reverse">Альбомная (обратная)</string>
+    <string name="overwrite_original">Перезаписать оригинал</string>
+    <string name="video_no_sound">Видео без звука</string>
+    <string name="render_ultra_hdr_photos">Показывать изображения Ultra HDR в HDR</string>
+    <string name="on_video_tap">При нажатии на видео</string>
+    <string name="open_in_app_player">Открыть встроенный проигрыватель</string>
+    <string name="open_system_default_player">Открыть проигрыватель по умолчанию</string>
 </resources>

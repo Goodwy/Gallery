@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name_g">Right Gallery</string>
-    <string name="app_launcher_name_g">Galerie</string> <!--Not used-->
+    <!--Not used-->
     <string name="exclude_folder_description_g">Tato funkce vyloučí výběr včetně podsložek jen z Right Gallery. V nastavení můžete spravovat vyloučené složky.</string>
     <string name="excluded_activity_placeholder_g">Vyloučené složky budou spolu s podsložkami vyloučeny jen z Right Gallery, ostatní aplikace je nadále uvidí.
 \n

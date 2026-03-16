@@ -9,11 +9,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.speech.RecognizerIntent
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.core.net.toUri
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
@@ -43,12 +43,15 @@ import com.goodwy.gallery.interfaces.MediaOperationsListener
 import com.goodwy.gallery.models.Medium
 import com.goodwy.gallery.models.ThumbnailItem
 import com.goodwy.gallery.models.ThumbnailSection
+import com.google.android.material.appbar.AppBarLayout
 import java.io.File
 import java.io.IOException
 import java.util.Objects
 import kotlin.math.abs
 
 class MediaActivity : SimpleActivity(), MediaOperationsListener {
+    override var isSearchBarEnabled = true
+
     private val LAST_MEDIA_CHECK_PERIOD = 3000L
 
     private var mPath = ""
@@ -80,6 +83,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     private var mStoredThumbnailSpacing = 0
     private var mStoredHideTopBarWhenScroll = false
     private var isSpeechToTextAvailable = false
+    private var wasKeyboardVisible = false
 
     private val binding by viewBinding(ActivityMediaBinding::inflate)
 
@@ -88,11 +92,8 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        isMaterialActivity = true
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-        updateTransparentNavigationBar()
 
         intent.apply {
             mIsGetImageIntent = getBooleanExtra(GET_IMAGE_INTENT, false)
@@ -113,12 +114,14 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         storeStateVariables()
         setupOptionsMenu()
         refreshMenuItems()
-        updateMaterialActivityViews(
-            mainCoordinatorLayout = binding.mediaCoordinator,
-            nestedView = binding.mediaGrid,
-            useTransparentNavigation = false, //!config.scrollHorizontally,
-            useTopSearchMenu = true
+        val scrollHorizontally = config.scrollHorizontally
+        val view = if (scrollHorizontally) binding.mediaFastscroller else binding.mediaGrid
+        setupEdgeToEdge(
+            padTopSystem = listOf(binding.mediaMenu),
+            padBottomImeAndSystem = listOf(view),
+            moveBottomSystem = listOf(binding.mainTopTabsContainer),
         )
+
         if (config.changeColourTopBar) {
             val useSurfaceColor = isDynamicTheme() && !isSystemInDarkMode()
             setupSearchMenuScrollListener(
@@ -139,25 +142,15 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 
         updateWidgets()
         setupTabs()
-    }
 
-    private fun updateTransparentNavigationBar(horizontally: Boolean = config.scrollHorizontally) {
-        // TODO TRANSPARENT Navigation Bar
-        if (config.transparentNavigationBar) {
-            setWindowTransparency(true) { _, bottomNavigationBarSize, leftNavigationBarSize, rightNavigationBarSize ->
-                binding.mediaCoordinator.setPadding(leftNavigationBarSize, 0, rightNavigationBarSize, 0)
-                if (horizontally) {
-                    binding.mediaFastscroller.setPadding(0, 0, 0, bottomNavigationBarSize)
-                    binding.mainTopTabsContainer.setPadding(0, 0, 0, bottomNavigationBarSize)
-                } else {
-                    val bottomBarSize = resources.getDimension(R.dimen.bottom_actions_height).toInt()
-                    val mediumMargin = resources.getDimension(com.goodwy.commons.R.dimen.medium_margin).toInt()
-                    binding.mediaFastscroller.trackMarginEnd = bottomNavigationBarSize + bottomBarSize
-                    binding.mediaGrid.setPadding(0, 0, 0, bottomNavigationBarSize + bottomBarSize + mediumMargin) // needed clipToPadding="false"
-                }
-                //updateNavigationBarColor(getProperBackgroundColor())
-            }
+        if (!scrollHorizontally) {
+            val bottomBarSize = resources.getDimension(R.dimen.bottom_actions_height).toInt()
+            val mediumMargin = resources.getDimension(com.goodwy.commons.R.dimen.medium_margin).toInt()
+            binding.mediaFastscroller.trackMarginEnd = bottomBarSize
+            binding.mediaGrid.setPadding(0, 0, 0, bottomBarSize + mediumMargin) // needed clipToPadding="false"
         }
+
+        if (scrollHorizontally) setupKeyboardListener()
     }
 
     override fun onStart() {
@@ -234,12 +227,12 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         binding.mediaEmptyTextPlaceholder2.setTextColor(getProperPrimaryColor())
         binding.mediaEmptyTextPlaceholder2.bringToFront()
 
-        val naviBarHeight =
-            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) navigationBarHeight
-            else if (navigationBarOnBottom) navigationBarWidth
-            else navigationBarHeight
-        (binding.mainTopTabsContainer.layoutParams as? CoordinatorLayout.LayoutParams)?.bottomMargin =
-            naviBarHeight + resources.getDimension(com.goodwy.commons.R.dimen.small_margin).toInt()
+//        val naviBarHeight =
+//            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) navigationBarHeight
+//            else if (navigationBarOnBottom) navigationBarWidth
+//            else navigationBarHeight
+//        (binding.mainTopTabsContainer.layoutParams as? CoordinatorLayout.LayoutParams)?.bottomMargin =
+//            naviBarHeight + resources.getDimension(com.goodwy.commons.R.dimen.small_margin).toInt()
 
         // do not refresh Random sorted files after opening a fullscreen image and going Back
         val isRandomSorting = config.getFolderSorting(mPath) and SORT_BY_RANDOM != 0
@@ -297,11 +290,15 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         mTempShowHiddenHandler.removeCallbacksAndMessages(null)
     }
 
-    override fun onBackPressed() {
-        if (binding.mediaMenu.isSearchOpen) {
+    override fun onBackPressedCompat(): Boolean {
+        return if (binding.mediaMenu.isSearchOpen) {
             binding.mediaMenu.closeSearch()
+            true
         } else {
-            super.onBackPressed()
+            if (config.showAll) {
+                appLockManager.lock()
+            }
+            false
         }
     }
 
@@ -329,7 +326,19 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         val isDefaultFolder = !config.defaultFolder.isEmpty()
             && File(config.defaultFolder).compareTo(File(mPath)) == 0
 
-        binding.mediaMenu.getToolbar().menu.apply {
+        binding.mediaMenu.requireToolbar().menu.apply {
+            if (isNewApp()) {
+                val showAsAction = if (config.hideIconsInMenu) {
+                    MenuItem.SHOW_AS_ACTION_NEVER
+                } else {
+                    MenuItem.SHOW_AS_ACTION_IF_ROOM
+                }
+                findItem(R.id.sort).setShowAsAction(showAsAction)
+                findItem(R.id.toggle_filename).setShowAsAction(showAsAction)
+                findItem(R.id.filter).setShowAsAction(showAsAction)
+                findItem(R.id.open_camera).setShowAsAction(showAsAction)
+            }
+            findItem(R.id.search).isVisible = !config.showSearchBar
             findItem(R.id.group).isVisible = !config.scrollHorizontally
 
             findItem(R.id.empty_recycle_bin).isVisible = mPath == RECYCLE_BIN
@@ -357,11 +366,11 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     }
 
     private fun setupOptionsMenu() {
-        binding.mediaMenu.getToolbar().inflateMenu(R.menu.menu_media)
+        binding.mediaMenu.requireToolbar().inflateMenu(R.menu.menu_media)
         if (!mShowAll) {
-            binding.mediaMenu.getToolbar().navigationIcon =
+            binding.mediaMenu.requireToolbar().navigationIcon =
                 resources.getColoredDrawableWithColor(this, com.goodwy.commons.R.drawable.ic_chevron_left_vector, Color.WHITE)
-            binding.mediaMenu.getToolbar().setNavigationOnClickListener {
+            binding.mediaMenu.requireToolbar().setNavigationOnClickListener {
                 super.onBackPressed()
             }
         }
@@ -371,7 +380,14 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
             binding.mediaMenu.showSpeechToText = isSpeechToTextAvailable
         }
 
-        binding.mediaMenu.toggleHideOnScroll(!config.scrollHorizontally && config.hideTopBarWhenScroll)
+//        binding.mediaMenu.toggleHideOnScroll(!config.scrollHorizontally && config.hideTopBarWhenScroll)
+        // Top bar scroll
+        val params = binding.mediaMenu.layoutParams as AppBarLayout.LayoutParams
+        params.scrollFlags = if (!config.scrollHorizontally && config.hideTopBarWhenScroll) {
+            AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or
+                AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+        } else 0
+        binding.mediaMenu.layoutParams = params
         binding.mediaMenu.setupMenu()
 
         binding.mediaMenu.onSpeechToTextClickListener = {
@@ -385,8 +401,10 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
             binding.mediaMenu.clearSearch()
         }
 
-        binding.mediaMenu.getToolbar().setOnMenuItemClickListener { menuItem ->
+        binding.mediaMenu.requireToolbar().setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
+                R.id.search -> launchSearchActivity()
+                R.id.folder_view -> switchToFolderView()
                 R.id.sort -> showSortingDialog()
                 R.id.filter -> showFilterMediaDialog()
                 R.id.empty_recycle_bin -> emptyRecycleBin()
@@ -394,7 +412,6 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                 R.id.restore_all_files -> restoreAllFiles()
                 R.id.toggle_filename -> toggleFilenameVisibility()
                 R.id.open_camera -> launchCamera()
-                R.id.folder_view -> switchToFolderView()
                 R.id.change_view_type -> changeViewType()
                 R.id.group -> showGroupByDialog()
                 R.id.create_new_folder -> createNewFolder()
@@ -410,6 +427,13 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                 else -> return@setOnMenuItemClickListener false
             }
             return@setOnMenuItemClickListener true
+        }
+    }
+
+    private fun launchSearchActivity() {
+        hideKeyboard()
+        Intent(this, SearchActivity::class.java).apply {
+            startActivity(this)
         }
     }
 
@@ -430,18 +454,9 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     private fun updateMenuColors() {
         val useSurfaceColor = isDynamicTheme() && !isSystemInDarkMode()
         val backgroundColor = if (useSurfaceColor) getSurfaceColor() else getProperBackgroundColor()
-        updateStatusbarColor(backgroundColor)
-        binding.mediaMenu.updateColors(getStartRequiredStatusBarColor(), scrollingView?.computeVerticalScrollOffset() ?: 0)
-    }
-
-    private fun getStartRequiredStatusBarColor(): Int {
+        val statusBarColor = if (config.changeColourTopBar) getRequiredStatusBarColor(useSurfaceColor) else backgroundColor
         val scrollingViewOffset = scrollingView?.computeVerticalScrollOffset() ?: 0
-        return if (scrollingViewOffset == 0) {
-            val useSurfaceColor = isDynamicTheme() && !isSystemInDarkMode()
-            if (useSurfaceColor) getSurfaceColor() else getProperBackgroundColor()
-        } else {
-            getColoredMaterialStatusBarColor()
-        }
+        binding.mediaMenu.updateColors(statusBarColor, scrollingViewOffset)
     }
 
     private fun storeStateVariables() {
@@ -508,7 +523,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 //            if (!mShowAll) {
 //                binding.mediaMenu.toggleForceArrowBackIcon(true)
 //                binding.mediaMenu.onNavigateBackClickListener = {
-//                    onBackPressed()
+//                    performDefaultBack()
 //                }
 //            }
 
@@ -518,6 +533,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
             }
 
             binding.mediaMenu.updateTitle(if (mShowAll) resources.getString(com.goodwy.strings.R.string.library) else dirName)
+            binding.mediaMenu.searchBeVisibleIf(config.showSearchBar)
             getMedia()
             setupLayoutManager()
         }
@@ -1069,30 +1085,40 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
             finish()
         } else {
             mWasFullscreenViewOpen = true
-            val isVideo = path.isVideoFast()
-            if (isVideo) {
-                val extras = HashMap<String, Boolean>()
-                extras[SHOW_FAVORITES] = mPath == FAVORITES
-                if (path.startsWith(recycleBinPath)) {
-                    extras[IS_IN_RECYCLE_BIN] = true
-                }
+            if (!path.isVideoFast()) {
+                openInViewPager(path)
+                return
+            }
 
-                if (shouldSkipAuthentication()) {
-                    extras[SKIP_AUTHENTICATION] = true
-                }
-                openPath(path, false, extras)
-            } else {
-                Intent(this, ViewPagerActivity::class.java).apply {
-                    putExtra(SKIP_AUTHENTICATION, shouldSkipAuthentication())
-                    putExtra(PATH, path)
-                    putExtra(SHOW_ALL, mShowAll)
-                    putExtra(SHOW_FAVORITES, mPath == FAVORITES)
-                    putExtra(SHOW_RECYCLE_BIN, mPath == RECYCLE_BIN)
-                    putExtra(IS_FROM_GALLERY, true)
-                    startActivity(this)
-                }
+            when (config.videoPlayerType) {
+                VIDEO_PLAYER_SYSTEM -> openSystemDefaultPlayer(path)
+                VIDEO_PLAYER_APP -> if (config.gestureVideoPlayer) launchGesturePlayer(path) else openInViewPager(path)
+                else -> openInViewPager(path) // unreachable by design
             }
         }
+    }
+
+    private fun openInViewPager(path: String) {
+        Intent(this, ViewPagerActivity::class.java).apply {
+            putExtra(SKIP_AUTHENTICATION, shouldSkipAuthentication())
+            putExtra(PATH, path)
+            putExtra(SHOW_ALL, mShowAll)
+            putExtra(SHOW_FAVORITES, mPath == FAVORITES)
+            putExtra(SHOW_RECYCLE_BIN, mPath == RECYCLE_BIN)
+            putExtra(IS_FROM_GALLERY, true)
+            startActivity(this)
+        }
+    }
+
+    private fun openSystemDefaultPlayer(path: String) {
+        openPath(
+            path = path,
+            forceChooser = false,
+            extras = hashMapOf(SHOW_FAVORITES to (mPath == FAVORITES)).apply {
+                if (path.startsWith(recycleBinPath)) put(IS_IN_RECYCLE_BIN, true)
+                if (shouldSkipAuthentication()) put(SKIP_AUTHENTICATION, true)
+            }
+        )
     }
 
     private fun gotMedia(media: ArrayList<ThumbnailItem>, isFromCache: Boolean) {
@@ -1384,6 +1410,57 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 
         if (areSystemAnimationsEnabled) {
             binding.mediaGrid.scheduleLayoutAnimation()
+        }
+    }
+
+    // Goodwy
+    private fun setupKeyboardListener() {
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
+            val rootView = binding.root
+            val displayMetrics = resources.displayMetrics
+            val screenHeight = displayMetrics.heightPixels
+
+            // We obtain the height of the visible area
+            val rect = android.graphics.Rect()
+            rootView.getWindowVisibleDisplayFrame(rect)
+
+            // Calculate the height of the invisible area (potentially the keyboard)
+            val heightDiff = screenHeight - rect.bottom
+
+            val isKeyboardVisible = heightDiff > 200.dpToPx(this)
+
+            if (wasKeyboardVisible && !isKeyboardVisible) {
+                // The keyboard has just disappeared.
+                onKeyboardHidden()
+            }
+
+            wasKeyboardVisible = isKeyboardVisible
+        }
+    }
+
+    private fun onKeyboardHidden() {
+        if (config.scrollHorizontally) {
+            recreateLayoutManager()
+        }
+    }
+
+    private fun recreateLayoutManager() {
+        if (config.scrollHorizontally) {
+            val oldAdapter = binding.mediaGrid.adapter
+            val scrollPosition = (binding.mediaGrid.layoutManager as? GridLayoutManager)?.findFirstVisibleItemPosition() ?: 0
+
+            // Save the adapter
+            binding.mediaGrid.adapter = null
+
+            // Creating a new layoutManager
+            val newLayoutManager = MyGridLayoutManager(this, config.mediaColumnCnt).apply {
+                orientation = RecyclerView.HORIZONTAL
+                spanCount = config.mediaColumnCnt
+            }
+
+            binding.mediaGrid.layoutManager = newLayoutManager
+            binding.mediaGrid.adapter = oldAdapter
+            binding.mediaGrid.scrollToPosition(scrollPosition)
         }
     }
 }

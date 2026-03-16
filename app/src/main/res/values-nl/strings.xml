@@ -170,7 +170,7 @@
     <string name="show_recycle_bin_last">Prullenbak als laatste item tonen</string>
     <string name="allow_down_gesture">Naar beneden vegen om volledig scherm af te sluiten</string>
     <string name="allow_one_to_one_zoom">1:1 zoomen na 2x dubbelklikken</string>
-    <string name="open_videos_on_separate_screen">Video\'s altijd in apart scherm met horizontale veeggebaren openen</string>
+    <string name="open_videos_on_separate_screen">Video\'s in apart scherm met horizontale veeggebaren openen</string>
     <string name="show_notch">Inkeping scherm tonen indien aanwezig</string>
     <string name="allow_rotating_gestures">Afbeeldingen met veeggebaren draaien</string>
     <string name="file_loading_priority">Prioriteit bij inladen bestanden</string>
@@ -263,4 +263,10 @@
         <item quantity="other">%d bestanden herstellen?</item>
     </plurals>
     <string name="force_landscape_reverse">Landschapsmodus forceren (omgedraaid)</string>
+    <string name="overwrite_original">Origineel overschrĳven</string>
+    <string name="video_no_sound">Deze video heeft geen geluid</string>
+    <string name="render_ultra_hdr_photos">Ultra HDR-foto\'s in HDR tonen</string>
+    <string name="on_video_tap">Bij klik op video</string>
+    <string name="open_in_app_player">Openen in interne speler</string>
+    <string name="open_system_default_player">Openen met standaard-app</string>
 </resources>

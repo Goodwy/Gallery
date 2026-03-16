@@ -20,12 +20,13 @@ import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.os.Handler
+import android.provider.MediaStore
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
-import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.core.graphics.drawable.toDrawable
 import androidx.annotation.OptIn
 import androidx.exifinterface.media.ExifInterface
 import androidx.lifecycle.lifecycleScope
@@ -39,6 +40,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.appbar.AppBarLayout
 import com.goodwy.commons.dialogs.PropertiesDialog
 import com.goodwy.commons.dialogs.RenameItemDialog
 import com.goodwy.commons.extensions.*
@@ -64,10 +66,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import kotlin.math.min
-import androidx.core.graphics.drawable.toDrawable
 
 @Suppress("UNCHECKED_CAST")
-class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, ViewPagerFragment.FragmentListener {
+class ViewPagerActivity : BaseViewerActivity(), ViewPager.OnPageChangeListener, ViewPagerFragment.FragmentListener {
     companion object {
         private const val REQUEST_VIEW_VIDEO = 1
         private const val SAVED_PATH = "current_path"
@@ -93,22 +94,29 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
     private var mMediaFiles = ArrayList<Medium>()
     private var mFavoritePaths = ArrayList<String>()
     private var mIgnoredPaths = ArrayList<String>()
+    private var mOriginalBrightness: Float? = null
 
     private var mVolumeController: VolumeController? = null
     private var mMuteInit: Boolean = false
 
     private val binding by viewBinding(ActivityMediumBinding::inflate)
 
+    override val contentHolder: View
+        get() = binding.fragmentHolder
+
+    override val appBarLayout: AppBarLayout
+        get() = binding.mediumViewerAppbar
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        showTransparentTop = true
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        setupEdgeToEdge(
+            padBottomSystem = listOf(binding.bottomActions.bottomActionsWrapper),
+        )
+
         refreshMenuItems()
 
         window.decorView.setBackgroundColor(getProperBackgroundColor())
-        binding.topShadow.layoutParams.height = statusBarHeight + actionBarHeight
-        binding.mediumViewerToolbar.layoutParams.height = actionBarHeight
-        checkNotchSupport()
         (MediaActivity.mMedia.clone() as ArrayList<ThumbnailItem>).filterIsInstanceTo(mMediaFiles, Medium::class.java)
 
         requestMediaPermissions {
@@ -135,28 +143,8 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
             return
         }
 
-        if (config.bottomActions) {
-            window.navigationBarColor = Color.TRANSPARENT
-        } else {
-            setTranslucentNavigation()
-        }
-
-//        // TODO TRANSPARENT Navigation Bar
-//        setWindowTransparency(true) { _, _, _, _ ->
-//            updateNavigationBarColor(Color.BLACK)
-//        }
-
-        window.updateStatusBarForegroundColor(Color.BLACK)
-        window.updateNavigationBarForegroundColor(Color.BLACK)
-
         initBottomActions()
-
-        if (config.maxBrightness) {
-            val attributes = window.attributes
-            attributes.screenBrightness = 1f
-            window.attributes = attributes
-        }
-
+        mOriginalBrightness = window.updateBrightness(config.maxBrightness, mOriginalBrightness)
         setupOptionsMenu()
         setupOrientation()
         refreshMenuItems()
@@ -248,8 +236,6 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
     }
 
     private fun setupOptionsMenu() {
-        (binding.mediumViewerAppbar.layoutParams as RelativeLayout.LayoutParams).topMargin = statusBarHeight
-
         val primaryColor = getProperPrimaryColor()
         val white = Color.WHITE
         val iconColor = if (baseConfig.topAppBarColorIcon) primaryColor else white
@@ -327,9 +313,6 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         initBottomActionsLayout()
-        binding.topShadow.layoutParams.height = statusBarHeight + actionBarHeight
-        binding.mediumViewerToolbar.layoutParams.height = actionBarHeight
-        (binding.mediumViewerAppbar.layoutParams as RelativeLayout.LayoutParams).topMargin = statusBarHeight
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -380,7 +363,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
             return
         }
 
-        showSystemUI(true)
+        showSystemUI()
 
         if (intent.getBooleanExtra(SKIP_AUTHENTICATION, false)) {
             initContinue()
@@ -439,8 +422,9 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         refreshViewPager(true)
         binding.viewPager.offscreenPageLimit = 2
 
-        if (config.blackBackground) {
-            binding.viewPager.background = Color.BLACK.toDrawable() //TODO always black background
+        if (config.blackBackground) {//TODO always black background
+            binding.fragmentHolder.background = Color.BLACK.toDrawable()
+            binding.viewPager.background = Color.BLACK.toDrawable()
         }
 
         if (config.hideSystemUI) {
@@ -451,21 +435,10 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
             }
         }
 
-        window.decorView.setOnSystemUiVisibilityChangeListener { visibility ->
-            mIsFullScreen = if (isUpsideDownCakePlus()) {
-                visibility and View.SYSTEM_UI_FLAG_LOW_PROFILE != 0
-            } else if (isInMultiWindowMode) {
-                visibility and View.SYSTEM_UI_FLAG_LOW_PROFILE != 0
-            } else if (visibility and View.SYSTEM_UI_FLAG_LOW_PROFILE == 0) {
-                false
-            } else {
-                visibility and View.SYSTEM_UI_FLAG_FULLSCREEN != 0
-            }
-
-            checkSystemUI()
-        }
-
-        if (intent.action == "com.android.camera.action.REVIEW") {
+        if (
+            intent.action == "com.android.camera.action.REVIEW"
+            || intent.action == MediaStore.ACTION_REVIEW
+        ) {
             ensureBackgroundThread {
                 if (mediaDB.getMediaFromPath(mPath).isEmpty()) {
                     val filename = mPath.getFilenameFromPath()
@@ -548,7 +521,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
                         binding.viewPager.setPageTransformer(false, FadePageTransformer())
                     }
 
-                    hideSystemUI(true)
+                    hideSystemUI()
                     if (!mIsFullScreen) {
                         mIsFullScreen = true
                         fullscreenToggled()
@@ -645,7 +618,7 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
         if (mIsSlideshowActive) {
             binding.viewPager.setPageTransformer(false, DefaultPageTransformer())
             mIsSlideshowActive = false
-            showSystemUI(true)
+            showSystemUI()
             mSlideshowHandler.removeCallbacksAndMessages(null)
             window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             mAreSlideShowMediaVisible = false
@@ -872,17 +845,10 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
     }
 
     private fun initBottomActionsLayout() {
-        binding.bottomActions.root.layoutParams.height = resources.getDimension(R.dimen.bottom_actions_height).toInt() + navigationBarHeight
         if (config.bottomActions) {
             binding.bottomActions.root.beVisible()
         } else {
             binding.bottomActions.root.beGone()
-        }
-
-        if (!portrait && navigationBarOnSide && navigationBarWidth > 0) {
-            binding.mediumViewerToolbar.setPadding(0, 0, navigationBarWidth, 0)
-        } else {
-            binding.mediumViewerToolbar.setPadding(0, 0, 0, 0)
         }
     }
 
@@ -1413,6 +1379,8 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
 
     override fun isSlideShowActive() = mIsSlideshowActive
 
+    override fun isFullScreen() = mIsFullScreen
+
     override fun goToPrevItem() {
         binding.viewPager.setCurrentItem(binding.viewPager.currentItem - 1, false)
         checkOrientation()
@@ -1452,12 +1420,10 @@ class ViewPagerActivity : SimpleActivity(), ViewPager.OnPageChangeListener, View
 
     private fun checkSystemUI() {
         if (mIsFullScreen) {
-            hideSystemUI(true)
+            hideSystemUI()
         } else {
             stopSlideshow()
-            showSystemUI(true)
-            window.updateStatusBarForegroundColor(Color.BLACK)
-            window.updateNavigationBarForegroundColor(Color.BLACK)
+            showSystemUI()
         }
     }
 

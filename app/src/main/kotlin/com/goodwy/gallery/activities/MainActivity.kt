@@ -10,9 +10,11 @@ import android.provider.MediaStore
 import android.provider.MediaStore.Images
 import android.provider.MediaStore.Video
 import android.speech.RecognizerIntent
+import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.goodwy.commons.dialogs.CreateNewFolderDialog
 import com.goodwy.commons.dialogs.FilePickerDialog
@@ -21,7 +23,6 @@ import com.goodwy.commons.extensions.*
 import com.goodwy.commons.helpers.*
 import com.goodwy.commons.models.FileDirItem
 import com.goodwy.commons.models.RadioItem
-import com.goodwy.commons.models.Release
 import com.goodwy.commons.views.MyGridLayoutManager
 import com.goodwy.commons.views.MyRecyclerView
 import com.goodwy.gallery.BuildConfig
@@ -39,6 +40,7 @@ import com.goodwy.gallery.interfaces.DirectoryOperationsListener
 import com.goodwy.gallery.jobs.NewPhotoFetcher
 import com.goodwy.gallery.models.Directory
 import com.goodwy.gallery.models.Medium
+import com.google.android.material.appbar.AppBarLayout
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -47,6 +49,8 @@ import java.io.OutputStream
 import java.util.Objects
 
 class MainActivity : SimpleActivity(), DirectoryOperationsListener {
+    override var isSearchBarEnabled = true
+
     companion object {
         private const val PICK_MEDIA = 2
         private const val PICK_WALLPAPER = 3
@@ -92,16 +96,14 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
     private var mStoredStyleString = ""
     private var mStoredHideTopBarWhenScroll = false
     private var isSpeechToTextAvailable = false
+    private var wasKeyboardVisible = false
 
     private val binding by viewBinding(ActivityMainBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        isMaterialActivity = true
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         appLaunched(BuildConfig.APPLICATION_ID)
-
-        updateTransparentNavigationBar()
 
         if (savedInstanceState == null) {
             config.temporarilyShowHidden = false
@@ -130,13 +132,14 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
         setupOptionsMenu()
         refreshMenuItems()
         binding.mainMenu.updateTitle(getString(R.string.app_launcher_name))
+        binding.mainMenu.searchBeVisibleIf(config.showSearchBar)
 
-        updateMaterialActivityViews(
-            mainCoordinatorLayout = binding.directoriesCoordinator,
-            nestedView = binding.directoriesGrid,
-            useTransparentNavigation = true, //!config.scrollHorizontally,
-            useTopSearchMenu = true
+        val scrollHorizontally = config.scrollHorizontally
+        val view = if (scrollHorizontally) binding.directoriesFastscroller else binding.directoriesGrid
+        setupEdgeToEdge(
+            padBottomImeAndSystem = listOf(view)
         )
+
         if (config.changeColourTopBar) {
             val useSurfaceColor = isDynamicTheme() && !isSystemInDarkMode()
             setupSearchMenuScrollListener(
@@ -148,7 +151,6 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
 
         binding.directoriesRefreshLayout.setOnRefreshListener { getDirectories() }
         storeStateVariables()
-        checkWhatsNewDialog()
 
         setupLatestMediaId()
 
@@ -184,6 +186,10 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
 
         // just request the permission, tryLoadGallery will then trigger in onResume
         handleMediaPermissions()
+
+        if (scrollHorizontally) setupKeyboardListener()
+
+        checkWhatsNewDialog()
     }
 
     private fun handleMediaPermissions(callback: (() -> Unit)? = null) {
@@ -192,27 +198,6 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             if (isRPlus() && !mWasMediaManagementPromptShown) {
                 mWasMediaManagementPromptShown = true
                 handleMediaManagementPrompt { }
-            }
-        }
-    }
-
-    private fun updateTransparentNavigationBar() {
-        // TODO TRANSPARENT Navigation Bar
-        if (config.transparentNavigationBar) {
-            setWindowTransparency(true) { _, bottomNavigationBarSize, leftNavigationBarSize, rightNavigationBarSize ->
-                binding.directoriesCoordinator.setPadding(leftNavigationBarSize, 0, rightNavigationBarSize, 0)
-                if (config.scrollHorizontally) {
-                    binding.directoriesFastscroller.setPadding(0, 0, 0, bottomNavigationBarSize)
-                    binding.directoriesGrid.setPadding(0, 0, 0, 0)
-                } else {
-                    binding.directoriesFastscroller.setPadding(0, 0, 0, 0)
-                    binding.directoriesFastscroller.trackMarginEnd = bottomNavigationBarSize
-                    val topPadding = resources.getDimension(com.goodwy.commons.R.dimen.small_margin).toInt()
-                    binding.directoriesGrid.setPadding(0, topPadding, 0, bottomNavigationBarSize) // needed clipToPadding="false"
-                }
-//                val useSurfaceColor = isDynamicTheme() && !isSystemInDarkMode()
-//                val backgroundColor = if (useSurfaceColor) getSurfaceColor() else getProperBackgroundColor()
-//                updateNavigationBarColor(backgroundColor)
             }
         }
     }
@@ -298,6 +283,8 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
         } else {
             binding.mainMenu.updateHintText(getString(com.goodwy.commons.R.string.search_folders))
         }
+
+        newAppRecommendation()
     }
 
     override fun onPause() {
@@ -341,20 +328,23 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
         }
     }
 
-    override fun onBackPressed() {
-        if (binding.mainMenu.isSearchOpen) {
+    override fun onBackPressedCompat(): Boolean {
+        return if (binding.mainMenu.isSearchOpen) {
             binding.mainMenu.closeSearch()
+            true
         } else if (config.groupDirectSubfolders) {
             if (mCurrentPathPrefix.isEmpty()) {
-                super.onBackPressed()
+                appLockManager.lock()
+                false
             } else {
                 mOpenedSubfolders.removeAt(mOpenedSubfolders.lastIndex)
                 mCurrentPathPrefix = mOpenedSubfolders.last()
                 setupAdapter(mDirs)
+                true
             }
         } else {
             appLockManager.lock()
-            super.onBackPressed()
+            false
         }
     }
 
@@ -405,7 +395,18 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
 
     private fun refreshMenuItems() {
         if (!mIsThirdPartyIntent) {
-            binding.mainMenu.getToolbar().menu.apply {
+            binding.mainMenu.requireToolbar().menu.apply {
+                if (isNewApp()) {
+                    val showAsAction = if (config.hideIconsInMenu) {
+                        MenuItem.SHOW_AS_ACTION_NEVER
+                    } else {
+                        MenuItem.SHOW_AS_ACTION_IF_ROOM
+                    }
+                    findItem(R.id.sort).setShowAsAction(showAsAction)
+                    findItem(R.id.filter).setShowAsAction(showAsAction)
+                    findItem(R.id.open_camera).setShowAsAction(showAsAction)
+                }
+                findItem(R.id.search).isVisible = !config.showSearchBar
                 findItem(R.id.column_count).isVisible = config.viewTypeFolders == VIEW_TYPE_GRID
                 findItem(R.id.set_as_default_folder).isVisible = config.defaultFolder.isNotEmpty()
                 findItem(R.id.open_recycle_bin).isVisible =
@@ -414,7 +415,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             }
         }
 
-        binding.mainMenu.getToolbar().menu.apply {
+        binding.mainMenu.requireToolbar().menu.apply {
             findItem(R.id.temporarily_show_hidden).isVisible = !config.shouldShowHidden
             findItem(R.id.stop_showing_hidden).isVisible =
                 (!isRPlus() || isExternalStorageManager()) && config.temporarilyShowHidden
@@ -436,8 +437,15 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             binding.mainMenu.showSpeechToText = isSpeechToTextAvailable
         }
 
-        binding.mainMenu.getToolbar().inflateMenu(menuId)
-        binding.mainMenu.toggleHideOnScroll(!config.scrollHorizontally && config.hideTopBarWhenScroll)
+        binding.mainMenu.requireToolbar().inflateMenu(menuId)
+//        binding.mainMenu.toggleHideOnScroll(!config.scrollHorizontally && config.hideTopBarWhenScroll)
+        // Top bar scroll
+        val params = binding.mainMenu.layoutParams as AppBarLayout.LayoutParams
+        params.scrollFlags = if (!config.scrollHorizontally && config.hideTopBarWhenScroll) {
+            AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or
+                AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+        } else 0
+        binding.mainMenu.layoutParams = params
         binding.mainMenu.setupMenu()
 
         binding.mainMenu.onSearchOpenListener = {
@@ -458,12 +466,13 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             binding.mainMenu.clearSearch()
         }
 
-        binding.mainMenu.getToolbar().setOnMenuItemClickListener { menuItem ->
+        binding.mainMenu.requireToolbar().setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
+                R.id.search -> launchSearchActivity()
+                R.id.show_all -> showAllMedia()
                 R.id.sort -> showSortingDialog()
                 R.id.filter -> showFilterMediaDialog()
                 R.id.open_camera -> launchCamera()
-                R.id.show_all -> showAllMedia()
                 R.id.change_view_type -> changeViewType()
                 R.id.temporarily_show_hidden -> tryToggleTemporarilyShowHidden()
                 R.id.stop_showing_hidden -> tryToggleTemporarilyShowHidden()
@@ -485,18 +494,9 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
     private fun updateMenuColors() {
         val useSurfaceColor = isDynamicTheme() && !isSystemInDarkMode()
         val backgroundColor = if (useSurfaceColor) getSurfaceColor() else getProperBackgroundColor()
-        updateStatusbarColor(backgroundColor)
-        binding.mainMenu.updateColors(getStartRequiredStatusBarColor(), scrollingView?.computeVerticalScrollOffset() ?: 0)
-    }
-
-    private fun getStartRequiredStatusBarColor(): Int {
+        val statusBarColor = if (config.changeColourTopBar) getRequiredStatusBarColor(useSurfaceColor) else backgroundColor
         val scrollingViewOffset = scrollingView?.computeVerticalScrollOffset() ?: 0
-        return if (scrollingViewOffset == 0) {
-            val useSurfaceColor = isDynamicTheme() && !isSystemInDarkMode()
-            if (useSurfaceColor) getSurfaceColor() else getProperBackgroundColor()
-        } else {
-            getColoredMaterialStatusBarColor()
-        }
+        binding.mainMenu.updateColors(statusBarColor, scrollingViewOffset)
     }
 
     private fun getRecyclerAdapter() = binding.directoriesGrid.adapter as? DirectoryAdapter
@@ -1007,7 +1007,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             inputStream.copyTo(outputStream!!)
         } catch (e: SecurityException) {
             showErrorToast(e)
-        } catch (ignored: FileNotFoundException) {
+        } catch (_: FileNotFoundException) {
             return getFilePublicUri(file, BuildConfig.APPLICATION_ID)
         } finally {
             inputStream?.close()
@@ -1132,7 +1132,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
 
                     dirs.add(0, recycleBin)
                 }
-            } catch (ignored: Exception) {
+            } catch (_: Exception) {
             }
         }
 
@@ -1233,7 +1233,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
                     Thread {
                         try {
                             mediaDB.insertAll(curMedia)
-                        } catch (ignored: Exception) {
+                        } catch (_: Exception) {
                         }
                     }.start()
                 }
@@ -1263,7 +1263,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
                 dirs.removeAll(dirsToRemove)
                 setupAdapter(dirs)
             }
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
         }
 
         val foldersToScan = mLastMediaFetcher!!.getFoldersToScan()
@@ -1350,7 +1350,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
                     if (folder != RECYCLE_BIN && folder != FAVORITES) {
                         mediaDB.insertAll(newMedia)
                     }
-                } catch (ignored: Exception) {
+                } catch (_: Exception) {
                 }
             }.start()
         }
@@ -1386,7 +1386,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
 
             // catch some extreme exceptions like too many everShownFolders for storing, shouldnt really happen
             config.everShownFolders = everShownFolders
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             config.everShownFolders = HashSet()
         }
 
@@ -1570,7 +1570,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
                 if (binFolder != null && mediaDB.getDeletedMedia().isEmpty()) {
                     invalidDirs.add(binFolder)
                 }
-            } catch (ignored: Exception) {
+            } catch (_: Exception) {
             }
         }
 
@@ -1580,7 +1580,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             invalidDirs.forEach {
                 try {
                     directoryDB.deleteDirPath(it.path)
-                } catch (ignored: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }
@@ -1635,7 +1635,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
                                 mediaDB.deleteMediumPath(it.path)
                             }
                         }
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                     }
                 }
             }, 3000L)
@@ -1684,7 +1684,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
                         config.addExcludedFolder(file.absolutePath)
                     }
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
     }
@@ -1704,7 +1704,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
                     }
                 }
             }
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
         }
 
         return folders
@@ -1728,16 +1728,59 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
     }
 
     private fun checkWhatsNewDialog() {
-        arrayListOf<Release>().apply {
-            add(Release(504, R.string.release_504))
-            add(Release(600, R.string.release_600))
-            add(Release(601, R.string.release_601))
-            add(Release(610, R.string.release_610))
-            add(Release(650, R.string.release_650))
-            add(Release(651, R.string.release_651))
-            add(Release(700, R.string.release_700))
-            add(Release(701, R.string.release_701))
+        whatsNewList().apply {
             checkWhatsNew(this, BuildConfig.VERSION_CODE)
+        }
+    }
+
+    // Goodwy
+    private fun setupKeyboardListener() {
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
+            val rootView = binding.root
+            val displayMetrics = resources.displayMetrics
+            val screenHeight = displayMetrics.heightPixels
+
+            // We obtain the height of the visible area
+            val rect = android.graphics.Rect()
+            rootView.getWindowVisibleDisplayFrame(rect)
+
+            // Calculate the height of the invisible area (potentially the keyboard)
+            val heightDiff = screenHeight - rect.bottom
+
+            val isKeyboardVisible = heightDiff > 200.dpToPx(this)
+
+            if (wasKeyboardVisible && !isKeyboardVisible) {
+                // The keyboard has just disappeared.
+                onKeyboardHidden()
+            }
+
+            wasKeyboardVisible = isKeyboardVisible
+        }
+    }
+
+    private fun onKeyboardHidden() {
+        if (config.scrollHorizontally) {
+            recreateLayoutManager()
+        }
+    }
+
+    private fun recreateLayoutManager() {
+        if (config.scrollHorizontally) {
+            val oldAdapter = binding.directoriesGrid.adapter
+            val scrollPosition = (binding.directoriesGrid.layoutManager as? GridLayoutManager)?.findFirstVisibleItemPosition() ?: 0
+
+            // Save the adapter
+            binding.directoriesGrid.adapter = null
+
+            // Creating a new layoutManager
+            val newLayoutManager = MyGridLayoutManager(this, config.dirColumnCnt).apply {
+                orientation = RecyclerView.HORIZONTAL
+                spanCount = config.dirColumnCnt
+            }
+
+            binding.directoriesGrid.layoutManager = newLayoutManager
+            binding.directoriesGrid.adapter = oldAdapter
+            binding.directoriesGrid.scrollToPosition(scrollPosition)
         }
     }
 }

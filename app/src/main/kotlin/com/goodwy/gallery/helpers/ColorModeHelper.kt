@@ -24,14 +24,14 @@ object ColorModeHelper {
     }
 
     fun setColorMode(activity: Activity, colorMode: Int) {
-        activity.window.setColorMode(colorMode)
+        activity.window.colorMode = colorMode
     }
 
-    fun setColorModeForImage(activity: Activity, bitmap: Bitmap?) {
+    fun setColorModeForImage(activity: Activity, bitmap: Bitmap?, ultraHdr: Boolean = true) {
         setColorMode(
             activity = activity,
             colorMode = when {
-                isGainmapSupported() && hasHdrContent(bitmap) -> ActivityInfo.COLOR_MODE_HDR
+                ultraHdr && isGainmapSupported() && hasHdrContent(bitmap) -> ActivityInfo.COLOR_MODE_HDR
                 hasWideColorGamut(bitmap) -> ActivityInfo.COLOR_MODE_WIDE_COLOR_GAMUT
                 else -> ActivityInfo.COLOR_MODE_DEFAULT
             }
@@ -39,6 +39,6 @@ object ColorModeHelper {
     }
 
     fun resetColorMode(activity: Activity?) {
-        activity?.window?.setColorMode(ActivityInfo.COLOR_MODE_DEFAULT)
+        activity?.window?.colorMode = ActivityInfo.COLOR_MODE_DEFAULT
     }
 }

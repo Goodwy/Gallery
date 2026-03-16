@@ -4,6 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="AppCompatResource">
     <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_search_top_padding"
+        android:title="@string/search"
+        android:visible="false"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/folder_view"
         android:icon="@drawable/ic_folder_open_vector"
         android:title="@string/folder_view"

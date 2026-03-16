@@ -18,8 +18,8 @@ import android.provider.MediaStore.Files
 import android.provider.MediaStore.Images
 import android.provider.Settings
 import android.util.DisplayMetrics
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.exifinterface.media.ExifInterface
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
@@ -39,6 +39,7 @@ import com.goodwy.gallery.R
 import com.goodwy.gallery.activities.MediaActivity
 import com.goodwy.gallery.activities.SettingsActivity
 import com.goodwy.gallery.activities.SimpleActivity
+import com.goodwy.gallery.activities.VideoPlayerActivity
 import com.goodwy.gallery.dialogs.AllFilesPermissionDialog
 import com.goodwy.gallery.dialogs.PickDirectoryDialog
 import com.goodwy.gallery.helpers.DIRECTORY
@@ -53,6 +54,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.Locale
 import androidx.core.net.toUri
+import com.goodwy.commons.dialogs.NewAppDialog
+import kotlin.ranges.random
 
 fun Activity.sharePath(path: String) {
     sharePathIntent(path, BuildConfig.APPLICATION_ID)
@@ -76,6 +79,25 @@ fun Activity.setAs(path: String) {
 
 fun Activity.openPath(path: String, forceChooser: Boolean, extras: HashMap<String, Boolean> = HashMap()) {
     openPathIntent(path, forceChooser, BuildConfig.APPLICATION_ID, extras = extras)
+}
+
+fun Activity.launchGesturePlayer(path: String, extras: HashMap<String, Boolean> = HashMap()) {
+    ensureBackgroundThread {
+        val newUri = getFinalUriFromPath(path, BuildConfig.APPLICATION_ID)
+        if (newUri == null) {
+            toast(com.goodwy.commons.R.string.unknown_error_occurred)
+            return@ensureBackgroundThread
+        }
+
+        val mimeType = getUriMimeType(path, newUri)
+        runOnUiThread {
+            Intent(applicationContext, VideoPlayerActivity::class.java).apply {
+                setDataAndType(newUri, mimeType)
+                for ((key, value) in extras) putExtra(key, value)
+                startActivity(this)
+            }
+        }
+    }
 }
 
 fun Activity.openEditor(path: String, forceChooser: Boolean = false) {
@@ -143,10 +165,21 @@ fun SimpleActivity.launchAbout() {
     val subscriptionYearIdX2 = BuildConfig.SUBSCRIPTION_YEAR_ID_X2
     val subscriptionYearIdX3 = BuildConfig.SUBSCRIPTION_YEAR_ID_X3
 
+    val flavorName = BuildConfig.FLAVOR
+    val storeDisplayName = when (flavorName) {
+        "gplay" -> "Google Play"
+        "foss" -> "FOSS"
+        "rustore" -> "RuStore"
+        else -> "Huawei"
+    }
+    val versionName = BuildConfig.VERSION_NAME
+    val fullVersionText = "$versionName ($storeDisplayName)"
+
     startAboutActivity(
-        appNameId = R.string.app_name_g,
+        appNameId = R.string.app_name,
         licenseMask = licenses,
-        versionName = BuildConfig.VERSION_NAME,
+        versionName = fullVersionText,
+        flavorName = BuildConfig.FLAVOR,
         faqItems = faqItems,
         showFAQBeforeMail = true,
         productIdList= arrayListOf(productIdX1, productIdX2, productIdX3),
@@ -155,8 +188,6 @@ fun SimpleActivity.launchAbout() {
         subscriptionIdListRu = arrayListOf(subscriptionIdX1, subscriptionIdX2, subscriptionIdX3),
         subscriptionYearIdList = arrayListOf(subscriptionYearIdX1, subscriptionYearIdX2, subscriptionYearIdX3),
         subscriptionYearIdListRu = arrayListOf(subscriptionYearIdX1, subscriptionYearIdX2, subscriptionYearIdX3),
-        playStoreInstalled = isPlayStoreInstalled(),
-        ruStoreInstalled = isRuStoreInstalled()
     )
 }
 
@@ -209,20 +240,12 @@ fun BaseSimpleActivity.launchGrantAllFilesIntent() {
     }
 }
 
-fun AppCompatActivity.showSystemUI(toggleActionBarVisibility: Boolean) {
-    window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+fun AppCompatActivity.showSystemUI() {
+    window.showBars()
 }
 
-fun AppCompatActivity.hideSystemUI(toggleActionBarVisibility: Boolean) {
-    window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-        View.SYSTEM_UI_FLAG_LOW_PROFILE or
-        View.SYSTEM_UI_FLAG_FULLSCREEN or
-        View.SYSTEM_UI_FLAG_IMMERSIVE
+fun AppCompatActivity.hideSystemUI() {
+    window.hideBars(transient = false)
 }
 
 fun BaseSimpleActivity.addNoMedia(path: String, callback: () -> Unit) {
@@ -1087,4 +1110,24 @@ fun Activity.proposeNewFilePath(uri: Uri): Pair<String, Boolean> {
     }
 
     return Pair(newPath, shouldAppendFilename)
+}
+
+//Goodwy
+fun Activity.newAppRecommendation() {
+    if (resources.getBoolean(com.goodwy.commons.R.bool.is_foss)) {
+        if (!isNewApp()) {
+            if ((0..config.newAppRecommendationDialogCount).random() == 2) {
+                val packageName = "yrellag.ywdoog.ved".reversed()
+                NewAppDialog(
+                    activity = this,
+                    packageName = packageName,
+                    title = getString(com.goodwy.strings.R.string.notification_of_new_application),
+                    text = "AlRight Gallery",
+                    drawable = AppCompatResources.getDrawable(this, com.goodwy.commons.R.drawable.ic_gallery_new),
+                    showSubtitle = true
+                ) {
+                }
+            }
+        }
+    }
 }

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name_g">Right Gallery</string>
-    <string name="app_launcher_name_g">แกลเลอรี่</string>
     <string name="exclude_folder_description_g">ฟีเจอร์นี้จะยกเว้นโฟลเดอร์ที่เลือกและโฟลเดอร์ย่อยสำหรับ Right Gallery เท่านั้น คุณสามารถจัดการโฟลเดอร์ที่ยกเว้นได้ในการตั้งค่า</string>
     <string name="excluded_activity_placeholder_g">การยกเว้นโฟลเดอร์จะซ่อนโฟลเดอร์และโฟลเดอร์ย่อยใน Right Gallery แต่จะยังคงมองเห็นได้ในแอปอื่นๆ
 

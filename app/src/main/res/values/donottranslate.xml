@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Right Gallery</string>
     <string name="gif">GIF</string>
     <string name="raw">RAW</string>
     <string name="svg">SVG</string>
     <string name="package_name">com.goodwy.gallery</string>
+    <string name="playback_speed_display_text">2x >></string>
 
     <!-- Release notes -->
-    <string name="release_701">
+    <string name="release_820">
+        Compatibility updates for Android 15 &amp; 16\n
+        Changed the logic of styles\n
+        Changed colors of context action modes\n
+        Added support for custom fonts\n
+        Added ‘App font’ option\n
+        Added ‘Show search bar’ option\n
+        Added ‘Hide icons in menu’ option\n
+        Added "On video tap" option to choose between in-app player or default player app\n
+        Added option to toggle Ultra HDR rendering (Android 14+)\n
+        Videos now open in the in-app player; use the "Open with" option for other apps\n
+        Long press gesture to play videos at 2x speed\n
         Fixed bugs, improved stability
     </string>
     <string name="release_700">
@@ -14,9 +27,6 @@
         Added an auto dark/light theme\n
         Added voice input for search\n
         Fixed bugs, improved stability
-    </string>
-    <string name="release_651">
-        Improved performance, bug fixes
     </string>
     <string name="release_650">
         Added ‘Hide the grouping bar when scrolling‘ option\n
@@ -39,9 +49,6 @@
         Fixed inaccurate or broken seeking in some videos\n
         Image rotation edits no longer auto-save without confirmation\n
         External keyboards now work properly in copy/move dialogs
-    </string>
-    <string name="release_610">
-        Improved performance, bug fixes
     </string>
     <string name="release_601">
         Added ‘Hide the grouping bar‘ option\n

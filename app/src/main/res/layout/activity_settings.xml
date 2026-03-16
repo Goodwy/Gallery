@@ -2,28 +2,33 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/settings_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/settings_toolbar"
+    <com.goodwy.commons.views.MyAppBarLayout
+        android:id="@+id/settings_appbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/color_primary"
-        app:title="@string/settings"
-        app:titleTextAppearance="@style/AppTheme.ActionBar.TitleTextStyle" />
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/settings_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:menu="@menu/menu_settings"
+            app:title="@string/settings"
+            app:titleTextAppearance="@style/AppTheme.ActionBar.TitleTextStyle" />
+    </com.goodwy.commons.views.MyAppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/settingsNestedScrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingHorizontal="@dimen/activity_padding_left_right"
-        android:layout_marginTop="?attr/actionBarSize"
         android:fillViewport="true"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+    <LinearLayout
             android:id="@+id/settings_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,31 +75,6 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:contentDescription="@string/customization_theme_summary"/>
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/settingsOverflowIconHolder"
-                        style="@style/SettingsHolderStyle">
-
-                        <com.goodwy.commons.views.MyTextView
-                            android:id="@+id/settingsOverflowIconLabel"
-                            style="@style/SettingsTextLabelStyle"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:layout_toStartOf="@+id/settingsOverflowIcon"
-                            android:layout_marginEnd="@dimen/normal_margin"
-                            android:text="@string/overflow_icon" />
-
-                        <ImageView
-                            android:id="@+id/settingsOverflowIcon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginEnd="@dimen/settings_margin"
-                            android:clickable="false"
-                            android:contentDescription="@string/overflow_icon"
-                            android:src="@drawable/ic_more_horiz" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -426,6 +406,26 @@
                             app:switchPadding="@dimen/bigger_margin" />
 
                     </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/settings_on_video_tap_holder"
+                        style="@style/SettingsHolderStyle">
+
+                        <com.goodwy.commons.views.MyTextView
+                            android:id="@+id/settings_on_video_tap_label"
+                            style="@style/SettingsTextLabelStyle"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@+id/settings_on_video_tap"
+                            android:text="@string/on_video_tap" />
+
+                        <com.goodwy.commons.views.MyTextView
+                            android:id="@+id/settings_on_video_tap"
+                            style="@style/SettingsTextValueStyle"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="@dimen/settings_margin"
+                            tools:text="@string/open_in_app_player" />
+                    </RelativeLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -514,6 +514,73 @@
                     </RelativeLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/settingsTopAppBarLabel"
+            style="@style/SettingsSectionLabelStyle"
+            android:text="@string/top_app_bar"
+            tools:textColor="@color/primary"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/settingsTopAppBarHolder"
+            style="@style/SettingsSectionHolder"
+            app:cardCornerRadius="@dimen/activity_margin"
+            app:cardElevation="0dp">
+
+            <LinearLayout
+                android:id="@+id/settingsTopAppBarWrapper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/settingsOverflowIconHolder"
+                    style="@style/SettingsHolderStyle">
+
+                    <com.goodwy.commons.views.MyTextView
+                        android:id="@+id/settingsOverflowIconLabel"
+                        style="@style/SettingsTextLabelStyle"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@+id/settingsOverflowIcon"
+                        android:layout_marginEnd="@dimen/normal_margin"
+                        android:text="@string/overflow_icon" />
+
+                    <ImageView
+                        android:id="@+id/settingsOverflowIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/settings_margin"
+                        android:clickable="false"
+                        android:contentDescription="@string/overflow_icon"
+                        android:src="@drawable/ic_more_horiz" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/settingsHideIconsInMenuHolder"
+                    style="@style/SettingsHolderSwitchStyle">
+
+                    <com.goodwy.commons.views.MyMaterialSwitch
+                        android:id="@+id/settingsHideIconsInMenu"
+                        style="@style/SettingsSwitchStyle"
+                        android:text="@string/hide_icons_in_menu"
+                        app:switchPadding="@dimen/bigger_margin" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/settingsShowSearchBarHolder"
+                    style="@style/SettingsHolderSwitchStyle">
+
+                    <com.goodwy.commons.views.MyMaterialSwitch
+                        android:id="@+id/settingsShowSearchBar"
+                        style="@style/SettingsSwitchStyle"
+                        android:text="@string/show_search_bar"
+                        app:switchPadding="@dimen/bigger_margin" />
+                </RelativeLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/settings_scrolling_label"
@@ -616,6 +683,18 @@
                             android:id="@+id/settings_max_brightness"
                             style="@style/SettingsSwitchStyle"
                             android:text="@string/max_brightness"
+                            app:switchPadding="@dimen/bigger_margin" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/settings_ultra_hdr_rendering_holder"
+                        style="@style/SettingsHolderSwitchStyle">
+
+                        <com.goodwy.commons.views.MyMaterialSwitch
+                            android:id="@+id/settings_ultra_hdr_rendering"
+                            style="@style/SettingsSwitchStyle"
+                            android:text="@string/render_ultra_hdr_photos"
                             app:switchPadding="@dimen/bigger_margin" />
 
                     </RelativeLayout>

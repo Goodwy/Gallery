@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name_g">Right Gallery</string>
-    <string name="app_launcher_name_g">Galerie</string> <!--Not used-->
+    <!--Not used-->
     <string name="exclude_folder_description_g">Acest lucru va exclude selecția, împreună cu subdosarele sale, numai din Right Gallery. Poţi gestiona dosarele excluse în Setări.</string>
     <string name="excluded_activity_placeholder_g">Excluderea dosarelor le va face ca acestea, împreună cu subdosarele lor, să fie ascunse doar în Right Gallery, ele vor fi în continuare vizibile în alte aplicații.
 \n

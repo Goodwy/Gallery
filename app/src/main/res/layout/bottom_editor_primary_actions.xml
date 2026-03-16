@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_editor_primary_actions_wrapper"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/bottom_actions_height"
-    android:layout_alignParentBottom="true">
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/bottom_actions_height">
 
     <com.goodwy.commons.views.MyTextView
         android:id="@+id/bottom_primary_cancel"
@@ -16,6 +16,7 @@
         android:lines="1"
         android:padding="@dimen/medium_margin"
         android:contentDescription="@string/cancel"
+        android:ellipsize="end"
         android:text="@string/cancel"
         android:textSize="@dimen/bigger_text_size"
         android:background="@drawable/ripple_all_corners"
@@ -72,6 +73,7 @@
         android:layout_marginEnd="@dimen/normal_margin"
         android:background="@drawable/ripple_all_corners"
         android:contentDescription="@string/save"
+        android:ellipsize="end"
         android:gravity="end"
         android:lines="1"
         android:padding="@dimen/medium_margin"

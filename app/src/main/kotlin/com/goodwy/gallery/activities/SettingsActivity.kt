@@ -14,8 +14,6 @@ import com.google.gson.reflect.TypeToken
 import com.goodwy.commons.dialogs.*
 import com.goodwy.commons.extensions.*
 import com.goodwy.commons.helpers.*
-import com.goodwy.commons.helpers.rustore.RuStoreHelper
-import com.goodwy.commons.helpers.rustore.model.StartPurchasesEvent
 import com.goodwy.commons.models.RadioItem
 import com.goodwy.gallery.BuildConfig
 import com.goodwy.gallery.R
@@ -25,7 +23,6 @@ import com.goodwy.gallery.extensions.*
 import com.goodwy.gallery.helpers.*
 import com.goodwy.gallery.models.AlbumCover
 import kotlinx.coroutines.launch
-import ru.rustore.sdk.core.feature.model.FeatureAvailabilityResult
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
@@ -44,8 +41,7 @@ class SettingsActivity : SimpleActivity() {
 
     private var mRecycleBinContentSize = 0L
     private val binding by viewBinding(ActivitySettingsBinding::inflate)
-    private val purchaseHelper = PurchaseHelper(this)
-    private var ruStoreHelper: RuStoreHelper? = null
+
     private val productIdX1 = BuildConfig.PRODUCT_ID_X1
     private val productIdX2 = BuildConfig.PRODUCT_ID_X2
     private val productIdX3 = BuildConfig.PRODUCT_ID_X3
@@ -56,101 +52,48 @@ class SettingsActivity : SimpleActivity() {
     private val subscriptionYearIdX1 = BuildConfig.SUBSCRIPTION_YEAR_ID_X1
     private val subscriptionYearIdX2 = BuildConfig.SUBSCRIPTION_YEAR_ID_X2
     private val subscriptionYearIdX3 = BuildConfig.SUBSCRIPTION_YEAR_ID_X3
-    private var ruStoreIsConnected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        isMaterialActivity = true
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        updateMaterialActivityViews(
-            mainCoordinatorLayout = binding.settingsCoordinator,
-            nestedView = binding.settingsHolder,
-            useTransparentNavigation = false,
-            useTopSearchMenu = false)
-        setupMaterialScrollListener(scrollingView = binding.settingsNestedScrollview, toolbar = binding.settingsToolbar)
-        // TODO TRANSPARENT Navigation Bar
-        if (config.transparentNavigationBar) {
-            setWindowTransparency(true) { _, _, leftNavigationBarSize, rightNavigationBarSize ->
-                binding.settingsCoordinator.setPadding(leftNavigationBarSize, 0, rightNavigationBarSize, 0)
-                updateNavigationBarColor(getProperBackgroundColor())
-            }
-        }
+//        setupEdgeToEdge(
+//            padTopSystem = listOf(binding.settingsAppbar),
+//            padBottomSystem = listOf(binding.settingsNestedScrollview)
+//        )
+        setupMaterialScrollListener(binding.settingsNestedScrollview, binding.settingsAppbar)
 
-        if (isPlayStoreInstalled()) {
-            //PlayStore
-            purchaseHelper.initBillingClient()
-            val iapList: ArrayList<String> = arrayListOf(productIdX1, productIdX2, productIdX3)
-            val subList: ArrayList<String> = arrayListOf(subscriptionIdX1, subscriptionIdX2, subscriptionIdX3, subscriptionYearIdX1, subscriptionYearIdX2, subscriptionYearIdX3)
-            purchaseHelper.retrieveDonation(iapList, subList)
-
-            purchaseHelper.isIapPurchased.observe(this) {
-                when (it) {
-                    is Tipping.Succeeded -> {
-                        config.isPro = true
-                        updatePro()
-                    }
-                    is Tipping.NoTips -> {
-                        config.isPro = false
-                        updatePro()
-                    }
-                    is Tipping.FailedToLoad -> {
-                    }
-                }
-            }
-
-            purchaseHelper.isSupPurchased.observe(this) {
-                when (it) {
-                    is Tipping.Succeeded -> {
-                        config.isProSubs = true
-                        updatePro()
-                    }
-                    is Tipping.NoTips -> {
-                        config.isProSubs = false
-                        updatePro()
-                    }
-                    is Tipping.FailedToLoad -> {
-                    }
-                }
-            }
-        }
-        if (isRuStoreInstalled()) {
-            //RuStore
-            ruStoreHelper = RuStoreHelper()
-            ruStoreHelper!!.checkPurchasesAvailability(this@SettingsActivity)
-
-            lifecycleScope.launch {
-                ruStoreHelper!!.eventStart
-                    .flowWithLifecycle(lifecycle)
-                    .collect { event ->
-                        handleEventStart(event)
-                    }
-            }
-
-            lifecycleScope.launch {
-                ruStoreHelper!!.statePurchased
-                    .flowWithLifecycle(lifecycle)
-                    .collect { state ->
-                        //update of purchased
-                        if (!state.isLoading && ruStoreIsConnected) {
-                            config.isProRuStore = state.purchases.firstOrNull() != null
-                            updatePro()
-                        }
-                    }
-            }
+        val iapList: ArrayList<String> = arrayListOf(productIdX1, productIdX2, productIdX3)
+        val subList: ArrayList<String> =
+            arrayListOf(
+                subscriptionIdX1, subscriptionIdX2, subscriptionIdX3,
+                subscriptionYearIdX1, subscriptionYearIdX2, subscriptionYearIdX3
+            )
+        val ruStoreList: ArrayList<String> =
+            arrayListOf(
+                productIdX1, productIdX2, productIdX4,
+                subscriptionIdX1, subscriptionIdX2, subscriptionIdX3,
+                subscriptionYearIdX1, subscriptionYearIdX2, subscriptionYearIdX3
+            )
+        PurchaseHelper().checkPurchase(
+            this@SettingsActivity,
+            iapList = iapList,
+            subList = subList,
+            ruStoreList = ruStoreList
+        ) { updatePro ->
+            if (updatePro) updatePro()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        setupToolbar(binding.settingsToolbar, NavigationIcon.Arrow)
+        setupTopAppBar(binding.settingsAppbar, NavigationIcon.Arrow)
         setupSettingItems()
     }
 
     private fun setupSettingItems() {
         setupPurchaseThankYou()
         setupCustomizeColors()
-        setupOverflowIcon()
         setupTransparentBottomNavigationBar()
 
         setupManageIncludedFolders()
@@ -170,9 +113,15 @@ class SettingsActivity : SimpleActivity() {
         setupRememberLastVideo()
         setupLoopVideos()
         setupOpenVideosOnSeparateScreen()
+        setupOnVideoTap()
         setupMaxBrightness()
+        setupUltraHdrRendering()
         setupCropThumbnails()
         setupAnimateGifs()
+
+        setupOverflowIcon()
+        setupHideIconsInMenu()
+        setupShowSearchBar()
 
         setupScrollHorizontally()
         setupEnablePullToRefresh()
@@ -234,6 +183,7 @@ class SettingsActivity : SimpleActivity() {
             binding.settingsVideosLabel,
             binding.settingsThumbnailsLabel,
             binding.settingsScrollingLabel,
+            binding.settingsTopAppBarLabel,
             binding.settingsFullscreenMediaLabel,
             binding.settingsDeepZoomableImagesLabel,
             binding.settingsExtendedDetailsLabel,
@@ -253,6 +203,7 @@ class SettingsActivity : SimpleActivity() {
             binding.settingsGeneralHolder,
             binding.settingsVideosHolder,
             binding.settingsThumbnailsHolder,
+            binding.settingsTopAppBarHolder,
             binding.settingsScrollingHolder,
             binding.settingsFullscreenMediaHolder,
             binding.settingsDeepZoomableImagesHolder,
@@ -302,7 +253,7 @@ class SettingsActivity : SimpleActivity() {
     }
 
     private fun setupPurchaseThankYou() = binding.apply {
-        settingsPurchaseThankYouHolder.beGoneIf(isPro())
+        settingsPurchaseThankYouHolder.beGoneIf(checkPro(false))
         settingsPurchaseThankYouHolder.onClick = { launchPurchase() }
     }
 
@@ -317,8 +268,6 @@ class SettingsActivity : SimpleActivity() {
                 subscriptionIdListRu = arrayListOf(subscriptionIdX1, subscriptionIdX2, subscriptionIdX3),
                 subscriptionYearIdList = arrayListOf(subscriptionYearIdX1, subscriptionYearIdX2, subscriptionYearIdX3),
                 subscriptionYearIdListRu = arrayListOf(subscriptionYearIdX1, subscriptionYearIdX2, subscriptionYearIdX3),
-                playStoreInstalled = isPlayStoreInstalled(),
-                ruStoreInstalled = isRuStoreInstalled(),
                 showAppIconColor = true
             )
         }
@@ -558,18 +507,54 @@ class SettingsActivity : SimpleActivity() {
     }
 
     private fun setupOpenVideosOnSeparateScreen() {
-        binding.settingsOpenVideosOnSeparateScreen.isChecked = config.openVideosOnSeparateScreen
+        binding.settingsOpenVideosOnSeparateScreen.isChecked = config.gestureVideoPlayer
         binding.settingsOpenVideosOnSeparateScreenHolder.setOnClickListener {
             binding.settingsOpenVideosOnSeparateScreen.toggle()
-            config.openVideosOnSeparateScreen = binding.settingsOpenVideosOnSeparateScreen.isChecked
+            config.gestureVideoPlayer = binding.settingsOpenVideosOnSeparateScreen.isChecked
         }
     }
+
+    private fun setupOnVideoTap() {
+        binding.settingsOnVideoTap.text = getVideoPlayerTypeText()
+        binding.settingsOnVideoTapHolder.setOnClickListener {
+            val items = arrayListOf(
+                RadioItem(VIDEO_PLAYER_APP, getString(R.string.open_in_app_player)),
+                RadioItem(VIDEO_PLAYER_SYSTEM, getString(R.string.open_system_default_player))
+            )
+
+            RadioGroupDialog(
+                activity = this@SettingsActivity,
+                items = items,
+                checkedItemId = config.videoPlayerType,
+                R.string.on_video_tap
+            ) {
+                config.videoPlayerType = it as Int
+                binding.settingsOnVideoTap.text = getVideoPlayerTypeText()
+            }
+        }
+    }
+
+    private fun getVideoPlayerTypeText() = getString(
+        when (config.videoPlayerType) {
+            VIDEO_PLAYER_APP -> R.string.open_in_app_player
+            else -> R.string.open_system_default_player
+        }
+    )
 
     private fun setupMaxBrightness() {
         binding.settingsMaxBrightness.isChecked = config.maxBrightness
         binding.settingsMaxBrightnessHolder.setOnClickListener {
             binding.settingsMaxBrightness.toggle()
             config.maxBrightness = binding.settingsMaxBrightness.isChecked
+        }
+    }
+
+    private fun setupUltraHdrRendering() {
+        binding.settingsUltraHdrRenderingHolder.beVisibleIf(ColorModeHelper.isGainmapSupported())
+        binding.settingsUltraHdrRendering.isChecked = config.ultraHdrRendering
+        binding.settingsUltraHdrRenderingHolder.setOnClickListener {
+            binding.settingsUltraHdrRendering.toggle()
+            config.ultraHdrRendering = binding.settingsUltraHdrRendering.isChecked
         }
     }
 
@@ -612,6 +597,24 @@ class SettingsActivity : SimpleActivity() {
                 settingsChangeColourTopBarHolder.beVisibleIf(!config.scrollHorizontally)
                 settingsHideGroupingBarWhenScrollHolder.beVisibleIf(!config.scrollHorizontally)
             }
+        }
+    }
+
+    private fun setupHideIconsInMenu() = binding.apply {
+        settingsHideIconsInMenuHolder.beVisibleIf(isNewApp())
+        settingsHideIconsInMenu.isChecked = config.hideIconsInMenu
+        settingsHideIconsInMenuHolder.setOnClickListener {
+            settingsHideIconsInMenu.toggle()
+            config.hideIconsInMenu = settingsHideIconsInMenu.isChecked
+        }
+    }
+
+    private fun setupShowSearchBar() = binding.apply {
+        settingsShowSearchBar.isChecked = config.showSearchBar
+        settingsShowSearchBarHolder.setOnClickListener {
+            settingsShowSearchBar.toggle()
+            config.showSearchBar = settingsShowSearchBar.isChecked
+            config.needRestart = true
         }
     }
 
@@ -1172,9 +1175,12 @@ class SettingsActivity : SimpleActivity() {
                 put(TEXT_COLOR, config.textColor)
                 put(BACKGROUND_COLOR, config.backgroundColor)
                 put(PRIMARY_COLOR, config.primaryColor)
+                put(SAVE_PRIMARY_COLOR, config.savePrimaryColor)
                 put(ACCENT_COLOR, config.accentColor)
+                put(IS_USING_ACCENT_COLOR, config.isUsingAccentColor)
                 put(OVERFLOW_ICON, config.overflowIcon)
                 put(APP_ICON_COLOR, config.appIconColor)
+
                 put(USE_ENGLISH, config.useEnglish)
                 put(WAS_USE_ENGLISH_TOGGLED, config.wasUseEnglishToggled)
                 put(WIDGET_BG_COLOR, config.widgetBgColor)
@@ -1191,16 +1197,23 @@ class SettingsActivity : SimpleActivity() {
                 put(AUTOPLAY_VIDEOS, config.autoplayVideos)
                 put(REMEMBER_LAST_VIDEO_POSITION, config.rememberLastVideoPosition)
                 put(LOOP_VIDEOS, config.loopVideos)
-                put(OPEN_VIDEOS_ON_SEPARATE_SCREEN, config.openVideosOnSeparateScreen)
+                put(GESTURE_VIDEO_PLAYER, config.gestureVideoPlayer)
+                put(VIDEO_PLAYER_TYPE, config.videoPlayerType)
                 put(ALLOW_VIDEO_GESTURES, config.allowVideoGestures)
                 put(ANIMATE_GIFS, config.animateGifs)
                 put(CROP_THUMBNAILS, config.cropThumbnails)
                 put(SHOW_THUMBNAIL_VIDEO_DURATION, config.showThumbnailVideoDuration)
                 put(SHOW_THUMBNAIL_FILE_TYPES, config.showThumbnailFileTypes)
                 put(MARK_FAVORITE_ITEMS, config.markFavoriteItems)
+                put(HIDE_ICONS_IN_MENU, config.hideIconsInMenu)
+                put(SHOW_SEARCH_BAR, config.showSearchBar)
+                put(HIDE_TOP_BAR_WHEN_SCROLL, config.hideTopBarWhenScroll)
+                put(HIDE_GROUPING_BAR_WHEN_SCROLLING, config.hideGroupingBarWhenScroll)
+                put(CHANGE_COLOUR_TOP_BAR, config.changeColourTopBar)
                 put(SCROLL_HORIZONTALLY, config.scrollHorizontally)
                 put(ENABLE_PULL_TO_REFRESH, config.enablePullToRefresh)
                 put(MAX_BRIGHTNESS, config.maxBrightness)
+                put(ULTRA_HDR_RENDERING, config.ultraHdrRendering)
                 put(BLACK_BACKGROUND, config.blackBackground)
                 put(HIDE_SYSTEM_UI, config.hideSystemUI)
                 put(ALLOW_INSTANT_CHANGE, config.allowInstantChange)
@@ -1317,7 +1330,9 @@ class SettingsActivity : SimpleActivity() {
                 TEXT_COLOR -> config.textColor = value.toInt()
                 BACKGROUND_COLOR -> config.backgroundColor = value.toInt()
                 PRIMARY_COLOR -> config.primaryColor = value.toInt()
+                SAVE_PRIMARY_COLOR -> config.savePrimaryColor = value.toInt()
                 ACCENT_COLOR -> config.accentColor = value.toInt()
+                IS_USING_ACCENT_COLOR -> config.isUsingAccentColor = value.toBoolean()
                 OVERFLOW_ICON -> config.overflowIcon = value.toInt()
                 APP_ICON_COLOR -> {
                     if (getAppIconColors().contains(value.toInt())) {
@@ -1343,16 +1358,23 @@ class SettingsActivity : SimpleActivity() {
                 AUTOPLAY_VIDEOS -> config.autoplayVideos = value.toBoolean()
                 REMEMBER_LAST_VIDEO_POSITION -> config.rememberLastVideoPosition = value.toBoolean()
                 LOOP_VIDEOS -> config.loopVideos = value.toBoolean()
-                OPEN_VIDEOS_ON_SEPARATE_SCREEN -> config.openVideosOnSeparateScreen = value.toBoolean()
+                GESTURE_VIDEO_PLAYER -> config.gestureVideoPlayer = value.toBoolean()
+                VIDEO_PLAYER_TYPE -> config.videoPlayerType = value.toInt()
                 ALLOW_VIDEO_GESTURES -> config.allowVideoGestures = value.toBoolean()
                 ANIMATE_GIFS -> config.animateGifs = value.toBoolean()
                 CROP_THUMBNAILS -> config.cropThumbnails = value.toBoolean()
                 SHOW_THUMBNAIL_VIDEO_DURATION -> config.showThumbnailVideoDuration = value.toBoolean()
                 SHOW_THUMBNAIL_FILE_TYPES -> config.showThumbnailFileTypes = value.toBoolean()
                 MARK_FAVORITE_ITEMS -> config.markFavoriteItems = value.toBoolean()
+                HIDE_ICONS_IN_MENU -> config.hideIconsInMenu = value.toBoolean()
+                SHOW_SEARCH_BAR -> config.showSearchBar = value.toBoolean()
+                HIDE_TOP_BAR_WHEN_SCROLL -> config.hideTopBarWhenScroll = value.toBoolean()
+                HIDE_GROUPING_BAR_WHEN_SCROLLING -> config.hideGroupingBarWhenScroll = value.toBoolean()
+                CHANGE_COLOUR_TOP_BAR -> config.changeColourTopBar = value.toBoolean()
                 SCROLL_HORIZONTALLY -> config.scrollHorizontally = value.toBoolean()
                 ENABLE_PULL_TO_REFRESH -> config.enablePullToRefresh = value.toBoolean()
                 MAX_BRIGHTNESS -> config.maxBrightness = value.toBoolean()
+                ULTRA_HDR_RENDERING -> config.ultraHdrRendering = value.toBoolean()
                 BLACK_BACKGROUND -> config.blackBackground = value.toBoolean()
                 HIDE_SYSTEM_UI -> config.hideSystemUI = value.toBoolean()
                 ALLOW_INSTANT_CHANGE -> config.allowInstantChange = value.toBoolean()
@@ -1432,17 +1454,26 @@ class SettingsActivity : SimpleActivity() {
 
     private fun setupTipJar() = binding.apply {
         settingsTipJarHolder.apply {
-            beVisibleIf(isPro())
-            background.applyColorFilter(getColoredMaterialStatusBarColor())
+            beVisibleIf(checkPro(false))
+            background.applyColorFilter(getColoredMaterialStatusBarColor().lightenColor(4))
             setOnClickListener {
                 launchPurchase()
             }
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun setupAbout() = binding.apply {
-        settingsAboutVersion.text = "Version: " + BuildConfig.VERSION_NAME
+        val flavorName = BuildConfig.FLAVOR
+        val storeDisplayName = when (flavorName) {
+            "gplay" -> "Google Play"
+            "foss" -> "FOSS"
+            "rustore" -> "RuStore"
+            else -> "Huawei"
+        }
+        val versionName = BuildConfig.VERSION_NAME
+        val fullVersionText = "Version: $versionName ($storeDisplayName)"
+
+        settingsAboutVersion.text = fullVersionText
         settingsAboutHolder.setOnClickListener {
             launchAbout()
         }
@@ -1450,54 +1481,24 @@ class SettingsActivity : SimpleActivity() {
 
     private fun launchPurchase() {
         startPurchaseActivity(
-            R.string.app_name_g,
+            R.string.app_name,
             productIdList = arrayListOf(productIdX1, productIdX2, productIdX3),
             productIdListRu = arrayListOf(productIdX1, productIdX2, productIdX4),
             subscriptionIdList = arrayListOf(subscriptionIdX1, subscriptionIdX2, subscriptionIdX3),
             subscriptionIdListRu = arrayListOf(subscriptionIdX1, subscriptionIdX2, subscriptionIdX3),
             subscriptionYearIdList = arrayListOf(subscriptionYearIdX1, subscriptionYearIdX2, subscriptionYearIdX3),
             subscriptionYearIdListRu = arrayListOf(subscriptionYearIdX1, subscriptionYearIdX2, subscriptionYearIdX3),
-            playStoreInstalled = isPlayStoreInstalled(),
-            ruStoreInstalled = isRuStoreInstalled()
         )
     }
 
-    private fun updatePro(isPro: Boolean = isPro() || isCollection()) {
+    private fun updatePro(isPro: Boolean = checkPro()) {
         binding.apply {
             settingsPurchaseThankYouHolder.beGoneIf(isPro)
             settingsTipJarHolder.beVisibleIf(isPro)
         }
     }
 
-    private fun updateProducts() {
-        val productList: ArrayList<String> =
-            arrayListOf(productIdX1, productIdX2, productIdX4,
-                subscriptionIdX1, subscriptionIdX2, subscriptionIdX3,
-                subscriptionYearIdX1, subscriptionYearIdX2, subscriptionYearIdX3)
-        ruStoreHelper!!.getProducts(productList)
-    }
-
-    private fun handleEventStart(event: StartPurchasesEvent) {
-        when (event) {
-            is StartPurchasesEvent.PurchasesAvailability -> {
-                when (event.availability) {
-                    is FeatureAvailabilityResult.Available -> {
-                        //Process purchases available
-                        updateProducts()
-                        ruStoreIsConnected = true
-                    }
-
-                    is FeatureAvailabilityResult.Unavailable -> {
-                        //toast(event.availability.cause.message ?: "Process purchases unavailable", Toast.LENGTH_LONG)
-                    }
-
-                    else -> {}
-                }
-            }
-
-            is StartPurchasesEvent.Error -> {
-                //toast(event.throwable.message ?: "Process unknown error", Toast.LENGTH_LONG)
-            }
-        }
-    }
+    private fun checkPro(collection: Boolean = resources.getBoolean(R.bool.show_collection)) =
+        if (collection) isPro() || isCollection()
+        else isPro()
 }

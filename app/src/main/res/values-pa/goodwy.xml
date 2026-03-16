@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name_g">Right Gallery</string>
-    <string name="app_launcher_name_g">ਗexclude_folder_description_g">ਇਹ ਵਿਸ਼ੇਸ਼ਤਾ ਸਿਰਫ਼ Right Gallery ਲਈ ਚੁਣੇ ਹੋਏ ਫੋਲਡਰਾਂ ਅਤੇ ਉਹਨਾਂ ਦੇ ਸਬਫੋਲਡਰਾਂ ਨੂੰ ਬਾਹਰ ਕੱਢ ਦੇਵੇਗੀ। ਤੁਸੀਂ ਸੈਟਿੰਗਾਂ ਵਿੱਚ ਬਾਹਰ ਕੱਢੇ ਗਏ ਫੋਲਡਰਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰ ਸਕਦੇ ਹੋ।</string>
     <string name="exclude_folder_description_g">ਇਹ ਚੋਣ ਨੂੰ ਇਸਦੇ ਸਬਫੋਲਡਰਾਂ ਸਮੇਤ ਸਿਰਫ਼ ਸੱਜੇ ਗੈਲਰੀ ਤੋਂ ਬਾਹਰ ਕਰ ਦੇਵੇਗਾ। ਤੁਸੀਂ ਸੈਟਿੰਗਾਂ ਵਿੱਚ ਬਾਹਰ ਕੱਢੇ ਗਏ ਫੋਲਡਰਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰ ਸਕਦੇ ਹੋ।.</string>
     <string name="excluded_activity_placeholder_g">ਫੋਲਡਰਾਂ ਨੂੰ ਬਾਹਰ ਕੱਢਣ ਨਾਲ ਉਹਨਾਂ ਨੂੰ ਅਤੇ ਉਹਨਾਂ ਦੇ ਸਬਫੋਲਡਰਾਂ ਨੂੰ Right Gallery ਵਿੱਚ ਲੁਕਾ ਦਿੱਤਾ ਜਾਵੇਗਾ, ਪਰ ਉਹ ਹੋਰ ਐਪਾਂ ਵਿੱਚ ਦਿਖਾਈ ਦੇਣਗੇ।
 

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name_g">Right Gallery</string>
-    <string name="app_launcher_name_g">ગેલેરી</string>
     <string name="exclude_folder_description_g">આ સુવિધા ફક્ત Right Gallery માટે પસંદ કરેલા ફોલ્ડર્સ અને તેમના સબફોલ્ડર્સને બાકાત રાખશે. તમે સેટિંગ્સમાં બાકાત રાખેલા ફોલ્ડર્સનું સંચાલન કરી શકો છો.</string>
     <string name="excluded_activity_placeholder_g">ફોલ્ડર્સને બાકાત રાખવાથી તેઓ અને તેમના સબફોલ્ડર્સ Right Galleryમાં છુપાઈ જશે, પરંતુ તેઓ અન્ય એપ્લિકેશનોમાં દૃશ્યમાન રહેશે.
 \n

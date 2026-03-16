@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name_g">Right Gallery</string>
-    <string name="app_launcher_name_g">Галерия</string> <!--Not used-->
+    <!--Not used-->
     <string name="exclude_folder_description_g">Това ще изключи селекцията заедно с вътрешните ѝ папки само от Right Gallery. Можете да управлявате изключените папки в Настройки.</string>
     <string name="excluded_activity_placeholder_g">Изключването на папките ще ги скрие, заедно с вътрешните им папки, само в Right Gallery; те ще бъдат видими в други приложения.
 \n

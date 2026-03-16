@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name_g">Right Gallery</string>
-    <string name="app_launcher_name_g">Galeria</string> <!--Not used-->
+    <!--Not used-->
     <string name="exclude_folder_description_g">Esta ação deixará de exibir as pastas selecionadas só neste aplicativo. Você pode gerenciar as pastas ignoradas nas configurações do aplicativo.</string>
     <string name="excluded_activity_placeholder_g">Ignorar uma pasta só deixa de exibí-la nesta galeria. Ela continuará visível para outros aplicativos.\n\nSe você quiser ocultar a pasta para todos os aplicativos, utilize a função Ocultar.</string>
     <string name="faq_1_title_g">Como posso fazer do Right Gallery a galeria padrão do dispositivo\?</string>

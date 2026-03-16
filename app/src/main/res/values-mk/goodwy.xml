@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name_g">Right Gallery</string>
-    <string name="app_launcher_name_g">Галерија</string>
     <string name="exclude_folder_description_g">Оваа функција ќе ги исклучи избраните папки и нивните подпапки само за Right Gallery. Можете да управувате со исклучените папки во Поставки.</string>
     <string name="excluded_activity_placeholder_g">Исклучувањето на папките ќе ги скрие нив и нивните подпапки во Right Gallery, но тие ќе останат видливи во други апликации.
 

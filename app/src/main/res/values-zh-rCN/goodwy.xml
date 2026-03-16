@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name_g">Right Gallery</string>
-    <string name="app_launcher_name_g">图库</string> <!--Not used-->
+    <!--Not used-->
     <string name="exclude_folder_description_g">该操作仅会在“Right Gallery”中排除显示选定的文件夹及其子文件夹。您可以在设置中管理排除的文件夹。</string>
     <string name="excluded_activity_placeholder_g">排除此文件夹将使它们与其子文件夹在“Right Gallery”中隐身，但它们仍将在其他应用程序中可见。
 \n
@@ -13,7 +12,7 @@
     <!-- Grouping at media thumbnails -->
     <string name="years">年</string>
     <string name="months">月</string>
-    <string name="days">天</string>
+    <string name="days">日</string>
     <string name="all_photos">所有照片</string>
     <string name="by_last_modified_yearly_g">最后修改时间 (每年)</string>
     <string name="by_date_taken_yearly_g">拍摄时间 (每年)</string>

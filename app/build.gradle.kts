@@ -5,7 +5,6 @@ import java.io.FileInputStream
 
 plugins {
     alias(libs.plugins.android)
-    alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.ksp)
     alias(libs.plugins.detekt)
 }
@@ -26,6 +25,11 @@ fun hasSigningVars(): Boolean {
         && providers.environmentVariable("SIGNING_STORE_PASSWORD").orNull != null
 }
 
+base {
+    val versionCode = project.property("VERSION_CODE").toString().toInt()
+    archivesName = "gallery-$versionCode"
+}
+
 android {
     compileSdk = project.libs.versions.app.build.compileSDKVersion.get().toInt()
 
@@ -35,7 +39,6 @@ android {
         targetSdk = project.libs.versions.app.build.targetSDK.get().toInt()
         versionName = project.property("VERSION_NAME").toString()
         versionCode = project.property("VERSION_CODE").toString().toInt()
-        setProperty("archivesBaseName", "gallery-$versionCode")
         buildConfigField("String", "PRODUCT_ID_X1", "\"${properties["PRODUCT_ID_X1"]}\"")
         buildConfigField("String", "PRODUCT_ID_X2", "\"${properties["PRODUCT_ID_X2"]}\"")
         buildConfigField("String", "PRODUCT_ID_X3", "\"${properties["PRODUCT_ID_X3"]}\"")
@@ -90,14 +93,15 @@ android {
         }
     }
 
-    flavorDimensions.add("licensing")
+    flavorDimensions += "distribution"
     productFlavors {
-        register("foss")
-        register("gplay")
+        create("gplay") { dimension = "distribution" }
+        create("foss") { dimension = "distribution" }
+        create("rustore") { dimension = "distribution" }
     }
 
     sourceSets {
-        getByName("main").java.srcDirs("src/main/kotlin")
+        getByName("main").java.directories.add("src/main/kotlin")
     }
 
     compileOptions {
@@ -153,10 +157,13 @@ detekt {
 }
 
 dependencies {
+    implementation(libs.androidx.print)
     implementation(libs.android.image.cropper)
     implementation(libs.exif)
     implementation(libs.android.gif.drawable)
+    implementation(libs.androidx.lifecycle.runtime)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.documentfile)
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.sanselan)
     implementation(libs.androidphotofilters)
@@ -185,8 +192,9 @@ dependencies {
     detektPlugins(libs.compose.detekt)
 
     //Goodwy
-    implementation(libs.goodwy.commons)
+    "gplayImplementation"(libs.goodwy.commons.gplay)
+    "fossImplementation"(libs.goodwy.commons.foss)
+    "rustoreImplementation"(libs.goodwy.commons.rustore)
     implementation(libs.behavio.rule)
     implementation(libs.rx.animation)
-    implementation(libs.bundles.lifecycle)
 }

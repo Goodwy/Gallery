@@ -1,22 +1,43 @@
 package com.goodwy.gallery.dialogs
 
 import android.graphics.Color
-import android.view.KeyEvent.ACTION_UP
-import android.view.KeyEvent.KEYCODE_BACK
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.goodwy.commons.activities.BaseSimpleActivity
 import com.goodwy.commons.dialogs.FilePickerDialog
-import com.goodwy.commons.extensions.*
+import com.goodwy.commons.extensions.baseConfig
+import com.goodwy.commons.extensions.beGone
+import com.goodwy.commons.extensions.beInvisible
+import com.goodwy.commons.extensions.beVisibleIf
+import com.goodwy.commons.extensions.getAlertDialogBuilder
+import com.goodwy.commons.extensions.getDefaultCopyDestinationPath
+import com.goodwy.commons.extensions.getProperPrimaryColor
+import com.goodwy.commons.extensions.getSurfaceColor
+import com.goodwy.commons.extensions.handleHiddenFolderPasswordProtection
+import com.goodwy.commons.extensions.handleLockedFolderOpening
+import com.goodwy.commons.extensions.hideKeyboard
+import com.goodwy.commons.extensions.isBlackTheme
+import com.goodwy.commons.extensions.isDynamicTheme
+import com.goodwy.commons.extensions.isGone
+import com.goodwy.commons.extensions.isInDownloadDir
+import com.goodwy.commons.extensions.isRestrictedWithSAFSdk30
+import com.goodwy.commons.extensions.setupDialogStuff
+import com.goodwy.commons.extensions.toast
 import com.goodwy.commons.helpers.VIEW_TYPE_GRID
 import com.goodwy.commons.views.MyGridLayoutManager
 import com.goodwy.commons.views.MySearchMenuTop
 import com.goodwy.gallery.R
 import com.goodwy.gallery.adapters.DirectoryAdapter
 import com.goodwy.gallery.databinding.DialogDirectoryPickerBinding
-import com.goodwy.gallery.extensions.*
+import com.goodwy.gallery.extensions.addTempFolderIfNeeded
+import com.goodwy.gallery.extensions.config
+import com.goodwy.gallery.extensions.getCachedDirectories
+import com.goodwy.gallery.extensions.getDirsToShow
+import com.goodwy.gallery.extensions.getDistinctPath
+import com.goodwy.gallery.extensions.getSortedDirectories
 import com.goodwy.gallery.models.Directory
 
 class PickDirectoryDialog(
@@ -39,7 +60,7 @@ class PickDirectoryDialog(
     private val config = activity.config
     private val searchView = binding.folderSearchView
     private val searchEditText = searchView.binding.topToolbarSearch
-    private val searchViewAppBarLayout = searchView.binding.topAppBarLayout
+    private val searchBarContainer = searchView.binding.searchBarContainer
 
     init {
         (binding.directoriesGrid.layoutManager as MyGridLayoutManager).apply {
@@ -54,14 +75,6 @@ class PickDirectoryDialog(
         val builder = activity.getAlertDialogBuilder()
             .setPositiveButton(com.goodwy.commons.R.string.ok, null)
             .setNegativeButton(com.goodwy.commons.R.string.cancel, null)
-            .setOnKeyListener { dialogInterface, i, keyEvent ->
-                return@setOnKeyListener if (keyEvent.action == ACTION_UP && i == KEYCODE_BACK) {
-                    backPressed()
-                    true
-                } else {
-                    false
-                }
-            }
 
         if (showOtherFolderButton) {
             builder.setNeutralButton(R.string.other_folder) { dialogInterface, i -> showOtherFolder() }
@@ -76,6 +89,24 @@ class PickDirectoryDialog(
                         binding.directoriesShowHidden.beGone()
                         showHidden = true
                         fetchDirectories(true)
+                    }
+                }
+
+                alertDialog.onBackPressedDispatcher.addCallback(alertDialog) {
+                    if (searchView.isSearchOpen) {
+                        searchView.closeSearch()
+                    } else if (activity.config.groupDirectSubfolders) {
+                        if (currentPathPrefix.isEmpty()) {
+                            isEnabled = false
+                            alertDialog.onBackPressedDispatcher.onBackPressed()
+                        } else {
+                            openedSubfolders.removeAt(openedSubfolders.lastIndex)
+                            currentPathPrefix = openedSubfolders.last()
+                            gotDirectories(allDirectories)
+                        }
+                    } else {
+                        isEnabled = false
+                        alertDialog.onBackPressedDispatcher.onBackPressed()
                     }
                 }
             }
@@ -95,10 +126,16 @@ class PickDirectoryDialog(
     }
 
     private fun MySearchMenuTop.updateSearchViewUi() {
-        getToolbar().beInvisible()
-        updateColors()
+        requireToolbar().beInvisible()
+
+        val backgroundColor = when {
+            context.isDynamicTheme() -> resources.getColor(com.goodwy.commons.R.color.you_dialog_background_color, context.theme)
+            context.isBlackTheme() -> context.getSurfaceColor()
+            else -> context.baseConfig.backgroundColor
+        }
+        updateColors(background = backgroundColor)
         setBackgroundColor(Color.TRANSPARENT)
-        searchViewAppBarLayout.setBackgroundColor(Color.TRANSPARENT)
+//        searchBarContainer.setBackgroundColor(Color.TRANSPARENT)
     }
 
     private fun MySearchMenuTop.setSearchViewListeners() {
@@ -173,12 +210,12 @@ class PickDirectoryDialog(
     private fun showOtherFolder() {
         activity.hideKeyboard(searchEditText)
         FilePickerDialog(
-            activity,
-            activity.getDefaultCopyDestinationPath(showHidden, sourcePath),
-            !isPickingCopyMoveDestination && !isPickingFolderForWidget,
-            showHidden,
-            true,
-            true
+            activity = activity,
+            currPath = activity.getDefaultCopyDestinationPath(showHidden, sourcePath),
+            pickFile = !isPickingCopyMoveDestination && !isPickingFolderForWidget,
+            showHidden = showHidden,
+            showFAB = true,
+            canAddShowHiddenButton = true
         ) {
             config.lastCopyPath = it
             activity.handleLockedFolderOpening(it) { success ->
@@ -232,22 +269,6 @@ class PickDirectoryDialog(
         binding.apply {
             directoriesGrid.adapter = adapter
             directoriesFastscroller.setScrollVertically(!scrollHorizontally)
-        }
-    }
-
-    private fun backPressed() {
-        if (searchView.isSearchOpen) {
-            searchView.closeSearch()
-        } else if (activity.config.groupDirectSubfolders) {
-            if (currentPathPrefix.isEmpty()) {
-                dialog?.dismiss()
-            } else {
-                openedSubfolders.removeAt(openedSubfolders.lastIndex)
-                currentPathPrefix = openedSubfolders.last()
-                gotDirectories(allDirectories)
-            }
-        } else {
-            dialog?.dismiss()
         }
     }
 }

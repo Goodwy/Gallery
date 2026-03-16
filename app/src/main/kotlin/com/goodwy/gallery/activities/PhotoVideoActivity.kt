@@ -3,14 +3,13 @@ package com.goodwy.gallery.activities
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Html
 import android.view.View
-import android.widget.RelativeLayout
+import androidx.core.graphics.drawable.toDrawable
+import com.google.android.material.appbar.AppBarLayout
 import androidx.media3.common.util.UnstableApi
 import com.goodwy.commons.dialogs.PropertiesDialog
 import com.goodwy.commons.extensions.*
@@ -26,12 +25,13 @@ import com.goodwy.gallery.helpers.*
 import com.goodwy.gallery.models.Medium
 import java.io.File
 
-open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentListener {
+open class PhotoVideoActivity : BaseViewerActivity(), ViewPagerFragment.FragmentListener {
     private var mMedium: Medium? = null
     private var mIsFullScreen = false
     private var mIsFromGallery = false
     private var mFragment: ViewPagerFragment? = null
     private var mUri: Uri? = null
+    private var mOriginalBrightness: Float? = null
 
     var mIsVideo = false
 
@@ -40,10 +40,20 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
 
     private val binding by viewBinding(FragmentHolderBinding::inflate)
 
+    override val contentHolder: View
+        get() = binding.fragmentHolder
+
+    override val appBarLayout: AppBarLayout
+        get() = binding.fragmentViewerAppbar
+
     public override fun onCreate(savedInstanceState: Bundle?) {
-        showTransparentTop = true
         super.onCreate(savedInstanceState)
+        updateSystemBarsAppearance = false
+
         setContentView(binding.root)
+        setupEdgeToEdge(
+            padBottomSystem = listOf(binding.bottomActions.bottomActionsWrapper),
+        )
         if (checkAppSideloading()) {
             return
         }
@@ -63,19 +73,10 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
 
     override fun onResume() {
         super.onResume()
-
-        if (config.bottomActions) {
-            window.navigationBarColor = Color.TRANSPARENT
-        } else {
-            setTranslucentNavigation()
+        if (config.blackBackground) {
+            binding.fragmentHolder.background = Color.BLACK.toDrawable()
+            window.setSystemBarsAppearance(Color.BLACK)
         }
-//
-//        if (config.blackBackground) {
-//            updateStatusbarColor(Color.BLACK)
-//        }
-
-        window.updateStatusBarForegroundColor(Color.BLACK)
-        window.updateNavigationBarForegroundColor(Color.BLACK)
     }
 
     override fun onDestroy() {
@@ -86,15 +87,6 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         initBottomActionsLayout()
-
-        binding.topShadow.layoutParams.height = statusBarHeight + actionBarHeight
-        binding.fragmentViewerToolbar.layoutParams.height = actionBarHeight
-        (binding.fragmentViewerAppbar.layoutParams as RelativeLayout.LayoutParams).topMargin = statusBarHeight
-        if (!portrait && navigationBarOnSide && navigationBarWidth > 0) {
-            binding.fragmentViewerToolbar.setPadding(0, 0, navigationBarWidth, 0)
-        } else {
-            binding.fragmentViewerToolbar.setPadding(0, 0, 0, 0)
-        }
     }
 
     fun refreshMenuItems() {
@@ -114,8 +106,6 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
     }
 
     private fun setupOptionsMenu() {
-        (binding.fragmentViewerAppbar.layoutParams as RelativeLayout.LayoutParams).topMargin = statusBarHeight
-
         val primaryColor = getProperPrimaryColor()
         val white = Color.WHITE
         val iconColor = if (baseConfig.topAppBarColorIcon) primaryColor else white
@@ -172,8 +162,8 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
 
         var filename = getFilenameFromUri(mUri!!)
         mIsFromGallery = intent.getBooleanExtra(IS_FROM_GALLERY, false)
-        if (mIsFromGallery && filename.isVideoFast() && config.openVideosOnSeparateScreen) {
-            launchVideoPlayer()
+        if (mIsFromGallery && filename.isVideoFast() && config.gestureVideoPlayer) {
+            launchGesturePlayer()
             return
         }
 
@@ -222,16 +212,7 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
             }
         }
 
-        binding.topShadow.layoutParams.height = statusBarHeight + actionBarHeight
-        binding.fragmentViewerToolbar.layoutParams.height = actionBarHeight
-        if (!portrait && navigationBarOnSide && navigationBarWidth > 0) {
-            binding.fragmentViewerToolbar.setPadding(0, 0, navigationBarWidth, 0)
-        } else {
-            binding.fragmentViewerToolbar.setPadding(0, 0, 0, 0)
-        }
-
-        checkNotchSupport()
-        showSystemUI(true)
+        showSystemUI()
         val bundle = Bundle()
         val file = File(mUri.toString())
         val intentType = intent.type ?: ""
@@ -262,25 +243,15 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
         updatePlayPause(!isPlaying)
 
         if (config.blackBackground) {
-            binding.fragmentHolder.background = ColorDrawable(Color.BLACK)
+            binding.fragmentHolder.background = Color.BLACK.toDrawable()
         }
 
-        if (config.maxBrightness) {
-            val attributes = window.attributes
-            attributes.screenBrightness = 1f
-            window.attributes = attributes
-        }
-
-        window.decorView.setOnSystemUiVisibilityChangeListener { visibility ->
-            val isFullscreen = visibility and View.SYSTEM_UI_FLAG_FULLSCREEN != 0
-            mFragment?.fullscreenToggled(isFullscreen)
-        }
-
+        mOriginalBrightness = window.updateBrightness(config.maxBrightness, mOriginalBrightness)
         refreshMenuItems()
         initBottomActions()
     }
 
-    private fun launchVideoPlayer() {
+    private fun launchGesturePlayer() {
         val newUri = getFinalUriFromPath(mUri.toString(), BuildConfig.APPLICATION_ID)
         if (newUri == null) {
             toast(com.goodwy.commons.R.string.unknown_error_occurred)
@@ -366,7 +337,6 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
     }
 
     private fun initBottomActionsLayout() {
-        binding.bottomActions.root.layoutParams.height = resources.getDimension(R.dimen.bottom_actions_height).toInt() + navigationBarHeight
         if (config.bottomActions) {
             binding.bottomActions.root.beVisible()
         } else {
@@ -442,11 +412,8 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
 
     override fun fragmentClicked() {
         mIsFullScreen = !mIsFullScreen
-        if (mIsFullScreen) {
-            hideSystemUI(true)
-        } else {
-            showSystemUI(true)
-        }
+        if (mIsFullScreen) hideSystemUI() else showSystemUI()
+        mFragment?.fullscreenToggled(mIsFullScreen)
 
         val newAlpha = if (mIsFullScreen) 0f else 1f
         binding.topShadow.animate().alpha(newAlpha).start()
@@ -470,6 +437,8 @@ open class PhotoVideoActivity : SimpleActivity(), ViewPagerFragment.FragmentList
     override fun launchViewVideoIntent(path: String) {}
 
     override fun isSlideShowActive() = false
+
+    override fun isFullScreen() = mIsFullScreen
 
     override fun updatePlayPause(play: Boolean) {
         if (play) {

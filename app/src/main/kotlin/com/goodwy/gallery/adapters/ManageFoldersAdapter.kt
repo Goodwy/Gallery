@@ -1,7 +1,7 @@
 package com.goodwy.gallery.adapters
 
 import android.view.*
-import android.widget.PopupMenu
+import androidx.appcompat.widget.PopupMenu
 import com.goodwy.commons.activities.BaseSimpleActivity
 import com.goodwy.commons.adapters.MyRecyclerViewAdapter
 import com.goodwy.commons.extensions.getPopupMenuTheme

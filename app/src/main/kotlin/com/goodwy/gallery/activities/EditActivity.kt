@@ -12,12 +12,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
-import android.view.View
 import android.widget.ImageView
-import android.widget.RelativeLayout
-import androidx.core.view.isInvisible
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.graphics.scale
+import androidx.core.net.toUri
+import androidx.core.graphics.drawable.toDrawable
 import androidx.exifinterface.media.ExifInterface
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -56,16 +56,12 @@ import com.goodwy.gallery.interfaces.CanvasListener
 import com.goodwy.gallery.models.FilterItem
 import com.zomato.photofilters.FilterPack
 import com.zomato.photofilters.imageprocessors.Filter
-import java.io.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 import kotlin.math.max
-import kotlinx.coroutines.*
-import androidx.core.graphics.scale
-import androidx.core.net.toUri
-import androidx.core.graphics.drawable.toDrawable
-import com.goodwy.gallery.extensions.readExif
-import com.goodwy.gallery.extensions.showContentDescriptionOnLongClick
 
-class EditActivity : SimpleActivity(), CanvasListener {
+class EditActivity : BaseCropActivity(), CanvasListener {
     companion object {
         init {
             System.loadLibrary("NativeImageProcessor")
@@ -102,16 +98,28 @@ class EditActivity : SimpleActivity(), CanvasListener {
     private var oldExif: ExifInterface? = null
     private var filterInitialBitmap: Bitmap? = null
     private var originalUri: Uri? = null
-    private var bitmapCroppingJob: Job? = null
     private var isEraserOn = false
     private var isEyeDropperOn = false
     private val binding by viewBinding(ActivityEditBinding::inflate)
 
     private var overwriteRequested = false
 
+    override val cropImageView: CropImageView
+        get() = binding.cropImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        isCropIntent = intent.extras?.get(CROP) == "true"
+        setupEdgeToEdge(
+            padBottomSystem = listOf(
+                if (isCropIntent) {
+                    binding.bottomEditorCropRotateActions.root
+                } else {
+                    binding.bottomEditorPrimaryActions.root
+                }
+            )
+        )
 
 //        if (config.blackBackground) {
             binding.editorCoordinator.background = Color.BLACK.toDrawable() //TODO always black background
@@ -144,8 +152,7 @@ class EditActivity : SimpleActivity(), CanvasListener {
         val getProperPrimaryColor = getProperPrimaryColor()
         binding.bottomEditorDrawActions.bottomDrawWidth.setColors(getProperTextColor(), getProperPrimaryColor(), Color.WHITE) //getProperTextColor(), getProperPrimaryColor(), getProperBackgroundColor()
         setupToolbar(binding.editorToolbar, NavigationIcon.Arrow, Color.BLACK)
-        updateNavigationBarColor(Color.BLACK)
-        updateStatusbarColor(Color.BLACK)
+        setupTopAppBar(binding.editorAppbar, NavigationIcon.Arrow, topBarColor = Color.BLACK)
 
         if (baseConfig.topAppBarColorIcon) {
             binding.bottomEditorPrimaryActions.bottomPrimaryCancel.setTextColor(getProperPrimaryColor)
@@ -225,10 +232,15 @@ class EditActivity : SimpleActivity(), CanvasListener {
             else -> uri!!
         }
 
-        isCropIntent = extras?.get(CROP) == "true"
         if (isCropIntent) {
             binding.bottomEditorPrimaryActions.root.beGone()
-            (binding.bottomEditorCropRotateActions.root.layoutParams as RelativeLayout.LayoutParams).addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 1)
+
+            val params = binding.bottomEditorCropRotateActions.root.layoutParams as? ConstraintLayout.LayoutParams
+            if (params != null) {
+                params.bottomToBottom = binding.activityEditHolder.id
+                binding.bottomEditorCropRotateActions.root.layoutParams = params
+            }
+
             binding.editorToolbar.menu.findItem(R.id.overwrite_original).isVisible = false
         }
 
@@ -310,7 +322,7 @@ class EditActivity : SimpleActivity(), CanvasListener {
                     dataSource: DataSource,
                     isFirstResource: Boolean
                 ): Boolean {
-                    ColorModeHelper.setColorModeForImage(this@EditActivity, bitmap)
+                    ColorModeHelper.setColorModeForImage(this@EditActivity, bitmap, config.ultraHdrRendering)
                     val currentFilter = getFiltersAdapter()?.getCurrentFilter()
                     if (filterInitialBitmap == null) {
                         if (!isCropIntent) bottomFilterClicked() // TODO Edit Default open
@@ -420,7 +432,7 @@ class EditActivity : SimpleActivity(), CanvasListener {
         overwriteRequested = overwrite
         setOldExif()
         when {
-            binding.cropImageView.isVisible() -> saveCroppedImage()
+            binding.cropImageView.isVisible() -> cropImage()
             binding.editorDrawCanvas.isVisible() -> saveDrawnImage()
             else -> saveFilteredImage(overwrite)
         }
@@ -433,28 +445,8 @@ class EditActivity : SimpleActivity(), CanvasListener {
         )
     }
 
-    private fun setCropProgressBarVisibility(visible: Boolean) {
-        binding.cropImageView
-            .findViewById<View>(com.canhub.cropper.R.id.CropProgressBar)
-            ?.isInvisible = visible.not()
-    }
-
-    private fun saveCroppedImage() {
-        setCropProgressBarVisibility(true)
-        bitmapCroppingJob?.cancel()
-        bitmapCroppingJob = lifecycleScope.launch(CoroutineExceptionHandler { _, t ->
-            onImageCropped(bitmap = null, error = Exception(t))
-        }) {
-            val bitmap = withContext(Dispatchers.Default) {
-                binding.cropImageView.getCroppedImage()
-            }
-            onImageCropped(bitmap, null)
-        }.apply {
-            invokeOnCompletion { setCropProgressBarVisibility(false) }
-        }
-    }
-
-    private fun onImageCropped(bitmap: Bitmap?, error: Exception?) {
+    override fun onImageCropped(bitmap: Bitmap?, error: Exception?) {
+        if (isFinishing || isDestroyed) return
         if (error != null || bitmap == null) {
             toast("${getString(R.string.image_editing_failed)}: ${error?.message}")
             return
@@ -491,11 +483,12 @@ class EditActivity : SimpleActivity(), CanvasListener {
     }
 
     private fun withFilteredImage(callback: (Bitmap) -> Unit) {
-        val currentFilter = getFiltersAdapter()?.getCurrentFilter() ?: return
+        val currentFilter = getFiltersAdapter()?.getCurrentFilter()?.filter ?: return
+        freeMemory()
         ensureBackgroundThread {
             try {
                 val original = getOriginalBitmap()
-                currentFilter.filter.processFilter(original)
+                currentFilter.processFilter(original)
                 callback(original)
             } catch (_: OutOfMemoryError) {
                 toast(com.goodwy.commons.R.string.out_of_memory_error)
@@ -505,13 +498,11 @@ class EditActivity : SimpleActivity(), CanvasListener {
 
     private fun saveFilteredImage(overwrite: Boolean) {
         if (overwrite) {
-            freeMemory()
             withFilteredImage {
                 saveBitmap(true, it)
             }
         } else {
             resolveSaveAsPath { path ->
-                freeMemory()
                 withFilteredImage {
                     saveBitmapToPath(it, path, showSavingToast = true)
                 }
@@ -537,7 +528,7 @@ class EditActivity : SimpleActivity(), CanvasListener {
                 binding.cropImageView.isVisible() -> {
                     isSharingBitmap = true
                     runOnUiThread {
-                        saveCroppedImage()
+                        cropImage()
                     }
                 }
 
@@ -942,7 +933,8 @@ class EditActivity : SimpleActivity(), CanvasListener {
 
     private fun updateDrawColor(color: Int) {
         drawColor = color
-//        binding.bottomEditorDrawActions.bottomDrawColor.applyColorFilter(color)
+//        binding.bottomEditorDrawActions.bottomDrawColor
+//            .setFillWithStroke(color, getProperBackgroundColor())
         getBrushPreviewView().setColor(drawColor)
         getBrushIconPreviewView().setColor(drawColor)
         config.lastEditorDrawColor = color
@@ -959,7 +951,7 @@ class EditActivity : SimpleActivity(), CanvasListener {
         ResizeDialog(this, point) {
             resizeWidth = it.x
             resizeHeight = it.y
-            saveCroppedImage()
+            cropImage()
         }
     }
 

@@ -36,6 +36,7 @@ class WidgetConfigureActivity : SimpleActivity() {
         super.onCreate(savedInstanceState)
         setResult(RESULT_CANCELED)
         setContentView(binding.root)
+        setupEdgeToEdge(padTopSystem = listOf(binding.configHolder), padBottomSystem = listOf(binding.root))
         initVariables()
 
         mWidgetId = intent.extras?.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID) ?: AppWidgetManager.INVALID_APPWIDGET_ID
@@ -44,7 +45,6 @@ class WidgetConfigureActivity : SimpleActivity() {
             finish()
         }
 
-        binding.folderPickerHolder.background.applyColorFilter(getProperBackgroundColor())
         binding.configTextColorHolder.beVisibleIf(config.showWidgetFolderName)
 
         binding.configSave.setOnClickListener { saveConfig() }

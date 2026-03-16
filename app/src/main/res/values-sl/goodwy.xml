@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name_g">Right Gallery</string>
-    <string name="app_launcher_name_g">Galerija</string> <!--Not used-->
+    <!--Not used-->
     <string name="exclude_folder_description_g">Izbira bo skupaj s podmapami izključena zgolj iz te Galerije. Izključene mape lahko urejate v Nastavitvah.</string>
     <string name="excluded_activity_placeholder_g">Izključevanje map jih bo skupaj s podmapami skrilo zgolj v tej Galeriji, v ostalih aplikacijah bodo normalno vidne.
 \n

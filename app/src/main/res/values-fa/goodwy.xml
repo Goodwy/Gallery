@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name_g">Right Gallery</string>
-    <string name="app_launcher_name_g">گالری</string> <!--Not used-->
+    <!--Not used-->
     <string name="exclude_folder_description_g">این کار، پوشه‌های انتخاب شده را به همراه زیرپوشه‌هایش فقط از گالری سمت راست حذف می‌کند. می‌توانید پوشه‌های حذف شده را در تنظیمات مدیریت کنید.</string>
     <string name="excluded_activity_placeholder_g">حذف پوشه‌ها، آنها را به همراه زیرپوشه‌هایشان فقط در گالری سمت راست پنهان می‌کند، و همچنان در برنامه‌های دیگر قابل مشاهده خواهند بود.\n\nاگر می‌خواهید آنها را از برنامه‌های دیگر نیز پنهان کنید، از تابع Hide استفاده کنید.</string>
     <string name="faq_1_title_g">چگونه می‌توانم گالری سمت راست را به گالری پیش‌فرض دستگاه تبدیل کنم؟</string>

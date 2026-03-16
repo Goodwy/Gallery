@@ -33,8 +33,6 @@
         android:name="android.permission.CAMERA"
         tools:node="remove" />
 
-    <uses-permission android:name="com.android.vending.BILLING" />
-
     <queries>
         <package android:name="com.goodwy.dialer.debug" />
         <package android:name="com.goodwy.dialer" />
@@ -132,6 +130,16 @@
                 <data android:mimeType="image/*" />
                 <data android:mimeType="video/*" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.provider.action.REVIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="image/*" />
+                <data android:mimeType="video/*" />
+            </intent-filter>
         </activity>
 
         <activity
@@ -213,6 +221,18 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:mimeType="image/*" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="content" />
+                <data android:host="*" />
+                <data android:pathPattern=".*\\.jxl" />
+                <data android:mimeType="application/octet-stream" />
             </intent-filter>
         </activity>
 

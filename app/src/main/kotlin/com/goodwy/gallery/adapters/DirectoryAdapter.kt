@@ -217,7 +217,7 @@ class DirectoryAdapter(
     }
 
     private fun moveSelectedItemsToTop() {
-        selectedKeys.toList().reversed().forEach { key ->
+        selectedKeys.toMutableList().reversed().forEach { key ->
             val position = dirs.indexOfFirst { it.path.hashCode() == key }
             val tempItem = dirs[position]
             dirs.removeAt(position)

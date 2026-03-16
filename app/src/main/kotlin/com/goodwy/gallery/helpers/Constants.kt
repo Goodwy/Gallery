@@ -1,6 +1,8 @@
 package com.goodwy.gallery.helpers
 
 import com.goodwy.commons.helpers.*
+import com.goodwy.commons.models.Release
+import com.goodwy.gallery.R
 
 // shared preferences
 const val DIRECTORY_SORT_ORDER = "directory_sort_order"
@@ -17,9 +19,11 @@ const val AUTOPLAY_VIDEOS = "autoplay_videos"
 const val REMEMBER_LAST_VIDEO_POSITION = "remember_last_video_position"
 const val LOOP_VIDEOS = "loop_videos"
 const val MUTE_VIDEOS = "mute_videos"
-const val OPEN_VIDEOS_ON_SEPARATE_SCREEN = "open_videos_on_separate_screen"
+const val GESTURE_VIDEO_PLAYER = "open_videos_on_separate_screen"
+const val VIDEO_PLAYER_TYPE = "video_player_type"
 const val ANIMATE_GIFS = "animate_gifs"
 const val MAX_BRIGHTNESS = "max_brightness"
+const val ULTRA_HDR_RENDERING = "ultra_hdr_rendering"
 const val PLAYBACK_SPEED = "playback_speed"
 const val PLAYBACK_SPEED_PROGRESS = "playback_speed_progress"
 const val CROP_THUMBNAILS = "crop_thumbnails"
@@ -173,6 +177,10 @@ const val ROTATE_BY_SYSTEM_SETTING = 0
 const val ROTATE_BY_DEVICE_ROTATION = 1
 const val ROTATE_BY_ASPECT_RATIO = 2
 
+// video player type
+const val VIDEO_PLAYER_APP = 0
+const val VIDEO_PLAYER_SYSTEM = 1
+
 // file loading priority
 const val PRIORITY_SPEED = 0
 const val PRIORITY_COMPROMISE = 1
@@ -290,3 +298,14 @@ const val TAB_TWO = 2
 const val TAB_THREE = 4
 const val TAB_FOUR = 8
 val tabsList = arrayListOf(TAB_ONE, TAB_TWO, TAB_THREE, TAB_FOUR)
+
+fun whatsNewList(): ArrayList<Release> {
+    return arrayListOf<Release>().apply {
+        add(Release(504, R.string.release_504))
+        add(Release(600, R.string.release_600))
+        add(Release(601, R.string.release_601))
+        add(Release(650, R.string.release_650))
+        add(Release(700, R.string.release_700))
+        add(Release(820, R.string.release_820))
+    }
+}

@@ -5,10 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.goodwy.commons.views.MySearchMenu
-        android:id="@+id/main_menu"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
+
+        <com.goodwy.commons.views.MySearchMenu
+            android:id="@+id/main_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlways" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <RelativeLayout
         android:id="@+id/directories_holder"
