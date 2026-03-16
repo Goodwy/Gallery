@@ -11,4 +11,6 @@ interface DirectoryOperationsListener {
     fun recheckPinnedFolders()
 
     fun updateDirectories(directories: ArrayList<Directory>)
+
+    fun excludeDirectories(paths: Set<String>)
 }

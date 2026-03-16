@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.speech.RecognizerIntent
 import android.view.MenuItem
 import android.view.View
@@ -67,8 +68,8 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     private var mLastSearchedText = ""
     private var mLatestMediaId = 0L
     private var mLatestMediaDateId = 0L
-    private var mLastMediaHandler = Handler()
-    private var mTempShowHiddenHandler = Handler()
+    private var mLastMediaHandler = Handler(Looper.getMainLooper())
+    private var mTempShowHiddenHandler = Handler(Looper.getMainLooper())
     private var mCurrAsyncTask: GetMediaAsynctask? = null
     private var mZoomListener: MyRecyclerView.MyZoomListener? = null
 
@@ -141,6 +142,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         }
 
         updateWidgets()
+        maybeRunMediaDbMaintenance()
         setupTabs()
 
         if (!scrollHorizontally) {
@@ -527,11 +529,6 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 //                }
 //            }
 
-            if (mShowLoadingIndicator) {
-                binding.loadingIndicator.show()
-                mShowLoadingIndicator = false
-            }
-
             binding.mediaMenu.updateTitle(if (mShowAll) resources.getString(com.goodwy.strings.R.string.library) else dirName)
             binding.mediaMenu.searchBeVisibleIf(config.showSearchBar)
             getMedia()
@@ -556,7 +553,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                 isAGetIntent = mIsGetImageIntent || mIsGetVideoIntent || mIsGetAnyIntent,
                 allowMultiplePicks = mAllowPickingMultiple,
                 path = mPath,
-                recyclerView = binding.mediaGrid,
+                mediaRecyclerView = binding.mediaGrid,
                 swipeRefreshLayout = binding.mediaRefreshLayout
             ) {
                 if (it is Medium && !isFinishing) {
@@ -779,6 +776,11 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
         if (mLoadedInitialPhotos) {
             startAsyncTask()
         } else {
+            // Show spinner optimistically; hide immediately if cache has data
+            if (mShowLoadingIndicator) {
+                binding.loadingIndicator.show()
+                mShowLoadingIndicator = false
+            }
             getCachedMedia(
                 mPath,
                 mIsGetVideoIntent && !mIsGetImageIntent,
@@ -1123,7 +1125,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 
     private fun gotMedia(media: ArrayList<ThumbnailItem>, isFromCache: Boolean) {
         mIsGettingMedia = false
-        checkLastMediaChanged()
+        if (!isFromCache) checkLastMediaChanged()
         mMedia = media
 
         runOnUiThread {
@@ -1136,7 +1138,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                 binding.mediaEmptyTextPlaceholder.text = getString(R.string.no_media_with_filters)
             }
             binding.mediaFastscroller.beVisibleIf(binding.mediaEmptyTextPlaceholder.isGone())
-            if (!isFromCache) setupAdapter()
+            setupAdapter()
         }
 
         mLatestMediaId = getLatestMediaId()
@@ -1262,10 +1264,10 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     private fun setupTabsColor() {
         val tabBackground = when {
             isDynamicTheme() && !isSystemInDarkMode() -> getProperBackgroundColor()
-            isLightTheme() -> resources.getColor(R.color.tab_background_light)
-            isGrayTheme() -> resources.getColor(R.color.tab_background_gray)
-            isDarkTheme() -> resources.getColor(R.color.tab_background_dark)
-            isBlackTheme() -> resources.getColor(R.color.tab_background_black)
+            isLightTheme() -> androidx.core.content.ContextCompat.getColor(this, R.color.tab_background_light)
+            isGrayTheme() -> androidx.core.content.ContextCompat.getColor(this, R.color.tab_background_gray)
+            isDarkTheme() -> androidx.core.content.ContextCompat.getColor(this, R.color.tab_background_dark)
+            isBlackTheme() -> androidx.core.content.ContextCompat.getColor(this, R.color.tab_background_black)
             else -> getSurfaceColor().adjustAlpha(0.95f)
         }
         binding.mainTopTabsBackground.backgroundTintList = ColorStateList.valueOf(tabBackground)

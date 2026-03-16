@@ -118,6 +118,7 @@ class SettingsActivity : SimpleActivity() {
         setupUltraHdrRendering()
         setupCropThumbnails()
         setupAnimateGifs()
+        setupThumbnailCacheSize()
 
         setupOverflowIcon()
         setupHideIconsInMenu()
@@ -573,6 +574,26 @@ class SettingsActivity : SimpleActivity() {
             config.animateGifs = binding.settingsAnimateGifs.isChecked
         }
     }
+
+    private fun setupThumbnailCacheSize() {
+        binding.settingsThumbnailCacheSize.text = getThumbnailCacheSizeText()
+        binding.settingsThumbnailCacheSizeHolder.setOnClickListener {
+            val items = arrayListOf(
+                RadioItem(100, "100 MB"),
+                RadioItem(256, "256 MB"),
+                RadioItem(512, "512 MB"),
+                RadioItem(1024, "1024 MB"),
+                RadioItem(2048, "2048 MB")
+            )
+            RadioGroupDialog(this@SettingsActivity, items, config.diskCacheSizeMB, R.string.thumbnail_cache_size) {
+                config.diskCacheSizeMB = it as Int
+                binding.settingsThumbnailCacheSize.text = getThumbnailCacheSizeText()
+                toast(R.string.thumbnail_cache_size_restart)
+            }
+        }
+    }
+
+    private fun getThumbnailCacheSizeText() = "${config.diskCacheSizeMB} MB"
 
     private fun setupDarkBackground() {
         binding.settingsBlackBackground.isChecked = config.blackBackground

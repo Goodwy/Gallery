@@ -6,6 +6,8 @@ import android.provider.MediaStore.Images
 import android.provider.MediaStore.Video
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
+import com.bumptech.glide.Glide
+import com.bumptech.glide.MemoryCategory
 import com.goodwy.commons.activities.BaseSimpleActivity
 import com.goodwy.commons.dialogs.FilePickerDialog
 import com.goodwy.commons.extensions.*
@@ -16,11 +18,17 @@ import com.goodwy.gallery.dialogs.StoragePermissionRequiredDialog
 import com.goodwy.gallery.extensions.addPathToDB
 import com.goodwy.gallery.extensions.config
 import com.goodwy.gallery.extensions.updateDirectoryPath
+import com.goodwy.gallery.extensions.warmIncludedFolderCaches
 import com.goodwy.gallery.helpers.getPermissionsToRequest
 
 open class SimpleActivity : BaseSimpleActivity() {
 
     private var dialog: AlertDialog? = null
+
+    override fun onResume() {
+        super.onResume()
+        Glide.get(this).setMemoryCategory(MemoryCategory.NORMAL)
+    }
 
     private val observer = object : ContentObserver(null) {
         override fun onChange(selfChange: Boolean, uri: Uri?) {
@@ -90,6 +98,7 @@ open class SimpleActivity : BaseSimpleActivity() {
             callback()
             ensureBackgroundThread {
                 scanPathRecursively(it)
+                applicationContext.warmIncludedFolderCaches(it)
             }
         }
     }

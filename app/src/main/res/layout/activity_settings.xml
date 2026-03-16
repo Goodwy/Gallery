@@ -512,6 +512,27 @@
                             app:switchPadding="@dimen/bigger_margin" />
 
                     </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/settings_thumbnail_cache_size_holder"
+                        style="@style/SettingsHolderStyle">
+
+                        <com.goodwy.commons.views.MyTextView
+                            android:id="@+id/settings_thumbnail_cache_size_label"
+                            style="@style/SettingsTextLabelStyle"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toStartOf="@+id/settings_thumbnail_cache_size"
+                            android:text="@string/thumbnail_cache_size" />
+
+                        <com.goodwy.commons.views.MyTextView
+                            android:id="@+id/settings_thumbnail_cache_size"
+                            style="@style/SettingsTextValueStyle"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="@dimen/settings_margin"
+                            tools:text="512 MB" />
+
+                    </RelativeLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
