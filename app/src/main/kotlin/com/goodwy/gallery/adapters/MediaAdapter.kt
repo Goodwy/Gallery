@@ -12,9 +12,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.view.allViews
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.Target
 import com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller
 import com.goodwy.commons.activities.BaseSimpleActivity
 import com.goodwy.commons.adapters.MyRecyclerViewAdapter
@@ -44,10 +46,10 @@ class MediaAdapter(
     val isAGetIntent: Boolean,
     val allowMultiplePicks: Boolean,
     val path: String,
-    recyclerView: MyRecyclerView,
+    private val mediaRecyclerView: MyRecyclerView,
     val swipeRefreshLayout: SwipeRefreshLayout? = null,
     itemClick: (Any) -> Unit
-) : MyRecyclerViewAdapter(activity, recyclerView, itemClick), ItemTouchHelperContract,
+) : MyRecyclerViewAdapter(activity, mediaRecyclerView, itemClick), ItemTouchHelperContract,
     RecyclerViewFastScroller.OnPopupTextUpdate {
 
     private val ITEM_SECTION = 0
@@ -73,6 +75,15 @@ class MediaAdapter(
     var actModeCallbacks = actModeCallback
 
     private val keyToPositionCache = mutableMapOf<Int, Int>()
+    private val preloadTargets = mutableListOf<Target<*>>()
+
+    private val highPriorityLookAheadItems = 12
+    private val prefetchItemBudget = 48
+    private val prefetchSizeBudgetBytes = 24L * 1024L * 1024L
+    private var cachedThumbnailSize = 0
+    private val selectionKeyByPath = mutableMapOf<String, Int>()
+    private val pathBySelectionKey = mutableMapOf<Int, String>()
+    private var nextSelectionKey = 1
 
     init {
         setupDragListener(true)
@@ -106,7 +117,7 @@ class MediaAdapter(
         val allowLongPress = (!isAGetIntent || allowMultiplePicks) && tmbItem is Medium
         holder.bindView(tmbItem, tmbItem is Medium, allowLongPress) { itemView, adapterPosition ->
             if (tmbItem is Medium) {
-                setupThumbnail(itemView, tmbItem)
+                setupThumbnail(itemView, tmbItem, adapterPosition)
             } else {
                 setupSection(itemView, tmbItem as ThumbnailSection, position)
             }
@@ -187,11 +198,12 @@ class MediaAdapter(
 
     override fun getIsItemSelectable(position: Int) = !isASectionTitle(position)
 
-    override fun getItemSelectionKey(position: Int) = (media.getOrNull(position) as? Medium)?.path?.hashCode()
+    override fun getItemSelectionKey(position: Int) = (media.getOrNull(position) as? Medium)?.path?.let(::getOrCreateSelectionKey)
 
 //    override fun getItemKeyPosition(key: Int) = media.indexOfFirst { (it as? Medium)?.path?.hashCode() == key }
     override fun getItemKeyPosition(key: Int): Int {
-        return keyToPositionCache[key] ?: media.indexOfFirst { (it as? Medium)?.path?.hashCode() == key }
+        val path = pathBySelectionKey[key]
+        return keyToPositionCache[key] ?: media.indexOfFirst { (it as? Medium)?.path == path }
     }
 
     override fun onActionModeCreated() {
@@ -206,12 +218,21 @@ class MediaAdapter(
     override fun onViewRecycled(holder: ViewHolder) {
         super.onViewRecycled(holder)
         if (!activity.isDestroyed) {
-            val itemView = holder.itemView
-            val tmb = itemView.allViews.firstOrNull { it.id == R.id.medium_thumbnail }
+            val tmb = holder.itemView.findViewById<ImageView>(R.id.medium_thumbnail)
             if (tmb != null) {
                 Glide.with(activity).clear(tmb)
             }
         }
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        clearPrefetchRequests()
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        prefetchVisibleRangeThumbnails()
     }
 
     fun isASectionTitle(position: Int) = media.getOrNull(position) is ThumbnailSection
@@ -454,7 +475,7 @@ class MediaAdapter(
         val manager = activity.getSystemService(ShortcutManager::class.java)
         if (manager.isRequestPinShortcutSupported) {
             val path = getSelectedPaths().first()
-            val drawable = resources.getDrawable(R.drawable.shortcut_image).mutate()
+            val drawable = androidx.core.content.ContextCompat.getDrawable(activity, R.drawable.shortcut_image)!!.mutate()
             activity.getShortcutImage(path, drawable) {
                 val intent = Intent(activity, ViewPagerActivity::class.java).apply {
                     putExtra(PATH, path)
@@ -582,26 +603,29 @@ class MediaAdapter(
 //    private fun getItemWithKey(key: Int): Medium? = media.firstOrNull { (it as? Medium)?.path?.hashCode() == key } as? Medium
     // Fix: at kotlin.collections.CollectionsKt___CollectionsKt.firstOrNull (CollectionsKt___Collections.kt:295)
     private fun getItemWithKey(key: Int): Medium? {
+        val path = pathBySelectionKey[key] ?: return null
         return media.asSequence()
             .filterIsInstance<Medium>()
-            .firstOrNull { it.path.hashCode() == key }
+            .firstOrNull { it.path == path }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateMedia(newMedia: ArrayList<ThumbnailItem>) {
         val thumbnailItems = newMedia.clone() as ArrayList<ThumbnailItem>
+        clearPrefetchRequests()
         if (thumbnailItems.hashCode() != currentMediaHash) {
             currentMediaHash = thumbnailItems.hashCode()
             media = thumbnailItems
             notifyDataSetChanged()
-            finishActMode()
         }
+        rebuildSelectionKeyCache()
         keyToPositionCache.clear()
         newMedia.forEachIndexed { index, item ->
             if (item is Medium) {
-                keyToPositionCache[item.path.hashCode()] = index
+                keyToPositionCache[getOrCreateSelectionKey(item.path)] = index
             }
         }
+        prefetchVisibleRangeThumbnails()
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -625,8 +649,9 @@ class MediaAdapter(
         notifyDataSetChanged()
     }
 
-    private fun setupThumbnail(view: View, medium: Medium) {
-        val isSelected = selectedKeys.contains(medium.path.hashCode())
+    private fun setupThumbnail(view: View, medium: Medium, adapterPosition: Int) {
+        val selectionKey = getOrCreateSelectionKey(medium.path)
+        val isSelected = selectedKeys.contains(selectionKey)
         bindItem(view, medium).apply {
             val padding = if (config.thumbnailSpacing <= 1) {
                 config.thumbnailSpacing
@@ -719,7 +744,9 @@ class MediaAdapter(
                 cropThumbnails = cropThumbnails,
                 roundCorners = roundedCorners,
                 signature = medium.getKey(),
+                highPriority = isHighPriorityPosition(adapterPosition),
                 skipMemoryCacheAtPaths = rotatedImagePaths,
+                thumbnailSize = cachedThumbnailSize,
                 onError = {
                     mediumThumbnail.scaleType = ImageView.ScaleType.CENTER
                     mediumThumbnail.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_vector_warning_colored))
@@ -731,6 +758,110 @@ class MediaAdapter(
                 playPortraitOutline?.applyColorFilter(textColor)
             }
         }
+    }
+
+    private fun isHighPriorityPosition(position: Int): Boolean {
+        val layoutManager = mediaRecyclerView.layoutManager as? LinearLayoutManager
+        val firstVisible = layoutManager?.findFirstVisibleItemPosition()?.takeIf { it != RecyclerView.NO_POSITION } ?: 0
+        return position in firstVisible..(firstVisible + highPriorityLookAheadItems)
+    }
+
+    private fun prefetchVisibleRangeThumbnails() {
+        if (activity.isDestroyed || media.isEmpty()) {
+            return
+        }
+
+        clearPrefetchRequests()
+
+        val roundedCorners = when {
+            isListViewType -> ROUNDED_CORNERS_SMALL
+            config.fileRoundedCorners -> ROUNDED_CORNERS_BIG
+            else -> ROUNDED_CORNERS_NONE
+        }
+
+        var prefetchedItems = 0
+        var prefetchedSizeBytes = 0L
+
+        val sampleChild = mediaRecyclerView.getChildAt(0)
+        val thumbnailWidth = sampleChild?.width?.takeIf { it > 0 } ?: 300
+        val thumbnailHeight = sampleChild?.height?.takeIf { it > 0 } ?: 300
+        cachedThumbnailSize = maxOf(thumbnailWidth, thumbnailHeight)
+        val estimatedBitmapBytesPerItem = thumbnailWidth.toLong() * thumbnailHeight.toLong() * 4L
+
+        val layoutManager = mediaRecyclerView.layoutManager as? LinearLayoutManager
+        val firstVisible = layoutManager?.findFirstVisibleItemPosition()?.takeIf { it != RecyclerView.NO_POSITION } ?: 0
+        val startIndex = maxOf(0, firstVisible - prefetchItemBudget / 4)
+        val endIndex = minOf(media.lastIndex, firstVisible + prefetchItemBudget)
+
+        for (index in startIndex..endIndex) {
+            if (prefetchedItems >= prefetchItemBudget || prefetchedSizeBytes >= prefetchSizeBudgetBytes) {
+                break
+            }
+
+            val medium = media[index] as? Medium ?: continue
+
+            if (prefetchedItems > 0 && prefetchedSizeBytes + estimatedBitmapBytesPerItem > prefetchSizeBudgetBytes) {
+                break
+            }
+
+            var pathToLoad = medium.path
+            if (hasOTGConnected && activity.isPathOnOTG(pathToLoad)) {
+                pathToLoad = pathToLoad.getOTGPublicPath(activity)
+            }
+
+            val requestTarget = activity.preloadImageBase(
+                path = pathToLoad,
+                cropThumbnails = cropThumbnails,
+                roundCorners = roundedCorners,
+                signature = medium.getKey(),
+                skipMemoryCache = rotatedImagePaths.contains(medium.path),
+                thumbnailSize = thumbnailWidth
+            )
+
+            preloadTargets.add(requestTarget)
+            prefetchedItems++
+            prefetchedSizeBytes += estimatedBitmapBytesPerItem
+        }
+    }
+
+    private fun clearPrefetchRequests() {
+        if (preloadTargets.isEmpty() || activity.isDestroyed) {
+            preloadTargets.clear()
+            return
+        }
+
+        preloadTargets.forEach { Glide.with(activity).clear(it) }
+        preloadTargets.clear()
+    }
+
+    private fun getOrCreateSelectionKey(path: String): Int {
+        selectionKeyByPath[path]?.let { return it }
+
+        while (nextSelectionKey == -1 || pathBySelectionKey.containsKey(nextSelectionKey)) {
+            nextSelectionKey++
+        }
+
+        val selectionKey = nextSelectionKey++
+        selectionKeyByPath[path] = selectionKey
+        pathBySelectionKey[selectionKey] = path
+        return selectionKey
+    }
+
+    private fun rebuildSelectionKeyCache() {
+        val currentPaths = media.filterIsInstance<Medium>().mapTo(HashSet()) { it.path }
+        val selectedPaths = selectedKeys.mapNotNull { pathBySelectionKey[it] }.toHashSet()
+        val pathsToKeep = currentPaths + selectedPaths
+
+        val iterator = selectionKeyByPath.iterator()
+        while (iterator.hasNext()) {
+            val entry = iterator.next()
+            if (entry.key !in pathsToKeep) {
+                pathBySelectionKey.remove(entry.value)
+                iterator.remove()
+            }
+        }
+
+        currentPaths.forEach(::getOrCreateSelectionKey)
     }
 
     private fun setupSection(view: View, section: ThumbnailSection, position: Int) {

@@ -11,7 +11,7 @@ import com.goodwy.commons.extensions.setupDialogStuff
 import com.goodwy.gallery.databinding.DialogExcludeFolderBinding
 import com.goodwy.gallery.extensions.config
 
-class ExcludeFolderDialog(val activity: BaseSimpleActivity, val selectedPaths: List<String>, val callback: () -> Unit) {
+class ExcludeFolderDialog(val activity: BaseSimpleActivity, val selectedPaths: List<String>, val callback: (String) -> Unit) {
     private val alternativePaths = getAlternativePathsList()
     private var radioGroup: RadioGroup? = null
 
@@ -43,7 +43,7 @@ class ExcludeFolderDialog(val activity: BaseSimpleActivity, val selectedPaths: L
     private fun dialogConfirmed() {
         val path = if (alternativePaths.isEmpty()) selectedPaths[0] else alternativePaths[radioGroup!!.checkedRadioButtonId]
         activity.config.addExcludedFolder(path)
-        callback()
+        callback(path)
     }
 
     private fun getAlternativePathsList(): List<String> {

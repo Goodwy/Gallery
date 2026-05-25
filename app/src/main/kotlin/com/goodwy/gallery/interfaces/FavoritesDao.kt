@@ -26,6 +26,9 @@ interface FavoritesDao {
     @Query("DELETE FROM favorites WHERE full_path = :path COLLATE NOCASE")
     fun deleteFavoritePath(path: String)
 
+    @Query("DELETE FROM favorites WHERE parent_path = :path COLLATE NOCASE OR parent_path LIKE :childPathPattern COLLATE NOCASE")
+    fun deleteFavoritesByParentPathWithChildren(path: String, childPathPattern: String)
+
     @Query("DELETE FROM favorites")
     fun clearFavorites()
 }

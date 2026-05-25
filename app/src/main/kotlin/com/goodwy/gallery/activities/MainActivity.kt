@@ -554,6 +554,7 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
                     val otgPath = trimEnd('/')
                     config.OTGPath = otgPath
                     config.addIncludedFolder(otgPath)
+                    applicationContext.warmIncludedFolderCaches(otgPath)
                 }
             }
         }
@@ -1725,6 +1726,35 @@ class MainActivity : SimpleActivity(), DirectoryOperationsListener {
             storeDirectoryItems(directories)
             removeInvalidDBDirectories()
         }
+    }
+
+    override fun excludeDirectories(paths: Set<String>) {
+        val normalizedPaths = paths.map { it.trimEnd('/') }
+            .filter { it.isNotEmpty() }
+            .toSet()
+
+        if (normalizedPaths.isEmpty()) {
+            return
+        }
+
+        val shouldRemove: (Directory) -> Boolean = { directory ->
+            normalizedPaths.any { excludedPath ->
+                directory.path.equals(excludedPath, true) || directory.path.startsWith("$excludedPath/", true)
+            }
+        }
+
+        mDirs = mDirs.filterNot(shouldRemove) as ArrayList<Directory>
+        mDirsIgnoringSearch = mDirsIgnoringSearch.filterNot(shouldRemove) as ArrayList<Directory>
+
+        getRecyclerAdapter()?.let { adapter ->
+            val updatedDirs = adapter.dirs.filterNot(shouldRemove) as ArrayList<Directory>
+            runOnUiThread {
+                adapter.updateDirs(updatedDirs)
+                checkPlaceholderVisibility(updatedDirs)
+            }
+        }
+
+        applicationContext.evictFoldersFromCache(normalizedPaths)
     }
 
     private fun checkWhatsNewDialog() {

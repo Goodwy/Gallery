@@ -57,12 +57,12 @@ class MediaFetcher(val context: Context) {
             if (curMedia.isEmpty()) {
                 val newMedia = getMediaInFolder(
                     curPath, isPickImage, isPickVideo, filterMedia, getProperDateTaken, getProperLastModified, getProperFileSize,
-                    favoritePaths, getVideoDurations, lastModifieds.clone() as HashMap<String, Long>, dateTakens.clone() as HashMap<String, Long>
+                    favoritePaths, getVideoDurations, HashMap(lastModifieds), HashMap(dateTakens)
                 )
 
                 if (curPath == FAVORITES && isRPlus() && !isExternalStorageManager()) {
                     val files =
-                        getAndroid11FolderMedia(isPickImage, isPickVideo, favoritePaths, true, getProperDateTaken, dateTakens.clone() as HashMap<String, Long>)
+                        getAndroid11FolderMedia(isPickImage, isPickVideo, favoritePaths, true, getProperDateTaken, HashMap(dateTakens))
                     newMedia.forEach { newMedium ->
                         for ((folder, media) in files) {
                             media.forEach { medium ->
@@ -417,7 +417,7 @@ class MediaFetcher(val context: Context) {
                 }
 
                 val isFavorite = favoritePaths.contains(path)
-                val medium = Medium(null, filename, path, file.parent, lastModified, dateTaken, size, type, videoDuration, isFavorite, 0L, 0L)
+                val medium = Medium(null, filename, path, file.parent ?: "", lastModified, dateTaken, size, type, videoDuration, isFavorite, 0L, 0L)
                 media.add(medium)
             }
         }
@@ -804,7 +804,7 @@ class MediaFetcher(val context: Context) {
         val currentGrouping = context.config.getFolderGrouping(pathToCheck)
         if (currentGrouping and GROUP_BY_NONE != 0 || currentGrouping and GROUP_BY_LAST_MODIFIED_NONE != 0 ||
             currentGrouping and GROUP_BY_DATE_TAKEN_NONE != 0 || currentGrouping and GROUP_BY_OTHER_NONE != 0) {
-            return media as ArrayList<ThumbnailItem>
+            return ArrayList<ThumbnailItem>(media)
         }
 
         val thumbnailItems = ArrayList<ThumbnailItem>()
