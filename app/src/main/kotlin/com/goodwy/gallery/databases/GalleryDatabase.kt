@@ -9,7 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.goodwy.gallery.interfaces.*
 import com.goodwy.gallery.models.*
 
-@Database(entities = [Directory::class, Medium::class, Widget::class, DateTaken::class, Favorite::class], version = 10)
+@Database(entities = [Directory::class, Medium::class, Widget::class, DateTaken::class, Favorite::class], version = 11)
 abstract class GalleryDatabase : RoomDatabase() {
 
     abstract fun DirectoryDao(): DirectoryDao
@@ -37,6 +37,14 @@ abstract class GalleryDatabase : RoomDatabase() {
                             .addMigrations(MIGRATION_7_8)
                             .addMigrations(MIGRATION_8_9)
                             .addMigrations(MIGRATION_9_10)
+                            .addMigrations(MIGRATION_10_11)
+                            .addCallback(object : RoomDatabase.Callback() {
+                                // covers fresh installs, which never run the Migration objects above
+                                override fun onCreate(db: SupportSQLiteDatabase) {
+                                    super.onCreate(db)
+                                    db.execSQL(CREATE_MEDIA_PARENT_PATH_INDEX_SQL)
+                                }
+                            })
                             .build()
                     }
                 }
@@ -89,6 +97,18 @@ abstract class GalleryDatabase : RoomDatabase() {
         private val MIGRATION_9_10 = object : Migration(9, 10) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE media ADD COLUMN media_store_id INTEGER default 0 NOT NULL")
+            }
+        }
+
+        // the "media" table's hottest query (get all files in a folder) filters on
+        // parent_path COLLATE NOCASE with no supporting index, causing a full table scan;
+        // this is an ADD-ONLY change (no column/table changes), so it's safe against existing data
+        private const val CREATE_MEDIA_PARENT_PATH_INDEX_SQL =
+            "CREATE INDEX IF NOT EXISTS idx_media_parent_path_nocase ON media(parent_path COLLATE NOCASE)"
+
+        private val MIGRATION_10_11 = object : Migration(10, 11) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(CREATE_MEDIA_PARENT_PATH_INDEX_SQL)
             }
         }
     }

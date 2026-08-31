@@ -60,7 +60,7 @@ class MyWidgetProvider : AppWidgetProvider() {
 //                }
 
                 val density = context.resources.displayMetrics.density
-                val appWidgetOptions = appWidgetManager.getAppWidgetOptions(appWidgetIds.first())
+                val appWidgetOptions = appWidgetManager.getAppWidgetOptions(it.widgetId)
                 val width = appWidgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
                 val height = appWidgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
 

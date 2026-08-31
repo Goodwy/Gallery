@@ -69,9 +69,9 @@ class WidgetConfigureActivity : SimpleActivity() {
             binding.configTextColorHolder.beVisibleIf(binding.folderPickerShowFolderName.isChecked)
         }
 
-        getCachedDirectories(false, false) {
-            mDirectories = it
-            val path = it.firstOrNull()?.path
+        getCachedDirectories(false, false) { dirs, _ ->
+            mDirectories = dirs
+            val path = dirs.firstOrNull()?.path
             if (path != null) {
                 updateFolderImage(path)
             }

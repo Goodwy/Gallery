@@ -1343,23 +1343,37 @@ class ViewPagerActivity : BaseViewerActivity(), ViewPager.OnPageChangeListener, 
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
+    // reads EXIF + decodes bounds from disk, so keep this off the UI thread -
+    // it used to run synchronously on every swipe when ROTATE_BY_ASPECT_RATIO is on
     private fun checkOrientation() {
-        if (!mIsOrientationLocked && config.screenRotation == ROTATE_BY_ASPECT_RATIO) {
+        if (mIsOrientationLocked || config.screenRotation != ROTATE_BY_ASPECT_RATIO) {
+            return
+        }
+
+        val pathToLoad = getCurrentPath()
+        ensureBackgroundThread {
             var flipSides = false
             try {
-                val pathToLoad = getCurrentPath()
                 val exif = ExifInterface(pathToLoad)
                 val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, -1)
                 flipSides = orientation == ExifInterface.ORIENTATION_ROTATE_90 || orientation == ExifInterface.ORIENTATION_ROTATE_270
             } catch (_: Exception) {
             }
-            val resolution = applicationContext.getResolution(getCurrentPath()) ?: return
+
+            val resolution = applicationContext.getResolution(pathToLoad) ?: return@ensureBackgroundThread
             val width = if (flipSides) resolution.y else resolution.x
             val height = if (flipSides) resolution.x else resolution.y
-            if (width > height) {
-                requestedOrientation = SCREEN_ORIENTATION_LANDSCAPE
-            } else if (width < height) {
-                requestedOrientation = SCREEN_ORIENTATION_PORTRAIT
+
+            if (isDestroyed || isFinishing) {
+                return@ensureBackgroundThread
+            }
+
+            runOnUiThread {
+                if (width > height) {
+                    requestedOrientation = SCREEN_ORIENTATION_LANDSCAPE
+                } else if (width < height) {
+                    requestedOrientation = SCREEN_ORIENTATION_PORTRAIT
+                }
             }
         }
     }

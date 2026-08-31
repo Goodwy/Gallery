@@ -724,7 +724,11 @@ class PhotoFragment : ViewPagerFragment() {
     }
 
     private fun openPanorama() {
-        TODO("Panorama is not yet implemented.")
+        // Panorama detection (checkIfPanorama()) is disabled pending a FOSS replacement for its
+        // non-free EXIF parsing dependency, so this is never reachable today (mIsPanorama stays
+        // false, panoramaOutline stays gone) - but TODO() throws NotImplementedError if called,
+        // so keep this a no-op rather than a crash if that ever gets re-enabled without also
+        // implementing panorama viewing.
     }
 
     private fun scheduleZoomableView() {

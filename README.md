@@ -1,7 +1,7 @@
 <div align="center">
 
-<img src="app/src/main/res/drawable/ic_launcher.png" width="120" alt="App icon"/>  
-<img src="app/src/gplay/res/drawable/ic_launcher.png" width="120" alt="App icon"/>
+<img src="app/src/main/res/drawable/ic_launcher.webp" width="120" alt="App icon"/>  
+<img src="app/src/gplay/res/drawable/ic_launcher.webp" width="120" alt="App icon"/>
 
 # Right Gallery/Alright Gallery
 <a href='https://play.google.com/store/apps/details?id=com.goodwy.gallery'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' height=80/></a>  <a href='https://play.google.com/store/apps/details?id=dev.goodwy.gallery'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' height=80/></a>

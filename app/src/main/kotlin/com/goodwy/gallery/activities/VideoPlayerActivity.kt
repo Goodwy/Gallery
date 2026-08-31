@@ -28,6 +28,7 @@ import android.view.WindowManager
 import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.media3.common.AudioAttributes
@@ -156,15 +157,21 @@ open class VideoPlayerActivity : BaseViewerActivity(), SeekBar.OnSeekBarChangeLi
 
     override fun onDestroy() {
         super.onDestroy()
-        if (!isChangingConfigurations) {
-            pauseVideo()
-            binding.bottomVideoTimeHolder.videoCurrTime.text = 0.getFormattedDuration()
-            releaseExoPlayer()
-            binding.bottomVideoTimeHolder.videoSeekbar.progress = 0
-            mTimerHandler.removeCallbacksAndMessages(null)
-            mPlayWhenReadyHandler.removeCallbacksAndMessages(null)
-            mVolumeController?.destroy()
-        }
+        // NOTE: this used to be skipped when isChangingConfigurations is true, on the
+        // assumption that meant a rotation was about to recreate the activity. But this
+        // activity's manifest entry already declares
+        // android:configChanges="orientation|keyboardHidden|screenSize", so the activity
+        // is never actually destroyed for those - onDestroy() only runs for some OTHER
+        // config change (theme, density, locale, ...), where the activity really is being
+        // torn down and a fresh instance created, so skipping cleanup here just leaked the
+        // player/native codec resources instead of preserving anything.
+        pauseVideo()
+        binding.bottomVideoTimeHolder.videoCurrTime.text = 0.getFormattedDuration()
+        releaseExoPlayer()
+        binding.bottomVideoTimeHolder.videoSeekbar.progress = 0
+        mTimerHandler.removeCallbacksAndMessages(null)
+        mPlayWhenReadyHandler.removeCallbacksAndMessages(null)
+        mVolumeController?.destroy()
     }
 
     private fun setupOptionsMenu() {
@@ -659,6 +666,21 @@ open class VideoPlayerActivity : BaseViewerActivity(), SeekBar.OnSeekBarChangeLi
     }
 
     override fun updatePlaybackSpeed(speed: Float) {
+        val isSlow = speed < 1f
+        if (isSlow != binding.bottomVideoTimeHolder.videoPlaybackSpeed.tag as? Boolean) {
+            binding.bottomVideoTimeHolder.videoPlaybackSpeed.tag = isSlow
+
+            val drawableId =
+                if (isSlow) R.drawable.ic_playback_speed_slow_vector else R.drawable.ic_playback_speed_vector
+            binding.bottomVideoTimeHolder.videoPlaybackSpeed
+                .setDrawablesRelativeWithIntrinsicBounds(
+                    AppCompatResources.getDrawable(
+                        this,
+                        drawableId
+                    )
+                )
+        }
+
         @SuppressLint("SetTextI18n")
         binding.bottomVideoTimeHolder.videoPlaybackSpeed.text =
             "${DecimalFormat("#.##").format(speed)}x"

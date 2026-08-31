@@ -1,25 +1,41 @@
 package com.goodwy.gallery.asynctasks
 
 import android.content.Context
-import android.os.AsyncTask
+import android.os.Environment
+import android.util.Log
 import com.goodwy.commons.helpers.FAVORITES
 import com.goodwy.commons.helpers.SORT_BY_DATE_MODIFIED
 import com.goodwy.commons.helpers.SORT_BY_DATE_TAKEN
 import com.goodwy.commons.helpers.SORT_BY_SIZE
+import com.goodwy.commons.helpers.isRPlus
 import com.goodwy.gallery.extensions.config
 import com.goodwy.gallery.extensions.getFavoritePaths
 import com.goodwy.gallery.helpers.*
 import com.goodwy.gallery.models.Medium
 import com.goodwy.gallery.models.ThumbnailItem
+import kotlinx.coroutines.*
 
 class GetMediaAsynctask(
     val context: Context, val mPath: String, val isPickImage: Boolean = false, val isPickVideo: Boolean = false,
     val showAll: Boolean, val callback: (media: ArrayList<ThumbnailItem>) -> Unit
-) :
-    AsyncTask<Void, Void, ArrayList<ThumbnailItem>>() {
-    private val mediaFetcher = MediaFetcher(context)
+) {
+    companion object {
+        private const val TAG = "GetMediaAsynctask"
+    }
 
-    override fun doInBackground(vararg params: Void): ArrayList<ThumbnailItem> {
+    private val mediaFetcher = MediaFetcher(context)
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    fun execute() {
+        scope.launch {
+            val media = fetchMedia()
+            withContext(Dispatchers.Main) {
+                callback(media)
+            }
+        }
+    }
+
+    private suspend fun fetchMedia(): ArrayList<ThumbnailItem> {
         val pathToUse = if (showAll) SHOW_ALL else mPath
         val folderGrouping = context.config.getFolderGrouping(pathToUse)
         val folderSorting = context.config.getFolderSorting(pathToUse)
@@ -41,17 +57,44 @@ class GetMediaAsynctask(
 
         val media = if (showAll) {
             val foldersToScan = mediaFetcher.getFoldersToScan().filter { it != RECYCLE_BIN && it != FAVORITES && !context.config.isFolderProtected(it) }
-            val media = ArrayList<Medium>()
-            foldersToScan.forEach {
-                val newMedia = mediaFetcher.getFilesFrom(
-                    it, isPickImage, isPickVideo, getProperDateTaken, getProperLastModified, getProperFileSize,
-                    favoritePaths, getVideoDurations, lastModifieds, dateTakens.clone() as HashMap<String, Long>, null
-                )
-                media.addAll(newMedia)
+
+            val shouldPrefetchAndroid11Files = isRPlus() && !Environment.isExternalStorageManager()
+            val prefetchedAndroid11Files = if (shouldPrefetchAndroid11Files) {
+                val queryStartedAt = System.currentTimeMillis()
+                Log.d(TAG, "showAll refresh: getAndroid11FolderMedia started at $queryStartedAt")
+                mediaFetcher.getAndroid11FolderMedia(
+                    isPickImage,
+                    isPickVideo,
+                    favoritePaths,
+                    false,
+                    getProperDateTaken,
+                    HashMap(dateTakens)
+                ).also {
+                    val queryFinishedAt = System.currentTimeMillis()
+                    Log.d(TAG, "showAll refresh: getAndroid11FolderMedia done in ${queryFinishedAt - queryStartedAt}ms")
+                }
+            } else {
+                null
             }
 
-            mediaFetcher.sortMedia(media, context.config.getFolderSorting(SHOW_ALL))
-            media
+            val allMedia = ArrayList<Medium>()
+            val lock = Any()
+            coroutineScope {
+                foldersToScan.map { folderPath ->
+                    async {
+                        if (mediaFetcher.shouldStop) return@async
+                        val newMedia = mediaFetcher.getFilesFrom(
+                            folderPath, isPickImage, isPickVideo, getProperDateTaken, getProperLastModified,
+                            getProperFileSize, favoritePaths, getVideoDurations,
+                            HashMap(lastModifieds), HashMap(dateTakens), prefetchedAndroid11Files
+                        )
+                        synchronized(lock) { allMedia.addAll(newMedia) }
+                    }
+                }.awaitAll()
+            }
+
+            mediaFetcher.sortMedia(allMedia, context.config.getFolderSorting(SHOW_ALL))
+            allMedia
         } else {
             mediaFetcher.getFilesFrom(
                 mPath, isPickImage, isPickVideo, getProperDateTaken, getProperLastModified, getProperFileSize, favoritePaths,
@@ -62,13 +105,8 @@ class GetMediaAsynctask(
         return mediaFetcher.groupMedia(media, pathToUse)
     }
 
-    override fun onPostExecute(media: ArrayList<ThumbnailItem>) {
-        super.onPostExecute(media)
-        callback(media)
-    }
-
     fun stopFetching() {
         mediaFetcher.shouldStop = true
-        cancel(true)
+        scope.cancel()
     }
 }

@@ -12,7 +12,16 @@ import java.io.Serializable
 import java.util.Calendar
 import java.util.Locale
 
-@Entity(tableName = "media", indices = [(Index(value = ["full_path"], unique = true))])
+@Entity(
+    tableName = "media",
+    indices = [
+        Index(value = ["full_path"], unique = true),
+        // name must match the raw-SQL index created in GalleryDatabase's migration/callback
+        // (CREATE INDEX ... parent_path COLLATE NOCASE) - Room's schema validation only checks
+        // name/columns/uniqueness here, not the collation used when the index was created
+        Index(value = ["parent_path"], name = "idx_media_parent_path_nocase")
+    ]
+)
 data class Medium(
     @PrimaryKey(autoGenerate = true) var id: Long?,
     @ColumnInfo(name = "filename") var name: String,
@@ -34,6 +43,12 @@ data class Medium(
 
     companion object {
         private const val serialVersionUID = -6553149366975655L
+
+        // Reused across getDayStartTS() calls instead of allocating a new Calendar per medium:
+        // grouping a large library calls this once per item, and Calendar.getInstance() isn't a
+        // cheap constructor (locale/timezone lookups). One per thread, since groupMedia() runs
+        // its grouping loop on a single background thread at a time, never concurrently.
+        private val dayStartCalendar = ThreadLocal.withInitial { Calendar.getInstance(Locale.ENGLISH) }
     }
 
     fun isWebP() = name.isWebP()
@@ -85,7 +100,7 @@ data class Medium(
     fun getIsInRecycleBin() = deletedTS != 0L
 
     private fun getDayStartTS(ts: Long, resetDays: Boolean, resetMonths: Boolean = false): String {
-        val calendar = Calendar.getInstance(Locale.ENGLISH).apply {
+        val calendar = dayStartCalendar.get().apply {
             timeInMillis = ts
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)

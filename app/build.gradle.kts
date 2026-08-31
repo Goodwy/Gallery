@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.baselineProfile)
 }
 
 val keystorePropertiesFile: File = rootProject.file("keystore.properties")
@@ -156,6 +157,12 @@ detekt {
     allRules = false
 }
 
+baselineProfile {
+    // Only regenerate the profile when explicitly requested via
+    // `./gradlew generateBaselineProfile`, not on every release build.
+    automaticGenerationDuringBuild = false
+}
+
 dependencies {
     implementation(libs.androidx.print)
     implementation(libs.android.image.cropper)
@@ -164,6 +171,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.documentfile)
+    implementation(libs.androidx.profileinstaller)
+    baselineProfile(project(":baselineprofile"))
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.sanselan)
     implementation(libs.androidsvg.aar)

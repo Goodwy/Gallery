@@ -15,10 +15,20 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.Target
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import com.google.gson.Gson
 import com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller
 import com.goodwy.commons.activities.BaseSimpleActivity
@@ -62,6 +72,8 @@ class DirectoryAdapter(
 
     private val config = activity.config
     private val isListViewType = config.viewTypeFolders == VIEW_TYPE_LIST
+    private val adapterScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private var updateDirsJob: Job? = null
     private var pinnedFolders = config.pinnedFolders
     private var scrollHorizontally = config.scrollHorizontally
     private var animateGifs = config.animateGifs
@@ -71,6 +83,10 @@ class DirectoryAdapter(
     private var lockedFolderPaths = ArrayList<String>()
     private var isDragAndDropping = false
     private var startReorderDragListener: StartReorderDragListener? = null
+    private val preloadTargets: MutableList<Target<*>> = mutableListOf()
+    private val prefetchItemBudget = 20
+    private var directoryRecyclerView: RecyclerView? = null
+    private var cachedThumbnailSize = 0
 
     private var showMediaCount = config.showFolderMediaCount
     private var folderStyle = config.folderStyle
@@ -432,21 +448,48 @@ class DirectoryAdapter(
         if (selectedPaths.contains(RECYCLE_BIN)) {
             config.showRecycleBinAtFolders = false
             if (selectedPaths.size == 1) {
+                removeExcludedDirsFromView()
                 listener?.refreshItems()
-                finishActMode()
             }
         }
 
         if (paths.size == 1) {
-            ExcludeFolderDialog(activity, paths.toMutableList()) {
+            ExcludeFolderDialog(activity, paths.toMutableList()) { excludedPath ->
+                listener?.excludeDirectories(setOf(excludedPath))
+                removeExcludedDirsFromView()
                 listener?.refreshItems()
-                finishActMode()
             }
         } else if (paths.size > 1) {
             config.addExcludedFolders(paths)
+            listener?.excludeDirectories(paths)
+            removeExcludedDirsFromView()
             listener?.refreshItems()
-            finishActMode()
         }
+    }
+
+    private fun removeExcludedDirsFromView() {
+        val excludedPaths = config.excludedFolders
+        val indicesToRemove = dirs.indices.filter { index ->
+            val dir = dirs.getOrNull(index) as? Directory ?: return@filter false
+            excludedPaths.any { excluded -> dir.path.equals(excluded, true) || dir.path.startsWith("$excluded/", true) }
+        }
+
+        if (indicesToRemove.isNotEmpty()) {
+            val newDirs = dirs.filterIndexed { index, _ -> index !in indicesToRemove.toSet() } as ArrayList<Directory>
+            syncRemovedDirectories(newDirs, indicesToRemove)
+        }
+        finishActMode()
+    }
+
+    private fun syncRemovedDirectories(newDirs: ArrayList<Directory>, removedPositions: List<Int>) {
+        removedPositions.sortedDescending().forEach { notifyItemRemoved(it) }
+        currentDirectoriesHash = newDirs.hashCode()
+        dirs = newDirs
+        keyToPositionCache.clear()
+        dirs.forEachIndexed { index, item ->
+            keyToPositionCache[item.path.hashCode()] = index
+        }
+        listener?.updateDirectories(newDirs)
     }
 
     private fun tryLockFolder() {
@@ -578,7 +621,7 @@ class DirectoryAdapter(
         if (manager.isRequestPinShortcutSupported) {
             val dir = getFirstSelectedItem() ?: return
             val path = dir.path
-            val drawable = resources.getDrawable(R.drawable.shortcut_image).mutate()
+            val drawable = androidx.core.content.ContextCompat.getDrawable(activity, R.drawable.shortcut_image)!!.mutate()
             val coverThumbnail = config.parseAlbumCovers().firstOrNull { it.tmb == dir.path }?.tmb ?: dir.tmb
             activity.getShortcutImage(coverThumbnail, drawable) {
                 val intent = Intent(activity, MediaActivity::class.java)
@@ -762,17 +805,45 @@ class DirectoryAdapter(
 
     fun updateDirs(newDirs: ArrayList<Directory>) {
         val directories = newDirs.clone() as ArrayList<Directory>
-        if (directories.hashCode() != currentDirectoriesHash) {
-            currentDirectoriesHash = directories.hashCode()
-            dirs = directories
-            fillLockedFolders()
-            notifyDataSetChanged()
-            finishActMode()
+
+        // hashCode() over the whole list and DiffUtil.calculateDiff() are both CPU work;
+        // run them off the main thread and only touch adapter state once back on it, same
+        // as MediaAdapter.updateMedia(). Cancel any in-flight update first so a fast-changing
+        // folder list never applies a diff computed against an already-stale oldDirs snapshot.
+        updateDirsJob?.cancel()
+        updateDirsJob = adapterScope.launch {
+            val newHash = withContext(Dispatchers.Default) { directories.hashCode() }
+            if (newHash != currentDirectoriesHash) {
+                currentDirectoriesHash = newHash
+                val oldDirs = dirs
+                dirs = directories
+                fillLockedFolders()
+                val diffResult = withContext(Dispatchers.Default) {
+                    DiffUtil.calculateDiff(DirectoryDiffCallback(oldDirs, directories))
+                }
+                diffResult.dispatchUpdatesTo(this@DirectoryAdapter)
+                clearPrefetchRequests()
+                prefetchDirectoryThumbnails()
+            }
+            keyToPositionCache.clear()
+            newDirs.forEachIndexed { index, item ->
+                keyToPositionCache[item.path.hashCode()] = index
+            }
         }
-        keyToPositionCache.clear()
-        newDirs.forEachIndexed { index, item ->
-            keyToPositionCache[item.path.hashCode()] = index
-        }
+    }
+
+    private class DirectoryDiffCallback(
+        private val oldList: List<Directory>,
+        private val newList: List<Directory>
+    ) : DiffUtil.Callback() {
+        override fun getOldListSize() = oldList.size
+        override fun getNewListSize() = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+            oldList[oldItemPosition].path.equals(newList[newItemPosition].path, true)
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+            oldList[oldItemPosition] == newList[newItemPosition]
     }
 
     fun updateAnimateGifs(animateGifs: Boolean) {
@@ -855,6 +926,9 @@ class DirectoryAdapter(
                     cropThumbnails = cropThumbnails,
                     roundCorners = roundedCorners,
                     signature = directory.getKey(),
+                    highPriority = true,
+                    loadHighPriority = isHighPriorityPosition(holder.bindingAdapterPosition),
+                    thumbnailSize = getDirectoryThumbnailSize(dirThumbnail),
                     onError = {
                         dirThumbnail.scaleType = ImageView.ScaleType.CENTER
                         dirThumbnail.setImageDrawable(AppCompatResources.getDrawable(activity, R.drawable.ic_vector_warning_colored))
@@ -939,6 +1013,100 @@ class DirectoryAdapter(
         }
 
         notifyItemMoved(fromPosition, toPosition)
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        directoryRecyclerView = recyclerView
+        prefetchDirectoryThumbnails()
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        adapterScope.cancel()
+        clearPrefetchRequests()
+        directoryRecyclerView = null
+    }
+
+    private fun clearPrefetchRequests() {
+        if (preloadTargets.isEmpty() || activity.isDestroyed) {
+            preloadTargets.clear()
+            return
+        }
+
+        preloadTargets.forEach { Glide.with(activity).clear(it) }
+        preloadTargets.clear()
+    }
+
+    private fun prefetchDirectoryThumbnails() {
+        if (activity.isDestroyed || dirs.isEmpty()) {
+            return
+        }
+
+        val firstVisible = (directoryRecyclerView?.layoutManager as? LinearLayoutManager)
+            ?.findFirstVisibleItemPosition()?.takeIf { it != RecyclerView.NO_POSITION } ?: 0
+        val startIndex = maxOf(0, firstVisible - prefetchItemBudget / 4)
+        val endIndex = minOf(dirs.lastIndex, firstVisible + prefetchItemBudget)
+        val thumbnailSize = getPrefetchThumbnailSize()
+        var itemCount = 0
+        for (index in startIndex..endIndex) {
+            if (itemCount >= prefetchItemBudget) break
+            val dir = dirs[index]
+            if (lockedFolderPaths.contains(dir.path)) continue
+            val roundedCorners = when {
+                isListViewType -> ROUNDED_CORNERS_SMALL
+                folderStyle == FOLDER_STYLE_SQUARE -> ROUNDED_CORNERS_NONE
+                else -> ROUNDED_CORNERS_SMALL
+            }
+            val target = activity.preloadImageBase(
+                path = dir.tmb,
+                cropThumbnails = cropThumbnails,
+                roundCorners = roundedCorners,
+                signature = dir.getKey(),
+                highPriority = true,
+                thumbnailSize = thumbnailSize
+            )
+            preloadTargets.add(target)
+            itemCount++
+        }
+    }
+
+    private fun getDirectoryThumbnailSize(target: ImageView): Int {
+        val targetSize = maxOf(target.width, target.height)
+        if (targetSize > 0) {
+            cachedThumbnailSize = targetSize
+        }
+
+        if (cachedThumbnailSize <= 0) {
+            cachedThumbnailSize = 512
+        }
+
+        return cachedThumbnailSize
+    }
+
+    private fun getPrefetchThumbnailSize(): Int {
+        val sampleChild = directoryRecyclerView?.getChildAt(0)
+        val sampleThumbnail = sampleChild?.let { bindItem(it).dirThumbnail }
+        val thumbnailSize = maxOf(sampleThumbnail?.width ?: 0, sampleThumbnail?.height ?: 0)
+        if (thumbnailSize > 0) {
+            cachedThumbnailSize = thumbnailSize
+        }
+
+        if (cachedThumbnailSize <= 0) {
+            cachedThumbnailSize = 512
+        }
+
+        return cachedThumbnailSize
+    }
+
+    private fun isHighPriorityPosition(position: Int): Boolean {
+        if (position == RecyclerView.NO_POSITION) {
+            return true
+        }
+
+        val layoutManager = directoryRecyclerView?.layoutManager as? LinearLayoutManager
+        val firstVisible = layoutManager?.findFirstVisibleItemPosition()?.takeIf { it != RecyclerView.NO_POSITION } ?: 0
+        return position in firstVisible..(firstVisible + prefetchItemBudget / 2)
     }
 
     override fun onRowSelected(myViewHolder: ViewHolder?) {

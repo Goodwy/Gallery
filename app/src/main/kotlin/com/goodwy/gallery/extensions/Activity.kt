@@ -609,18 +609,24 @@ fun AppCompatActivity.fixDateTaken(
 
         ensureBackgroundThread {
             val dateTakens = ArrayList<DateTaken>()
+            val processedPaths = ArrayList<String>()
+            // Only a handful of distinct formats are possible here (separator is '-' or ':',
+            // the "T" marker is present or not), so cache the formatter per format string
+            // instead of constructing a new SimpleDateFormat for every file in the batch.
+            val formattersByPattern = HashMap<String, SimpleDateFormat>()
 
             for (path in paths) {
                 try {
-                    val dateTime: String = ExifInterface(path).getAttribute(ExifInterface.TAG_DATETIME_ORIGINAL)
-                        ?: ExifInterface(path).getAttribute(ExifInterface.TAG_DATETIME) ?: continue
+                    val exif = ExifInterface(path)
+                    val dateTime: String = exif.getAttribute(ExifInterface.TAG_DATETIME_ORIGINAL)
+                        ?: exif.getAttribute(ExifInterface.TAG_DATETIME) ?: continue
 
                     // some formats contain a "T" in the middle, some don't
                     // sample dates: 2015-07-26T14:55:23, 2018:09:05 15:09:05
                     val t = if (dateTime.substring(10, 11) == "T") "\'T\'" else " "
                     val separator = dateTime.substring(4, 5)
                     val format = "yyyy${separator}MM${separator}dd${t}kk:mm:ss"
-                    val formatter = SimpleDateFormat(format, Locale.getDefault())
+                    val formatter = formattersByPattern.getOrPut(format) { SimpleDateFormat(format, Locale.getDefault()) }
                     val timestamp = formatter.parse(dateTime).time
 
                     val uri = getFileUri(path)
@@ -650,11 +656,18 @@ fun AppCompatActivity.fixDateTaken(
                         File(path).lastModified()
                     )
                     dateTakens.add(dateTaken)
-                    if (!hasRescanned && getFileDateTaken(path) == 0L) {
-                        pathsToRescan.add(path)
-                    }
+                    processedPaths.add(path)
                 } catch (e: Exception) {
                     continue
+                }
+            }
+
+            if (!hasRescanned && processedPaths.isNotEmpty()) {
+                val dateTakenByPath = getFileDateTakens(processedPaths)
+                processedPaths.forEach { path ->
+                    if ((dateTakenByPath[path] ?: 0L) == 0L) {
+                        pathsToRescan.add(path)
+                    }
                 }
             }
 
@@ -948,7 +961,7 @@ fun Activity.getShortcutImage(tmb: String, drawable: Drawable, callback: () -> U
             .fitCenter()
 
         val size = resources.getDimension(com.goodwy.commons.R.dimen.shortcut_size).toInt()
-        val builder = Glide.with(this)
+        val builder = Glide.with(applicationContext)
             .asDrawable()
             .load(tmb)
             .apply(options)
@@ -959,6 +972,8 @@ fun Activity.getShortcutImage(tmb: String, drawable: Drawable, callback: () -> U
             (drawable as LayerDrawable).setDrawableByLayerId(R.id.shortcut_image, builder.get())
         } catch (e: Exception) {
         }
+
+        if (isDestroyed || isFinishing) return@ensureBackgroundThread
 
         runOnUiThread {
             callback()

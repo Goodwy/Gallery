@@ -18,7 +18,7 @@ class MyGlideImageDecoder(val degrees: Int, val signature: ObjectKey) : ImageDec
             .signature(signature)
             .fitCenter()
 
-        val builder = Glide.with(context)
+        val builder = Glide.with(context.applicationContext)
             .asBitmap()
             .load(uri.toString().substringAfter("file://"))
             .apply(options)

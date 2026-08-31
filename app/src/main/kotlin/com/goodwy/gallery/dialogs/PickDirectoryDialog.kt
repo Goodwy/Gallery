@@ -193,15 +193,15 @@ class PickDirectoryDialog(
     }
 
     private fun fetchDirectories(forceShowHiddenAndExcluded: Boolean) {
-        activity.getCachedDirectories(forceShowHidden = forceShowHiddenAndExcluded, forceShowExcluded = forceShowHiddenAndExcluded) {
-            if (it.isNotEmpty()) {
-                it.forEach {
+        activity.getCachedDirectories(forceShowHidden = forceShowHiddenAndExcluded, forceShowExcluded = forceShowHiddenAndExcluded) { dirs, _ ->
+            if (dirs.isNotEmpty()) {
+                dirs.forEach {
                     it.subfoldersMediaCount = it.mediaCnt
                 }
 
                 activity.runOnUiThread {
                     allDirectories.clear()
-                    gotDirectories(activity.addTempFolderIfNeeded(it))
+                    gotDirectories(activity.addTempFolderIfNeeded(dirs))
                 }
             }
         }

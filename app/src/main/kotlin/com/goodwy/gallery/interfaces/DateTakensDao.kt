@@ -16,4 +16,7 @@ interface DateTakensDao {
 
     @Query("SELECT full_path, filename, parent_path, date_taken, last_fixed, last_modified FROM date_takens")
     fun getAllDateTakens(): List<DateTaken>
+
+    @Query("DELETE FROM date_takens WHERE parent_path = :path COLLATE NOCASE OR parent_path LIKE :childPathPattern COLLATE NOCASE")
+    fun deleteDateTakensByParentPathWithChildren(path: String, childPathPattern: String)
 }

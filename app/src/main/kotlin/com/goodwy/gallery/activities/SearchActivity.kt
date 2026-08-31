@@ -2,6 +2,8 @@ package com.goodwy.gallery.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.speech.RecognizerIntent
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -31,9 +33,15 @@ import java.io.File
 import java.util.Objects
 
 class SearchActivity : SimpleActivity(), MediaOperationsListener {
+    companion object {
+        private const val SEARCH_DEBOUNCE_MS = 300L
+    }
+
     override var isSearchBarEnabled = true
 
     private var mLastSearchedText = ""
+    private val mSearchHandler = Handler(Looper.getMainLooper())
+    private var mSearchGeneration = 0
 
     private var mCurrAsyncTask: GetMediaAsynctask? = null
     private var mAllMedia = ArrayList<ThumbnailItem>()
@@ -68,6 +76,7 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
     override fun onDestroy() {
         super.onDestroy()
         mCurrAsyncTask?.stopFetching()
+        mSearchHandler.removeCallbacksAndMessages(null)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
@@ -113,7 +122,7 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
 
         binding.searchMenu.onSearchTextChangedListener = { text ->
             mLastSearchedText = text
-            textChanged(text)
+            scheduleTextChanged(text)
             binding.searchMenu.clearSearch()
         }
 
@@ -130,13 +139,26 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
         binding.searchMenu.updateColors()
     }
 
-    private fun textChanged(text: String) {
+    // debounce keystrokes instead of re-filtering the whole media list on every one,
+    // and drop results from a stale (superseded) search instead of letting them
+    // overwrite a more recent one that happened to finish first
+    private fun scheduleTextChanged(text: String) {
+        val generation = ++mSearchGeneration
+        mSearchHandler.removeCallbacksAndMessages(null)
+        mSearchHandler.postDelayed({ textChanged(text, generation) }, SEARCH_DEBOUNCE_MS)
+    }
+
+    private fun textChanged(text: String, generation: Int) {
         ensureBackgroundThread {
             try {
                 val filtered = mAllMedia.filter { it is Medium && it.name.contains(text, true) } as ArrayList
                 filtered.sortBy { it is Medium && !it.name.startsWith(text, true) }
                 val grouped = MediaFetcher(applicationContext).groupMedia(filtered as ArrayList<Medium>, "")
                 runOnUiThread {
+                    if (generation != mSearchGeneration) {
+                        return@runOnUiThread
+                    }
+
                     if (grouped.isEmpty()) {
                         binding.searchEmptyTextPlaceholder.text = getString(com.goodwy.commons.R.string.no_items_found)
                         binding.searchEmptyTextPlaceholder.beVisible()
@@ -168,7 +190,7 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
             (currAdapter as MediaAdapter).updateMedia(mAllMedia)
             handleGridSpacing(mAllMedia)
         } else {
-            textChanged(mLastSearchedText)
+            textChanged(mLastSearchedText, ++mSearchGeneration)
         }
 
         setupScrollDirection()
@@ -277,7 +299,7 @@ class SearchActivity : SimpleActivity(), MediaOperationsListener {
         mCurrAsyncTask = GetMediaAsynctask(applicationContext, "", showAll = true) {
             mAllMedia = it.clone() as ArrayList<ThumbnailItem>
             if (updateItems) {
-                textChanged(mLastSearchedText)
+                textChanged(mLastSearchedText, ++mSearchGeneration)
             }
         }
 
