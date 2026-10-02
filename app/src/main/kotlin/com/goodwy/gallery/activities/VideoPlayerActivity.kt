@@ -156,15 +156,13 @@ open class VideoPlayerActivity : BaseViewerActivity(), SeekBar.OnSeekBarChangeLi
 
     override fun onDestroy() {
         super.onDestroy()
-        if (!isChangingConfigurations) {
-            pauseVideo()
-            binding.bottomVideoTimeHolder.videoCurrTime.text = 0.getFormattedDuration()
-            releaseExoPlayer()
-            binding.bottomVideoTimeHolder.videoSeekbar.progress = 0
-            mTimerHandler.removeCallbacksAndMessages(null)
-            mPlayWhenReadyHandler.removeCallbacksAndMessages(null)
-            mVolumeController?.destroy()
-        }
+        pauseVideo()
+        binding.bottomVideoTimeHolder.videoCurrTime.text = 0.getFormattedDuration()
+        releaseExoPlayer()
+        binding.bottomVideoTimeHolder.videoSeekbar.progress = 0
+        mTimerHandler.removeCallbacksAndMessages(null)
+        mPlayWhenReadyHandler.removeCallbacksAndMessages(null)
+        mVolumeController?.destroy()
     }
 
     private fun setupOptionsMenu() {

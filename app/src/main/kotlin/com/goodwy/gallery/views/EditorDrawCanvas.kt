@@ -189,7 +189,8 @@ class EditorDrawCanvas(context: Context, attrs: AttributeSet) : View(context, at
         invalidate()
     }
 
-    fun getBitmap(): Bitmap {
+    fun getBitmap(): Bitmap? {
+        if (width <= 0 || height <= 0) return null
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         canvas.drawColor(Color.WHITE)
@@ -246,7 +247,7 @@ class EditorDrawCanvas(context: Context, attrs: AttributeSet) : View(context, at
         // maybe free up some memory
         while (mOperations.size > MAX_HISTORY_COUNT) {
             val item = mOperations.removeAt(0)
-            if (item is CanvasOp.BitmapOp) {
+            if (item is CanvasOp.BitmapOp && !item.bitmap.isRecycled) {
                 item.bitmap.recycle()
             }
         }
@@ -257,7 +258,13 @@ class EditorDrawCanvas(context: Context, attrs: AttributeSet) : View(context, at
             val bitmapOp = ops.slice(start..ops.lastIndex).first()
 
             val startIndex = mOperations.indexOf(bitmapOp)
-            mOperations = mOperations.slice(startIndex..mOperations.lastIndex) as ArrayList<CanvasOp>
+            for (i in 0 until startIndex) {
+                val removed = mOperations[i]
+                if (removed is CanvasOp.BitmapOp && !removed.bitmap.isRecycled) {
+                    removed.bitmap.recycle()
+                }
+            }
+            mOperations = ArrayList(mOperations.slice(startIndex..mOperations.lastIndex))
         }
     }
 

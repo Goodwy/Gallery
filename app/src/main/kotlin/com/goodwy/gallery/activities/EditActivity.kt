@@ -435,9 +435,10 @@ class EditActivity : BaseCropActivity(), CanvasListener {
     }
 
     private fun saveDrawnImage() {
+        val bitmap = binding.editorDrawCanvas.getBitmap() ?: return
         saveBitmap(
             overwrite = overwriteRequested,
-            bitmap = binding.editorDrawCanvas.getBitmap()
+            bitmap = bitmap
         )
     }
 
@@ -528,7 +529,9 @@ class EditActivity : BaseCropActivity(), CanvasListener {
                     }
                 }
 
-                binding.editorDrawCanvas.isVisible() -> shareBitmap(binding.editorDrawCanvas.getBitmap())
+                binding.editorDrawCanvas.isVisible() -> {
+                    binding.editorDrawCanvas.getBitmap()?.let { shareBitmap(it) }
+                }
             }
         }
     }

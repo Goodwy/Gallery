@@ -507,13 +507,14 @@ class PhotoFragment : ViewPagerFragment() {
                 }
             }
 
-        Glide.with(requireContext())
+        Glide.with(this)
             .load(path)
             .apply(options)
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>, isFirstResource: Boolean): Boolean {
                     resetColorModeIfVisible()
-                    if (activity != null && !activity!!.isDestroyed && !activity!!.isFinishing) {
+                    val currentActivity = activity
+                    if (currentActivity != null && !currentActivity.isDestroyed && !currentActivity.isFinishing) {
                         tryLoadingWithPicasso(addZoomableView)
                     }
                     return false

@@ -416,11 +416,14 @@ class VideoFragment : ViewPagerFragment(), TextureView.SurfaceTextureListener,
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        cleanup()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        if (activity?.isChangingConfigurations == false) {
-            cleanup()
-        }
+        cleanup()
 
         if (::mVolumeSideScroll.isInitialized) {
             mVolumeSideScroll.cleanup()
